@@ -1,8 +1,9 @@
 import { css } from '@emotion/core'
+import { normalize } from 'polished'
 import styled from 'lib/emotion'
 
 export const globalStyles = css`
-	@import url('https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/0.5.0/modern-normalize.min.css');
+	${normalize()}
 
 	html {
 		width: 100%;

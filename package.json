@@ -12,6 +12,17 @@
 	"cacheDirectories": [
 		"node_modules"
 	],
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"**/*.{ts,tsx}": [
+			"yarn tslint -c tslint.json -t prose -p tsconfig.json --fix",
+			"git add"
+		]
+	},
 	"dependencies": {
 		"@emotion/core": "^10.0.10",
 		"@emotion/styled": "^10.0.11",
@@ -21,8 +32,8 @@
 		"emotion": "^10.0.9",
 		"emotion-theming": "^10.0.10",
 		"isomorphic-unfetch": "^3.0.0",
-		"mobx": "^5.9.4",
-		"mobx-react": "^6.0.0",
+		"mobx": "^5.10.0",
+		"mobx-react": "^6.0.3",
 		"mobx-state-tree": "^3.14.0",
 		"next": "^8.1.0",
 		"next-compose-plugins": "^2.2.0",
@@ -39,7 +50,9 @@
 		"@types/react": "^16.8.17",
 		"@types/react-dom": "^16.8.4",
 		"babel-plugin-polished": "^1.1.0",
-		"fork-ts-checker-webpack-plugin": "^1.3.1",
+		"fork-ts-checker-webpack-plugin": "^1.3.5",
+		"husky": "^2.4.0",
+		"lint-staged": "^8.1.7",
 		"prettier": "^1.17.1",
 		"tsconfig-paths-webpack-plugin": "^3.2.0",
 		"tslint": "^5.16.0",
@@ -47,6 +60,6 @@
 		"tslint-plugin-prettier": "^2.0.1",
 		"tslint-react": "^4.0.0",
 		"typescript": "^3.4.5",
-		"webpack": "^4.32.2"
+		"webpack": "^4.33.0"
 	}
 }

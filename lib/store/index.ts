@@ -20,7 +20,6 @@ export const initStore: (
 	isServer: boolean,
 	snapshot?: IStoreState | null
 ) => IStoreInstance = (isServer, snapshot = null) => {
-
 	if (isServer) {
 		store = Store.create()
 	}

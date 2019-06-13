@@ -4,9 +4,11 @@ import { Provider } from 'mobx-react'
 import { getSnapshot } from 'mobx-state-tree'
 import App, { Container, AppComponentProps } from 'next/app'
 import { ThemeProvider } from 'emotion-theming'
+import NextSEO from 'next-seo'
 
 import { initStore } from 'lib/store'
 import { theme } from 'lib/theme'
+import { defaultSeoConfig } from 'lib/constants/seo'
 import Layout from 'containers/PageLayout'
 
 interface Props extends AppComponentProps {
@@ -51,15 +53,18 @@ class MyApp extends App<Props, {}> {
 	public render() {
 		const { Component, pageProps } = this.props
 		return (
-			<Container>
-				<ThemeProvider theme={theme}>
-					<Provider store={this.store}>
-						<Layout>
-							<Component {...pageProps} />
-						</Layout>
-					</Provider>
-				</ThemeProvider>
-			</Container>
+			<>
+				<NextSEO config={defaultSeoConfig} />
+				<Container>
+					<ThemeProvider theme={theme}>
+						<Provider store={this.store}>
+							<Layout>
+								<Component {...pageProps} />
+							</Layout>
+						</Provider>
+					</ThemeProvider>
+				</Container>
+			</>
 		)
 	}
 }

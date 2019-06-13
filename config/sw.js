@@ -6,12 +6,12 @@ const PACKAGE_JSON = JSON.parse(
 )
 
 exports.sw = {
-	swDest: path.resolve(__dirname, '../static/service-worker.js'),
 	clientsClaim: true,
-	// skipWaiting: true,
+	skipWaiting: true,
 	cleanupOutdatedCaches: true,
 	cacheId: `${PACKAGE_JSON.name}_cache`,
 	ignoreURLParametersMatching: [/./],
+	// globPatterns: ['static/**/*'],
 	runtimeCaching: [
 		{
 			urlPattern: /\.(otf|ttf|eot|woff|woff2)$/,

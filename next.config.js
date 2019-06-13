@@ -19,10 +19,7 @@ module.exports = withPlugins(
 			withOffline,
 			{
 				workboxOpts: configs.sw,
-				dontAutoRegisterSw: true,
-				generateInDevMode: true,
-				registerSwPrefix: '/static',
-				scope: '/'
+				generateInDevMode: true
 			}
 		]
 	],

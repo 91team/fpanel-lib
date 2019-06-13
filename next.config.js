@@ -3,21 +3,22 @@ const path = require('path')
 const withTypescript = require('@zeit/next-typescript')
 const withCss = require('@zeit/next-css')
 const withOffline = require('next-offline')
-const withManifest = require('next-manifest')
 const withPlugins = require('next-compose-plugins')
+const withOptimizedImages = require('next-optimized-images')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 
-const { swConfig } = require('./config/sw')
+const { configs } = require('./config')
 
 module.exports = withPlugins(
 	[
 		withCss,
 		withTypescript,
+		[withOptimizedImages, configs.images],
 		[
 			withOffline,
 			{
-				workboxOpts: swConfig,
+				workboxOpts: configs.sw,
 				dontAutoRegisterSw: true,
 				generateInDevMode: true,
 				registerSwPrefix: '/static',

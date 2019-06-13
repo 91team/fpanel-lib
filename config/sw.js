@@ -5,10 +5,10 @@ const PACKAGE_JSON = JSON.parse(
 	fs.readFileSync(path.resolve(__dirname, '../package.json'), 'utf8')
 )
 
-exports.swConfig = {
+exports.sw = {
 	swDest: path.resolve(__dirname, '../static/service-worker.js'),
 	clientsClaim: true,
-	skipWaiting: true,
+	// skipWaiting: true,
 	cleanupOutdatedCaches: true,
 	cacheId: `${PACKAGE_JSON.name}_cache`,
 	ignoreURLParametersMatching: [/./],

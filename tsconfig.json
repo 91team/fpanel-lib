@@ -25,5 +25,12 @@
 		"typeRoots": ["./types", "./node_modules/@types"],
 		"lib": ["dom", "es2017"]
 	},
-	"exclude": ["dist", ".next", "out", "next.config.js"]
+	"exclude": [
+		"dist",
+		".next",
+		"config/**",
+		"static/**",
+		"out",
+		"next.config.js"
+	]
 }

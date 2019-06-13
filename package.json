@@ -4,9 +4,10 @@
 	"license": "Private",
 	"private": true,
 	"scripts": {
-		"dev": "next",
-		"build": "next build",
+		"dev": "yarn run clean && next",
+		"build": "yarn run clean && next build",
 		"start": "next start",
+		"clean": "rimraf .next && rimraf static/service-worker.js",
 		"tslint": "tslint -c tslint.json -p tsconfig.json"
 	},
 	"cacheDirectories": [
@@ -37,6 +38,8 @@
 		"mobx-state-tree": "^3.14.0",
 		"next": "^8.1.0",
 		"next-compose-plugins": "^2.2.0",
+		"next-manifest": "^2.0.0",
+		"next-offline": "^4.0.2",
 		"next-seo": "^1.11.2",
 		"polished": "^3.4.0",
 		"react": "^16.8.6",
@@ -56,6 +59,7 @@
 		"husky": "^2.4.0",
 		"lint-staged": "^8.1.7",
 		"prettier": "^1.18.2",
+		"rimraf": "^2.6.3",
 		"tsconfig-paths-webpack-plugin": "^3.2.0",
 		"tslint": "^5.16.0",
 		"tslint-config-prettier": "^1.18.0",

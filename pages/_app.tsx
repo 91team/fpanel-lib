@@ -5,6 +5,10 @@ import { getSnapshot } from 'mobx-state-tree'
 import App, { Container, AppComponentProps } from 'next/app'
 import { ThemeProvider } from 'emotion-theming'
 import NextSEO from 'next-seo'
+import {
+	register as registerSW,
+	unregister as unregisterSW
+} from 'next-offline/runtime'
 
 import { initStore } from 'lib/store'
 import { theme } from 'lib/theme'
@@ -48,6 +52,14 @@ class MyApp extends App<Props, {}> {
 		super(props)
 
 		this.store = initStore(props.isServer, props.initialState) as App.Store
+	}
+
+	componentDidMount() {
+		registerSW('/static/service-worker.js')
+	}
+
+	componentWillUnmount() {
+		unregisterSW()
 	}
 
 	public render() {

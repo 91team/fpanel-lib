@@ -1,18 +1,18 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
+		"target": "es2017",
 		"outDir": "dist",
-		"target": "esnext",
 		"moduleResolution": "node",
 		"esModuleInterop": true,
 		"isolatedModules": false,
 		"noEmit": false,
-		"sourceMap": true,
 		"skipLibCheck": true,
 		"baseUrl": ".",
 		"preserveConstEnums": true,
 		"typeRoots": ["./types", "./node_modules/@types"],
 		"lib": ["es2017"]
 	},
-	"include": ["server/**/*.ts", "i18n/**/*.ts"]
+	"include": ["server/**/*.ts"],
+	"exclude": ["lib/**/*.*"]
 }

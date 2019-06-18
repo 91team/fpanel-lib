@@ -7,9 +7,9 @@
 		"pre-dev": "yarn run clean",
 		"dev": "nodemon",
 		"pre-build": "yarn run clean",
-		"build": "next build && tsc --project tsconfig.server.json",
-		"start": "cross-env NODE_ENV=production node dist/server/index.js",
-		"clean": "rimraf .next && rimraf static/service-worker.js",
+		"build": "cross-env NODE_ENV=production next build && cross-env NODE_ENV=production yarn ts-node --project tsconfig.server.json server/index.ts",
+		"start": "cross-env NODE_ENV=production node dist/index.js",
+		"clean": "rimraf .next",
 		"tslint": "tslint -c tslint.json -p tsconfig.json"
 	},
 	"cacheDirectories": [

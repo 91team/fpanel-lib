@@ -32,7 +32,7 @@ module.exports = withPlugins(
 			]
 
 			// Do not run type checking twice:
-			if (options.isServer)
+			if (!options.isServer)
 				config.plugins.push(
 					new ForkTsCheckerWebpackPlugin({
 						tsconfig: path.resolve(__dirname, './tsconfig.json'),

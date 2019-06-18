@@ -4,12 +4,11 @@
 	"license": "Private",
 	"private": true,
 	"scripts": {
-		"pre-dev": "yarn run clean",
 		"dev": "nodemon",
-		"pre-build": "yarn run clean",
-		"build": "cross-env NODE_ENV=production next build && cross-env NODE_ENV=production yarn ts-node --project tsconfig.server.json server/index.ts",
-		"start": "cross-env NODE_ENV=production node dist/index.js",
-		"clean": "rimraf .next",
+		"build": "yarn run clean && tsc --project tsconfig.server.json && NODE_ENV=production next build",
+		"start": "ts-node server/index.ts",
+		"start:prod": "NODE_ENV=production node dist/index.js",
+		"clean": "rimraf .next && rimraf dist",
 		"tslint": "tslint -c tslint.json -p tsconfig.json"
 	},
 	"cacheDirectories": [

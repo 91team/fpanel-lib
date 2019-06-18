@@ -39,7 +39,7 @@ module.exports = withPlugins(
 						tslint: path.resolve(__dirname, './tslint.json'),
 						checkSyntacticErrors: true,
 						tslint: true,
-						tslintAutoFix: true,
+						tslintAutoFix: false,
 						memoryLimit: 1024,
 						workers: ForkTsCheckerWebpackPlugin.ONE_CPU,
 						async: true

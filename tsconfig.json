@@ -18,9 +18,9 @@
 		"skipLibCheck": true,
 		"baseUrl": ".",
 		"paths": {
-			"lib/*": ["lib/*"],
-			"containers/*": ["containers/*"],
-			"components/*": ["components/*"],
+			"lib/*": ["src/lib/*"],
+			"containers/*": ["src/containers/*"],
+			"components/*": ["src/components/*"],
 			"static/*": ["static/*"]
 		},
 		"typeRoots": ["./types", "./node_modules/@types"],

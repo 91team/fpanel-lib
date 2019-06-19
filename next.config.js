@@ -19,7 +19,7 @@ module.exports = withPlugins(
 			withOffline,
 			{
 				workboxOpts: configs.sw,
-				generateInDevMode: true
+				generateInDevMode: false
 			}
 		]
 	],

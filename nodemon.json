@@ -1,5 +1,0 @@
-{
-	"watch": ["server", "static"],
-	"ignore": ["static/service-worker.js"],
-	"exec": "ts-node --project tsconfig.server.json server/index.ts"
-}

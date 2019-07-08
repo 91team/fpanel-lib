@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { NextContext } from 'next'
+import { NextPageContext } from 'next'
 
 interface Props {
 	url: string
 }
 
 class IndexPage extends Component<Props> {
-	static async getInitialProps(ctx: NextContext) {
+	static async getInitialProps(ctx: NextPageContext) {
 		const { url } = await fetch('https://api.github.com/orgs/ninenone').then(
 			res => res.json()
 		)

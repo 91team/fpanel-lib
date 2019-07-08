@@ -24,7 +24,12 @@
 			"static/*": ["static/*"]
 		},
 		"typeRoots": ["./types", "./node_modules/@types"],
-		"lib": ["dom", "es2017"]
+		"lib": ["dom", "es2017"],
+		"strict": false,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true
 	},
-	"exclude": [".next", "config", "dist", "next.config.js"]
+	"exclude": [".next", "config", "next.config.js"],
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

@@ -1,33 +1,21 @@
-import {
-	applySnapshot,
-	Instance,
-	SnapshotIn,
-	SnapshotOut,
-	IStateTreeNode,
-	types
-} from 'mobx-state-tree'
+import { useStaticRendering } from 'mobx-react'
 
-let store: IStoreInstance = null as any
+const isServer = typeof window === 'undefined'
+useStaticRendering(isServer)
 
-const Store = types.model({})
+export class Store {
+	constructor(isServer: boolean, initialData = {}) {}
+}
 
-export type IStoreInstance = Instance<typeof Store>
-export type IStoreState = IStateTreeNode<typeof Store>
-export type IStoreSnapshotIn = SnapshotIn<typeof Store>
-export type IStoreSnapshotOut = SnapshotOut<typeof Store>
+let store = null
 
-export const initStore: (
-	isServer: boolean,
-	snapshot?: IStoreState | null
-) => IStoreInstance = (isServer, snapshot = null) => {
+export function initializeStore(initialData?: any) {
+	// Always make a new store if server, otherwise state is shared between requests
 	if (isServer) {
-		store = Store.create()
+		return new Store(isServer, initialData)
 	}
-	if ((store as any) === null) {
-		store = Store.create()
+	if (store === null) {
+		store = new Store(isServer, initialData)
 	}
-	if (snapshot) {
-		applySnapshot(store, snapshot)
-	}
-	return store
+	return store as App.Store | null
 }

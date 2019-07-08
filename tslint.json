@@ -10,6 +10,7 @@
 			"severity": "warning"
 		},
 		"no-empty": false,
+		"no-namespace": false,
 		"no-empty-interface": false,
 		"no-console": false,
 		"no-submodule-imports": false,

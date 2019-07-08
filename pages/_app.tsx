@@ -2,30 +2,29 @@ import 'isomorphic-unfetch'
 import React from 'react'
 import { Provider } from 'mobx-react'
 import { getSnapshot } from 'mobx-state-tree'
-import App, { Container, AppComponentProps } from 'next/app'
+import App, { Container, AppProps, AppContext } from 'next/app'
 import { ThemeProvider } from 'emotion-theming'
 import NextSEO from 'next-seo'
 
-import { initStore } from 'lib/store'
+import { initializeStore } from 'lib/store'
 import { theme } from 'lib/theme'
 import { defaultSeoConfig } from 'lib/constants/seo'
 import Layout from 'containers/PageLayout'
 
-interface Props extends AppComponentProps {
+interface Props extends AppProps {
 	isServer: boolean
-	initialState: App.StoreState
+	initialState: any
 	pageProps: any
 	styles?: React.ReactNode
 }
 
 class MyApp extends App<Props, {}> {
-	public static async getInitialProps({ Component, ctx }) {
+	public static async getInitialProps({ Component, ctx }: AppContext) {
 		//
 		// Use getInitialProps as a step in the lifecycle when
 		// we can initialize our store
 		//
-		const isServer = typeof window === 'undefined'
-		const store = initStore(isServer)
+		const store = initializeStore()
 		//
 		// Check whether the page being rendered by the App has a
 		// static getInitialProps method and if so call it
@@ -36,8 +35,7 @@ class MyApp extends App<Props, {}> {
 			pageProps = await Component.getInitialProps(ctx)
 		}
 		return {
-			initialState: getSnapshot(store),
-			isServer,
+			initialState: {},
 			pageProps
 		}
 	}
@@ -47,7 +45,7 @@ class MyApp extends App<Props, {}> {
 	constructor(props: Props) {
 		super(props)
 
-		this.store = initStore(props.isServer, props.initialState) as App.Store
+		this.store = initializeStore(props.initialState) as App.Store
 	}
 
 	public render() {

@@ -1,10 +1,7 @@
 import { css } from '@emotion/core'
-import { normalize } from 'polished'
 import styled from 'lib/emotion'
 
 export const globalStyles = css`
-	${normalize()}
-
 	html {
 		width: 100%;
 		height: 100%;

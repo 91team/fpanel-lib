@@ -1,4 +1,5 @@
 import 'isomorphic-unfetch'
+import 'modern-normalize'
 import React from 'react'
 import { Provider } from 'mobx-react'
 import App, { Container, AppProps, AppContext } from 'next/app'

@@ -1,7 +1,6 @@
 import 'isomorphic-unfetch'
 import React from 'react'
 import { Provider } from 'mobx-react'
-import { getSnapshot } from 'mobx-state-tree'
 import App, { Container, AppProps, AppContext } from 'next/app'
 import { ThemeProvider } from 'emotion-theming'
 import NextSEO from 'next-seo'

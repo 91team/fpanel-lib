@@ -1,7 +1,7 @@
 import breakpoints from './breakpoints'
 
 export const theme = {
-	breakpoints
+  breakpoints
 }
 
 export type Theme = typeof theme

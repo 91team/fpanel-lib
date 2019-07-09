@@ -1,78 +1,78 @@
 {
-	"name": "@nineone/boilerplate-client",
-	"version": "1.0.0",
-	"license": "Private",
-	"private": true,
-	"scripts": {
-		"dev": "next",
-		"build": "yarn run clean && next build",
-		"start": "next start",
-		"build:production": "NODE_ENV=production yarn run build",
-		"start:production": "yarn run build:production && NODE_ENV=production next start",
-		"clean": "rimraf .next",
-		"tslint": "tslint -c tslint.json -p tsconfig.json"
-	},
-	"cacheDirectories": [
-		"node_modules"
-	],
-	"husky": {
-		"hooks": {
-			"pre-commit": "lint-staged"
-		}
-	},
-	"lint-staged": {
-		"**/*.{ts,tsx}": [
-			"yarn tslint -c tslint.json -t prose -p tsconfig.json --fix",
-			"git add"
-		]
-	},
-	"dependencies": {
-		"@emotion/core": "^10.0.14",
-		"@emotion/styled": "^10.0.14",
-		"babel-plugin-emotion": "^10.0.14",
-		"emotion": "^10.0.14",
-		"emotion-theming": "^10.0.14",
-		"isomorphic-unfetch": "^3.0.0",
-		"mobx": "^5.10.1",
-		"mobx-react": "^6.1.1",
-		"mobx-utils": "^5.4.1",
-		"modern-normalize": "^0.5.0",
-		"next": "^9.0.0",
-		"next-seo": "^1.12.0",
-		"prop-types": "^15.7.2",
-		"react": "^16.8.6",
-		"react-dom": "^16.8.6",
-		"recompose": "^0.30.0"
-	},
-	"devDependencies": {
-		"@babel/core": "^7.4.5",
-		"@babel/plugin-proposal-decorators": "^7.4.4",
-		"@types/next-seo": "^1.10.0",
-		"@types/node": "11.12.0",
-		"@types/react": "^16.8.22",
-		"@types/react-dom": "^16.8.4",
-		"@zeit/next-css": "^1.0.1",
-		"cross-env": "^5.2.0",
-		"husky": "^3.0.0",
-		"imagemin-gifsicle": "^6.0.1",
-		"imagemin-mozjpeg": "^8.0.0",
-		"imagemin-optipng": "^7.0.0",
-		"imagemin-pngquant": "^8.0.0",
-		"imagemin-svgo": "^7.0.0",
-		"lint-staged": "^9.1.0",
-		"next-compose-plugins": "^2.2.0",
-		"next-optimized-images": "^2.5.3",
-		"next-progressbar": "^1.0.0",
-		"prettier": "^1.18.2",
-		"rimraf": "^2.6.3",
-		"svg-sprite-loader": "^4.1.6",
-		"tsconfig-paths-webpack-plugin": "^3.2.0",
-		"tslint": "^5.18.0",
-		"tslint-config-prettier": "^1.18.0",
-		"tslint-plugin-prettier": "^2.0.1",
-		"tslint-react": "^4.0.0",
-		"typescript": "^3.5.3",
-		"webp-loader": "^0.5.0",
-		"webpack": "^4.35.3"
-	}
+  "name": "@nineone/boilerplate-client",
+  "version": "1.0.0",
+  "license": "Private",
+  "private": true,
+  "scripts": {
+    "dev": "next",
+    "build": "yarn run clean && next build",
+    "start": "next start",
+    "build:production": "NODE_ENV=production yarn run build",
+    "start:production": "yarn run build:production && NODE_ENV=production next start",
+    "clean": "rimraf .next",
+    "tslint": "tslint -c tslint.json -p tsconfig.json"
+  },
+  "cacheDirectories": [
+    "node_modules"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx}": [
+      "yarn tslint -c tslint.json -t prose -p tsconfig.json --fix",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "@emotion/core": "^10.0.14",
+    "@emotion/styled": "^10.0.14",
+    "babel-plugin-emotion": "^10.0.14",
+    "emotion": "^10.0.14",
+    "emotion-theming": "^10.0.14",
+    "isomorphic-unfetch": "^3.0.0",
+    "mobx": "^5.10.1",
+    "mobx-react": "^6.1.1",
+    "mobx-utils": "^5.4.1",
+    "modern-normalize": "^0.5.0",
+    "next": "^9.0.0",
+    "next-seo": "^1.12.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "recompose": "^0.30.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@types/next-seo": "^1.10.0",
+    "@types/node": "11.12.0",
+    "@types/react": "^16.8.22",
+    "@types/react-dom": "^16.8.4",
+    "@zeit/next-css": "^1.0.1",
+    "cross-env": "^5.2.0",
+    "husky": "^3.0.0",
+    "imagemin-gifsicle": "^6.0.1",
+    "imagemin-mozjpeg": "^8.0.0",
+    "imagemin-optipng": "^7.0.0",
+    "imagemin-pngquant": "^8.0.0",
+    "imagemin-svgo": "^7.0.0",
+    "lint-staged": "^9.1.0",
+    "next-compose-plugins": "^2.2.0",
+    "next-optimized-images": "^2.5.3",
+    "next-progressbar": "^1.0.0",
+    "prettier": "^1.18.2",
+    "rimraf": "^2.6.3",
+    "svg-sprite-loader": "^4.1.6",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "tslint-react": "^4.0.0",
+    "typescript": "^3.5.3",
+    "webp-loader": "^0.5.0",
+    "webpack": "^4.35.3"
+  }
 }

@@ -12,59 +12,59 @@ import { defaultSeoConfig } from 'lib/constants/seo'
 import Layout from 'containers/PageLayout'
 
 interface Props extends AppProps {
-	isServer: boolean
-	initialState: any
-	pageProps: any
-	styles?: React.ReactNode
+  isServer: boolean
+  initialState: any
+  pageProps: any
+  styles?: React.ReactNode
 }
 
 class MyApp extends App<Props, {}> {
-	public static async getInitialProps({ Component, ctx }: AppContext) {
-		//
-		// Use getInitialProps as a step in the lifecycle when
-		// we can initialize our store
-		//
-		const store = initializeStore()
-		//
-		// Check whether the page being rendered by the App has a
-		// static getInitialProps method and if so call it
-		//
-		let pageProps: { [key: string]: any } = {}
+  public static async getInitialProps({ Component, ctx }: AppContext) {
+    //
+    // Use getInitialProps as a step in the lifecycle when
+    // we can initialize our store
+    //
+    const store = initializeStore()
+    //
+    // Check whether the page being rendered by the App has a
+    // static getInitialProps method and if so call it
+    //
+    let pageProps: { [key: string]: any } = {}
 
-		if (Component.getInitialProps) {
-			pageProps = await Component.getInitialProps(ctx)
-		}
-		return {
-			initialState: {},
-			pageProps
-		}
-	}
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx)
+    }
+    return {
+      initialState: {},
+      pageProps
+    }
+  }
 
-	private store: App.Store
+  private store: App.Store
 
-	constructor(props: Props) {
-		super(props)
+  constructor(props: Props) {
+    super(props)
 
-		this.store = initializeStore(props.initialState) as App.Store
-	}
+    this.store = initializeStore(props.initialState) as App.Store
+  }
 
-	public render() {
-		const { Component, pageProps } = this.props
-		return (
-			<>
-				<NextSEO config={defaultSeoConfig} />
-				<Container>
-					<ThemeProvider theme={theme}>
-						<Provider store={this.store}>
-							<Layout>
-								<Component {...pageProps} />
-							</Layout>
-						</Provider>
-					</ThemeProvider>
-				</Container>
-			</>
-		)
-	}
+  public render() {
+    const { Component, pageProps } = this.props
+    return (
+      <>
+        <NextSEO config={defaultSeoConfig} />
+        <Container>
+          <ThemeProvider theme={theme}>
+            <Provider store={this.store}>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </Provider>
+          </ThemeProvider>
+        </Container>
+      </>
+    )
+  }
 }
 
 export default MyApp

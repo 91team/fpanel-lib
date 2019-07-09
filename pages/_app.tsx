@@ -18,7 +18,7 @@ interface Props extends AppProps {
 	styles?: React.ReactNode
 }
 
-class MyApp extends App<Props, {}> {
+class Application extends App<Props, {}> {
 	public static async getInitialProps({ Component, ctx }: AppContext) {
 		//
 		// Use getInitialProps as a step in the lifecycle when
@@ -67,4 +67,4 @@ class MyApp extends App<Props, {}> {
 	}
 }
 
-export default MyApp
+export default Application

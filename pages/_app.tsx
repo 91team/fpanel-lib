@@ -52,15 +52,13 @@ class Application extends App<Props, {}> {
     const { Component, pageProps } = this.props
     return (
       <>
-        <NextSEO config={defaultSeoConfig} />
         <Container>
-          <ThemeProvider theme={theme}>
-            <Provider store={this.store}>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </Provider>
-          </ThemeProvider>
+          <Provider store={this.store}>
+            <Layout>
+              <NextSEO config={defaultSeoConfig} />
+              <Component {...pageProps} />
+            </Layout>
+          </Provider>
         </Container>
       </>
     )

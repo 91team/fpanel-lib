@@ -7,15 +7,13 @@ import { Container, globalStyles } from './components'
 
 interface OuterProps {}
 
-const Layout: FunctionComponent<OuterProps> = ({ children }) => {
-  return (
-    <ThemeProvider theme={theme}>
-      <>
-        <Global styles={globalStyles} />
-        <Container>{children}</Container>
-      </>
-    </ThemeProvider>
-  )
-}
+const Layout: FunctionComponent<OuterProps> = ({ children }) => (
+  <ThemeProvider theme={theme}>
+    <>
+      <Global styles={globalStyles} />
+      <Container>{children}</Container>
+    </>
+  </ThemeProvider>
+)
 
 export default Layout

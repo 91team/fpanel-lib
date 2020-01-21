@@ -1,7 +1,9 @@
-import breakpoints from './breakpoints'
+import colors from './colors'
+import common from './common'
+import sizes from './sizes'
 
-export const theme = {
-  breakpoints
-}
-
-export type Theme = typeof theme
+export const defaultTheme = {
+  colors,
+  common,
+  sizes
+} as const

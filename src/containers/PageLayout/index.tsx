@@ -1,19 +1,13 @@
-import React, { FunctionComponent } from 'react'
-import { Global } from '@emotion/core'
-import { ThemeProvider } from 'emotion-theming'
-import { theme } from 'lib/theme'
+import React, { FC } from 'react'
+import withStyles, { JSSProps } from 'react-jss'
 
-import { Container, globalStyles } from './components'
+import styles from './styles'
 
-interface OuterProps {}
+type TOuterProps = {}
+type TProps = TOuterProps & JSSProps<typeof styles>
 
-const Layout: FunctionComponent<OuterProps> = ({ children }) => (
-  <ThemeProvider theme={theme}>
-    <>
-      <Global styles={globalStyles} />
-      <Container>{children}</Container>
-    </>
-  </ThemeProvider>
+const Layout: FC<TProps> = ({ classes, children }) => (
+  <section className={classes.layout}>{children}</section>
 )
 
-export default Layout
+export default withStyles<TOuterProps>(styles)(Layout)

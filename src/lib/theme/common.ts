@@ -2,7 +2,7 @@ const transitionEasing = 'ease'
 const transitionTime = `300ms`
 
 export const common = {
-  fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+  fontFamily: 'CR, -apple-system, BlinkMacSystemFont, sans-serif',
   transition: {
     config: `${transitionTime} ${transitionEasing}`,
     easing: transitionEasing,

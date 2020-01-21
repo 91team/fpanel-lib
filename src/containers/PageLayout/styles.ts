@@ -1,3 +1,5 @@
+import CirceWOFF from 'static/fonts/Circe.woff'
+
 const styles = ({
   common,
   colors: {
@@ -6,10 +8,17 @@ const styles = ({
   }
 }: App.Theme) => ({
   '@global': {
+    '@font-face': [
+      {
+        fontFamily: 'CR',
+        src: `url("${CirceWOFF}") format('woff')`,
+        fontStyle: 'normal',
+        fontDisplay: 'swap'
+      }
+    ],
     html: {
       fontFamily: common.fontFamily,
       fontSize: 16,
-      fontStyle: 'normal',
       width: '100%',
       height: '100%'
     },
@@ -22,6 +31,7 @@ const styles = ({
       flexDirection: 'column',
       height: '100%',
       margin: 0,
+      fontFamily: 'inherit',
       backgroundColor: page.background
     },
     ':focus': {

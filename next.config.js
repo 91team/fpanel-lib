@@ -6,29 +6,33 @@ const TSConfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 const ReactJSSHMRPlugin = require('react-jss-hmr/webpack')
 
 const { configs } = require('./config')
+const { plugins } = require('./plugins')
 const TS_CONFIG_PATH = path.resolve(__dirname, './tsconfig.json')
 
-module.exports = withPlugins([withCss, [withOptimizedImages, configs.images]], {
-  webpack(config, options) {
-    const { plugins: resolvePlugins } = config.resolve
-    const plugins = [
-      new TSConfigPathsPlugin({
-        configFile: TS_CONFIG_PATH
-      })
-    ]
+module.exports = withPlugins(
+  [withCss, [withOptimizedImages, configs.images], ...plugins],
+  {
+    webpack(config, options) {
+      const { plugins: resolvePlugins } = config.resolve
+      const plugins = [
+        new TSConfigPathsPlugin({
+          configFile: TS_CONFIG_PATH
+        })
+      ]
 
-    config.resolve.plugins = resolvePlugins
-      ? resolvePlugins.concat(plugins)
-      : plugins
+      config.resolve.plugins = resolvePlugins
+        ? resolvePlugins.concat(plugins)
+        : plugins
 
-    if (process.env.NODE_ENV === 'production') {
-      config.resolve.plugins.push(new ReactJSSHMRPlugin())
-      config.plugins.push(new LodashModuleReplacementPlugin())
-    } else {
-      // Must be changed from default, because default not working in first render on client
-      config.devtool = 'cheap-module-eval-source-map'
+      if (process.env.NODE_ENV === 'production') {
+        config.resolve.plugins.push(new ReactJSSHMRPlugin())
+        config.plugins.push(new LodashModuleReplacementPlugin())
+      } else {
+        // Must be changed from default, because default not working in first render on client
+        config.devtool = 'cheap-module-eval-source-map'
+      }
+
+      return config
     }
-
-    return config
   }
-})
+)

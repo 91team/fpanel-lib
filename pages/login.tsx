@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
 import { inject, observer } from 'mobx-react'
+import Link from 'next/link'
 
 import compose from 'utils/compose'
-import Link from 'next/link'
 
 type TOuterProps = {}
 type TStateProps = {

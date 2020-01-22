@@ -1,16 +1,11 @@
 import { observable, action } from 'mobx'
 
+import BaseStore from './base'
 import { CStore } from './types'
 
 type TInitialState = Partial<User>
 
-class User implements CStore {
-  constructor(initialState: TInitialState) {
-    for (const key in initialState) {
-      this[key] = initialState[key]
-    }
-  }
-
+class User extends BaseStore<TInitialState> implements CStore {
   @observable token: null | string = null
 
   @action.bound setToken(token: string) {

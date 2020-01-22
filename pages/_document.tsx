@@ -54,6 +54,7 @@ class AppDocument extends Document<TProps> {
       <Html>
         <Head>
           <script
+            id="store-server-side"
             dangerouslySetInnerHTML={{
               __html: `window.__INITIAL_STATE__ = '${storeInitialState}'`
             }}

@@ -65,10 +65,17 @@ class Application extends App<TProps> {
 
   componentDidMount() {
     // Remove the server-side injected CSS
-    const jssStyles = document.querySelector('#jss-server-side')
+    this.removeElementByID('jss-server-side')
 
-    if (jssStyles) {
-      jssStyles.parentNode!.removeChild(jssStyles)
+    // Remove the server-side injected store state
+    this.removeElementByID('store-server-side')
+  }
+
+  removeElementByID(id: string) {
+    const element = document.querySelector('#' + id)
+
+    if (element) {
+      element.parentNode!.removeChild(element)
     }
   }
 

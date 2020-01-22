@@ -4,7 +4,7 @@ import User from './user'
 import { CStore, TRootStoreOptions } from './types'
 
 class Store implements CStore {
-  private childStores = {
+  public childStores = {
     user: User
   }
 
@@ -17,6 +17,10 @@ class Store implements CStore {
   }
 
   @observable user: null | User = null
+
+  get serializableWhitelist(): (keyof this['childStores'])[] {
+    return ['user']
+  }
 
   public getChildStores(): Record<string, CStore> {
     const result: Record<string, CStore> = {}
@@ -36,7 +40,10 @@ class Store implements CStore {
     Object.keys(this.childStores).forEach(key => {
       const childStore = this[key]
 
-      if (childStore) {
+      if (
+        childStore &&
+        this.serializableWhitelist.includes(key as keyof this['childStores'])
+      ) {
         result[key] = (this[key] as CStore).serialize()
       }
     })

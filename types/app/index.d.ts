@@ -1,9 +1,9 @@
 import { defaultTheme } from 'lib/theme'
-import { Store } from 'lib/store'
+import Store from 'lib/store'
 
 declare namespace App {
-  type Theme = typeof defaultTheme
-  type Store = Store
+  type TTheme = typeof defaultTheme
+  type TStore = Store
 }
 
 export = App

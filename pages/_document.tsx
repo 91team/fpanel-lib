@@ -10,8 +10,11 @@ import Document, {
 import { SheetsRegistry, JssProvider, createGenerateId } from 'react-jss'
 import sprite from 'svg-sprite-loader/runtime/sprite.build'
 
+import StoreService from 'services/store'
+
 type TProps = DocumentProps & {
   spriteContent: string
+  storeInitialState: string
 }
 
 class AppDocument extends Document<TProps> {
@@ -39,20 +42,29 @@ class AppDocument extends Document<TProps> {
           <style id="jss-server-side">{registry.toString()}</style>
         </Fragment>
       ],
-      spriteContent
+      spriteContent,
+      storeInitialState: StoreService.convertToJSON()
     }
   }
 
   render() {
+    const { spriteContent, storeInitialState } = this.props
+
     return (
       <Html>
-        <Head />
+        <Head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.__INITIAL_STATE__ = '${storeInitialState}'`
+            }}
+          />
+        </Head>
         <body>
           <div
             style={{ display: 'none' }}
             aria-hidden="true"
             dangerouslySetInnerHTML={{
-              __html: this.props.spriteContent
+              __html: spriteContent
             }}
           />
           <Main />

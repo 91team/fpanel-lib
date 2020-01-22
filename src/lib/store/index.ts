@@ -1,26 +1,48 @@
-import { useStaticRendering } from 'mobx-react'
+import { observable } from 'mobx'
 
-const isServer = typeof window === 'undefined'
+import User from './user'
+import { CStore, TRootStoreOptions } from './types'
 
-// eslint-disable-next-line react-hooks/rules-of-hooks
-useStaticRendering(isServer)
-
-export class Store {
-  constructor(isServer: boolean, initialData = {}) {}
-}
-
-let store: Store = null
-
-export function initializeStore(initialData?: any) {
-  // Always make a new store if server,
-  // otherwise state is shared between requests
-  if (isServer) {
-    return new Store(isServer, initialData)
+class Store implements CStore {
+  private childStores = {
+    user: User
   }
 
-  if (store === null) {
-    store = new Store(isServer, initialData)
+  constructor({ initialState = {} }: TRootStoreOptions) {
+    Object.entries(this.childStores).forEach(([key, Factory]) => {
+      const initialStoreData = initialState[key]
+
+      this[key] = new Factory(initialStoreData)
+    })
   }
 
-  return store
+  @observable user: null | User = null
+
+  public getChildStores(): Record<string, CStore> {
+    const result: Record<string, CStore> = {}
+
+    Object.keys(this.childStores).forEach(key => {
+      const childStore = this[key]
+
+      result[key] = childStore
+    })
+
+    return result
+  }
+
+  public serialize() {
+    const result: Record<string, any> = {}
+
+    Object.keys(this.childStores).forEach(key => {
+      const childStore = this[key]
+
+      if (childStore) {
+        result[key] = (this[key] as CStore).serialize()
+      }
+    })
+
+    return result
+  }
 }
+
+export default Store

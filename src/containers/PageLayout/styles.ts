@@ -6,7 +6,7 @@ const styles = ({
     common: commonColors,
     components: { page }
   }
-}: App.Theme) => ({
+}: App.TTheme) => ({
   '@global': {
     '@font-face': [
       {

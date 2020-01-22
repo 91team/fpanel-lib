@@ -1,15 +1,23 @@
 import 'isomorphic-unfetch'
 import 'modern-normalize'
 import React from 'react'
-import { Provider } from 'mobx-react'
+import { Provider, useStaticRendering } from 'mobx-react'
 import App, { Container, AppProps, AppContext } from 'next/app'
 import NextSEO from 'next-seo'
 import { ThemeProvider } from 'react-jss'
 
-import { initializeStore } from 'lib/store'
+import AppService from 'services/app'
+import StoreService from 'services/store'
 import { defaultTheme } from 'lib/theme'
 import { defaultSeoConfig } from 'lib/constants/seo'
 import Layout from 'containers/PageLayout'
+import { CStore } from 'lib/store/types'
+
+declare global {
+  interface Window {
+    __INITIAL_STATE__?: string
+  }
+}
 
 type TProps = AppProps & {
   isServer: boolean
@@ -19,10 +27,28 @@ type TProps = AppProps & {
 }
 
 class Application extends App<TProps> {
+  private stores: Record<string, CStore>
+
+  constructor(props: TProps) {
+    super(props)
+
+    useStaticRendering(AppService.isServer)
+
+    if (!AppService.isServer) {
+      StoreService.rehydrate()
+
+      if (AppService.isDev) {
+        StoreService.makeLogger()
+      }
+    }
+
+    this.stores = StoreService.getChildStores()
+  }
+
   public static async getInitialProps({ Component, ctx }: AppContext) {
     // Use getInitialProps as a step in the lifecycle when
     // we can initialize our store
-    const store = initializeStore()
+    StoreService.initialize()
 
     // Check whether the page being rendered by the App has a
     // static getInitialProps method and if so call it
@@ -33,17 +59,8 @@ class Application extends App<TProps> {
     }
 
     return {
-      initialState: {},
       pageProps
     }
-  }
-
-  private store: App.Store
-
-  constructor(props: TProps) {
-    super(props)
-
-    this.store = initializeStore(props.initialState) as App.Store
   }
 
   componentDidMount() {
@@ -61,7 +78,7 @@ class Application extends App<TProps> {
     return (
       <ThemeProvider theme={defaultTheme}>
         <Container>
-          <Provider store={this.store}>
+          <Provider {...this.stores}>
             <Layout>
               <NextSEO config={defaultSeoConfig} />
               <Component {...pageProps} />

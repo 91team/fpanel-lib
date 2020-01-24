@@ -4,8 +4,10 @@ import React from 'react'
 import { Provider, useStaticRendering } from 'mobx-react'
 import App, { Container, AppProps, AppContext } from 'next/app'
 import NextSEO from 'next-seo'
+import { ApolloProvider } from '@apollo/client'
 import { ThemeProvider } from 'react-jss'
 
+import ApolloService from 'services/apollo'
 import AppService from 'services/app'
 import StoreService from 'services/store'
 import { defaultTheme } from 'lib/theme'
@@ -16,18 +18,20 @@ import { CStore } from 'lib/store/types'
 declare global {
   interface Window {
     __INITIAL_STATE__?: string
+    __APOLLO_INITIAL_STATE__?: string
   }
 }
 
 type TProps = AppProps & {
-  isServer: boolean
   initialState: any
   pageProps: any
   styles?: React.ReactNode
+  isServer: boolean
 }
 
 class Application extends App<TProps> {
   private stores: Record<string, CStore>
+  private apolloClient: App.TApollo
 
   constructor(props: TProps) {
     super(props)
@@ -43,9 +47,12 @@ class Application extends App<TProps> {
     }
 
     this.stores = StoreService.getChildStores()
+    this.apolloClient = ApolloService.createClient(
+      AppService.isServer ? undefined : ApolloService.convertFromJSON()
+    )
   }
 
-  public static async getInitialProps({ Component, ctx }: AppContext) {
+  public static async getInitialProps({ ctx, Component }: AppContext) {
     // Use getInitialProps as a step in the lifecycle when
     // we can initialize our store
     StoreService.initialize()
@@ -69,6 +76,9 @@ class Application extends App<TProps> {
 
     // Remove the server-side injected store state
     this.removeElementByID('store-server-side')
+
+    // Remove the server-side injected apollo state
+    this.removeElementByID('apollo-server-side')
   }
 
   removeElementByID(id: string) {
@@ -83,16 +93,18 @@ class Application extends App<TProps> {
     const { Component, pageProps } = this.props
 
     return (
-      <ThemeProvider theme={defaultTheme}>
-        <Container>
-          <Provider {...this.stores}>
-            <Layout>
-              <NextSEO config={defaultSeoConfig} />
-              <Component {...pageProps} />
-            </Layout>
-          </Provider>
-        </Container>
-      </ThemeProvider>
+      <ApolloProvider client={this.apolloClient}>
+        <ThemeProvider theme={defaultTheme}>
+          <Container>
+            <Provider {...this.stores}>
+              <Layout>
+                <NextSEO config={defaultSeoConfig} />
+                <Component {...pageProps} />
+              </Layout>
+            </Provider>
+          </Container>
+        </ThemeProvider>
+      </ApolloProvider>
     )
   }
 }

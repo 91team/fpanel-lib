@@ -9,6 +9,7 @@ class User extends BaseStore<TInitialState> implements CStore {
   @observable token: null | string = null
 
   @action.bound setToken(token: string) {
+    console.log('set token')
     this.token = token
   }
 

@@ -634,111 +634,315 @@ type Polygon {
 }
 
 type RootMutationType {
+  """Update opendata rubric"""
   opendataRubricUpdate(id: Int, position: Int, title: String): OpendataRubric
+
+  """Create attachment"""
   ecorAttachmentCreate(file: Upload): EcorAttachment
+
+  """Create object"""
   ecorObjectCreate(address: String, attachmentIds: [UUID], description: String, objectCategoryId: Int, placeInput: PlaceInput, title: String): EcorObject
+
+  """Create support_info"""
   portalSupportInfoCreate(blocks: [SupportInfoInputBlock], published: Boolean, title: String): SupportInfo
+
+  """Answer form"""
   answerForm(customAnswer: Float, formAnswerId: Int, formId: Int): UserAnswer
+
+  """Delete opendata file"""
   openDataFileDelete(id: Int): String
+
+  """Delete group notification"""
   groupNotificationDelete(id: UUID): String
+
+  """Update event_category"""
   eventCategoryUpdate(id: Int, position: Int, title: String): EventCategory
+
+  """Update appeal_type"""
   appealTypeUpdate(additionalQuestions: [String], dateEnd: Timestamp, dateStart: Timestamp, id: Int, timeLimit: Int, title: String): AppealType
+
+  """Update news"""
   portalNewsUpdate(blocks: [InputBlock], categories: [Int], coverId: UUID, id: Int, localeList: [String], pinned: Boolean, published: Boolean, sendNotification: Boolean, showOnMain: Boolean, title: String, titleTranslate: Translate, url: String): NewsEntity
+
+  """Update scenario (with cards)"""
   scenarioUpdate(cards: [CardInput], eventCategoryId: Int, eventTypeId: Int, id: Int, position: Int, title: String): Scenario
+
+  """Update monitoring objects"""
   monitoringObjectUpdate(additionalInfo: [AdditionalInfoInput], id: String): MonitoringObject
+
+  """Update card"""
   eventCardsUpdate(card: CardInput): Card
+
+  """Create emergency contact"""
   portalEmergencyContactCreate(contact: String, position: Int, published: Boolean, title: String): EmergencyContact
+
+  """Delete attachment"""
   portalAttachmentDelete(id: UUID): String
+
+  """Delete card"""
   eventCardsDelete(id: UUID): String
+
+  """Delete news"""
   portalNewsDelete(id: Int): String
+
+  """Update operator"""
   operatorUpdate(acl: AclInput, email: String, firstName: String, id: Int, lastName: String, middleName: String, organisationId: Int, password: String, phone: String, role: OperatorRole): Operator
+
+  """Sign in"""
   sessionCreate(email: String!, password: String!): Session
+
+  """Update object category"""
   objectCategoryUpdate(id: Int, position: Int, title: String): ObjectCategory
+
+  """Update opendata file"""
   openDataFileUpdate(description: String, id: Int, licence: String, orgInn: String, orgTitle: String, responsibleContacts: String, responsibleFio: String, rubricId: Int, title: String): OpenDataFile
+
+  """Create object category"""
   ecorObjectCategoryCreate(position: Int, title: String): EcorObjectCategory
+
+  """Create object"""
   objectCreate(address: String, attachmentIds: [UUID], description: String, image: Upload, objectCategoryId: Int, placeInput: PlaceInput, title: String): Object
+
+  """Create operator"""
   operatorCreate(acl: AclInput, email: String, firstName: String, lastName: String, middleName: String, organisationId: Int, password: String, phone: String, role: OperatorRole): Operator
+
+  """Delete news category"""
   portalNewsCategoryDelete(id: Int): String
+
+  """Update opendata file version"""
   openDataFileVersionUpdate(attachmentId: String, file: Upload, id: Int, openDataFileId: Int): OpenDataFileVersion
+
+  """Update group notification"""
   groupNotificationUpdate(activityTypes: [String], actualLocation: Boolean, area: Coords, id: UUID, message: String, methods: [GroupNotificationMethod], probableLocation: Boolean, radius: Int, template: Boolean, title: String, type: GroupNotificationType): GroupNotification
+
+  """Create news"""
   portalNewsCreate(blocks: [InputBlock], categories: [Int], coverId: UUID, localeList: [String], pinned: Boolean, published: Boolean, sendNotification: Boolean, showOnMain: Boolean, title: String, titleTranslate: Translate, url: String): NewsEntity
+
+  """Create appeal_type"""
   appealTypeCreate(additionalQuestions: [String], dateEnd: Timestamp, dateStart: Timestamp, timeLimit: Int, title: String): AppealType
+
+  """Update support_info"""
   portalSupportInfoUpdate(blocks: [SupportInfoInputBlock], id: Int, published: Boolean, title: String): SupportInfo
+
+  """Delete attachment"""
   ecorAttachmentDelete(id: UUID): String
+
+  """Create group notification"""
   groupNotificationCreate(activityTypes: [String], actualLocation: Boolean, area: Coords, message: String, methods: [GroupNotificationMethod], probableLocation: Boolean, radius: Int, template: Boolean, title: String, type: GroupNotificationType): GroupNotification
+
+  """Create opendata rubric"""
   opendataRubricCreate(position: Int, title: String): OpendataRubric
+
+  """Update emergency contact"""
   portalEmergencyContactUpdate(contact: String, id: Int, position: Int, published: Boolean, title: String): EmergencyContact
+
+  """Create Organisation"""
   organisationCreate(role: OrganisationRole, title: String): Organisation
+
+  """Update document"""
   portalDocumentUpdate(attachmentId: UUID, id: Int, published: Boolean, publishedAt: Timestamp, title: String): Document
+
+  """Delete object category"""
   ecorObjectCategoryDelete(id: Int): String
+
+  """Refresh session"""
   sessionUpdate(refreshToken: UUID!): Session
+
+  """Update object category"""
   ecorObjectCategoryUpdate(id: Int, position: Int, title: String): EcorObjectCategory
+
+  """Delete appeal_type"""
   appealTypeDelete(id: Int): String
+
+  """Update event_type"""
   eventTypeUpdate(eventCategoryId: Int, id: Int, position: Int, title: String): EventType
+
+  """Delete operator"""
   operatorDelete(id: Int): String
+
+  """Create opendata file version"""
   openDataFileVersionCreate(attachmentId: String, file: Upload, openDataFileId: Int): OpenDataFileVersion
+
+  """Update object"""
   objectUpdate(address: String, attachmentIds: [UUID], description: String, id: Int, image: Upload, objectCategoryId: Int, placeInput: PlaceInput, title: String): Object
+
+  """Create event_category"""
   eventCategoryCreate(position: Int, title: String): EventCategory
+
+  """Create document"""
   portalDocumentCreate(attachmentId: UUID, published: Boolean, publishedAt: Timestamp, title: String): Document
+
+  """Create news category"""
   portalNewsCategoryCreate(color: String, title: String, titleTranslate: Translate): FullNewsCategory
+
+  """Create object category"""
   objectCategoryCreate(position: Int, title: String): ObjectCategory
+
+  """Update form"""
   formUpdate(formAnswers: [FormAnswerInput], formType: FormType, id: Int, question: String, respondentIds: [Int], title: String): Form
+
+  """Delete form"""
   formDelete(id: Int): String
+
+  """Delete event_category"""
   eventCategoryDelete(id: Int): String
+
+  """Create banner"""
   bannerCreate(attachmentId: String, image: Upload, published: Boolean, title: String, url: String): Banner
+
+  """Create scenario (with cards)"""
   scenarioCreate(cards: [CardInput], eventCategoryId: Int, eventTypeId: Int, position: Int, title: String): Scenario
+
+  """Delete support_info"""
   portalSupportInfoDelete(id: Int): String
+
+  """Update event (with cards)"""
   eventUpdate(additionalInfo: String, addrCorps: String, addrLevel1: String, addrLevel2: String, addressStr: String, building: String, cards: [CardInput], date: Timestamp, description: String, ecorEventType: EcorEventType, entrance: String, entranceCode: String, eventCategoryId: Int, eventTypeId: Int, firstName: String, id: UUID, label: String, lastName: String, level: String, near: String, phone: String, place: PlaceInput, room: String, scenarioId: Int, secondName: String, status: EcorEventStatus, storeys: String, street: String, userAddress: String): Event
+
+  """Delete object category"""
   objectCategoryDelete(id: Int): String
+
+  """Delete event_type"""
   eventTypeDelete(id: Int): String
+
+  """Delete document"""
   portalDocumentDelete(id: Int): String
+
+  """Create opendata file"""
   openDataFileCreate(description: String, licence: String, orgInn: String, orgTitle: String, responsibleContacts: String, responsibleFio: String, rubricId: Int, title: String): OpenDataFile
+
+  """Delete banner"""
   bannerDelete(id: Int): String
+
+  """Delete opendata file version"""
   openDataFileVersionDelete(id: Int): String
+
+  """Update news category"""
   portalNewsCategoryUpdate(color: String, id: Int, title: String, titleTranslate: Translate): FullNewsCategory
+
+  """Create event_type"""
   eventTypeCreate(eventCategoryId: Int, position: Int, title: String): EventType
+
+  """Delete emergency contact"""
   portalEmergencyContactDelete(id: Int): String
+
+  """Sign out"""
   sessionDelete: String
+
+  """Update banner"""
   bannerUpdate(attachmentId: String, id: Int, image: Upload, published: Boolean, title: String, url: String): Banner
+
+  """Delete object"""
   objectDelete(id: Int): String
+
+  """Create form"""
   formCreate(formAnswers: [FormAnswerInput], formType: FormType, question: String, respondentIds: [Int], title: String): Form
+
+  """Delete Organisation"""
   organisationDelete(id: Int): String
+
+  """Delete opendata rubric"""
   opendataRubricDelete(id: Int): String
+
+  """Update object"""
   ecorObjectUpdate(address: String, attachmentIds: [UUID], description: String, id: Int, objectCategoryId: Int, placeInput: PlaceInput, title: String): EcorObject
+
+  """Delete object"""
   ecorObjectDelete(id: Int): String
+
+  """Update Organisation"""
   organisationUpdate(id: Int, role: OrganisationRole, title: String): Organisation
+
+  """Create attachment"""
   portalAttachmentCreate(file: Upload): Attachment
 }
 
 type RootQueryType {
+  """Get banners by admin"""
   adminBannersGet(id: ID, limit: Int = 100, offset: Int = 0, published: Boolean): [Banner]
+
+  """Get appeal_types"""
   appealTypesGet(id: Int): [AppealType]
+
+  """Get cards"""
   cards(eventIds: [UUID]): [Card]
+
+  """Get object categories"""
   ecorObjectCategoriesGet(ids: [ID]): [EcorObjectCategory]
+
+  """Get objects"""
   ecorObjectsGet(ids: [ID]): [EcorObject]
+
+  """Get event_categories"""
   eventCategoriesGet(ids: [Int]): [EventCategory]
+
+  """Get event_types"""
   eventTypesGet(ids: [Int]): [EventType]
+
+  """Get events"""
   events: [Event]
+
+  """Get fire iterations"""
   fireIterationsGet(fireAgentDistance: Int, fireCenter: PlaceInput, fireClass: Int, fuelTypeCode: Int, iterationStepTime: Int, lastIterationTime: Int, windDirection: Float, windSpeed: Float): [FireModelIteration]
+
+  """Get forms"""
   formsGet(ids: [ID]): [Form]
+
+  """Get WMS layers"""
   gisLayersGet: [GisLayer]
+
+  """Get users activity types for group notification"""
   groupNotificationActivityTypesGet(search: String): [String]
+
+  """Get group notifications"""
   groupNotificationsGet(ids: [ID], template: Boolean): [GroupNotification]
+
+  """Get journal logs"""
   journalGet(limit: Int, offset: Int): [Journal]
+
+  """Get monitoring objects"""
   monitoringObjectsGet(ecorTypes: [EcorType], ids: [String], sources: [Source]): [MonitoringObject]
+
+  """Get object categories"""
   objectCategoriesGet(ids: [ID]): [ObjectCategory]
+
+  """Get objects"""
   objectsGet(ids: [ID]): [Object]
+
+  """Get opendata file"""
   opendataFileGet(id: Int): OpenDataFile
+
+  """Get opendata rubrics"""
   opendataRubricsGet: [OpendataRubric]
+
+  """Get operators"""
   operatorsGet(ids: [Int], limit: Int, offset: Int): [Operator]
+
+  """Get organisations"""
   organisationsGet(roles: [OrganisationRole]): [Organisation]
+
+  """Get documents"""
   portalDocumentsGet(id: ID, limit: Int = 100, offset: Int = 0, published: Boolean, search: String): [Document]
+
+  """Get emergency contacts"""
   portalEmergencyContactsGet(id: ID, limit: Int = 100, offset: Int = 0, published: Boolean): [EmergencyContact]
+
+  """Get news categories"""
   portalNewsCategoriesGet(limit: Int = 100, offset: Int = 0): [FullNewsCategory]
+
+  """Get news"""
   portalNewsGet(id: ID, limit: Int = 100, offset: Int = 0, pinned: Boolean, published: Boolean, publishedAtGt: Timestamp, publishedAtLt: Timestamp, routeIds: [String], search: String, showOnMain: Boolean): [NewsEntity]
+
+  """Get support_info"""
   portalSupportInfoGet(id: ID, limit: Int = 100, offset: Int = 0, pinned: Boolean, published: Boolean, publishedAtGt: Timestamp, publishedAtLt: Timestamp, routeIds: [String], search: String, showOnMain: Boolean): [SupportInfo]
+
+  """Get profile"""
   profileGet: Operator
+
+  """Get scenarios"""
   scenariosGet(ids: [Int]): [Scenario]
+
+  """Get vk_posts"""
   vkPostsGet(bboxBottom: Float, bboxLeft: Float, bboxRight: Float, bboxTop: Float, dateFinish: Timestamp, dateStart: Timestamp, ids: [Int], limit: Int, offset: Int, searchTags: [String]): [VkPost]
 }
 
@@ -826,10 +1030,7 @@ input Translate {
   ru: String
 }
 
-"""
-Represents an uploaded file.
-
-"""
+"""Represents an uploaded file."""
 scalar Upload
 
 type UserAnswer {

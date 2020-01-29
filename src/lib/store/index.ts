@@ -1,4 +1,5 @@
 import { observable } from 'mobx'
+import { enableLogging } from 'mobx-logger'
 
 import User from './user'
 import { CStore, TRootStoreOptions } from './types'
@@ -7,12 +8,15 @@ class Store implements CStore {
   public childStores = {
     user: User
   }
+  public services: unknown
 
-  constructor({ initialState = {} }: TRootStoreOptions) {
+  constructor({ initialState = {}, services }: TRootStoreOptions) {
+    this.services = services
+
     Object.entries(this.childStores).forEach(([key, Factory]) => {
       const initialStoreData = initialState[key]
 
-      this[key] = new Factory(initialStoreData)
+      this[key] = new Factory(initialStoreData, this)
     })
   }
 
@@ -49,6 +53,18 @@ class Store implements CStore {
     })
 
     return result
+  }
+
+  public static convertToJSON(store: Store): string {
+    return JSON.stringify(store.serialize())
+  }
+
+  public static convertFromJSON(state: string): Object {
+    return JSON.parse(state || '{}')
+  }
+
+  public static makeLogger() {
+    enableLogging()
   }
 }
 

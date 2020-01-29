@@ -2,29 +2,26 @@ import 'isomorphic-unfetch'
 import 'modern-normalize'
 import React from 'react'
 import { Provider, useStaticRendering } from 'mobx-react'
-import App, { Container, AppProps, AppContext } from 'next/app'
+import App, { AppProps, AppContext } from 'next/app'
 import NextSEO from 'next-seo'
-import { ApolloProvider } from '@apollo/client'
+import { ApolloProvider } from '@apollo/react-hooks'
+import { getDataFromTree } from '@apollo/react-ssr'
 import { ThemeProvider } from 'react-jss'
 
-import ApolloService from 'services/apollo'
-import AppService from 'services/app'
-import StoreService from 'services/store'
-import { defaultTheme } from 'lib/theme'
-import { defaultSeoConfig } from 'lib/constants/seo'
+import { ServicesBuilder, ApolloService, AppService } from 'services/index'
+import Store from 'lib/store'
 import Layout from 'containers/PageLayout'
+import { defaultTheme } from 'lib/theme'
+import { defaultSeoConfig } from 'constants/seo'
 import { CStore } from 'lib/store/types'
 
-declare global {
-  interface Window {
-    __INITIAL_STATE__?: string
-    __APOLLO_INITIAL_STATE__?: string
-  }
-}
-
 type TProps = AppProps & {
-  initialState: any
-  pageProps: any
+  initialStoreState?: string
+  initialApolloState?: string
+  ssr?: {
+    services: ServicesBuilder
+    store: Store
+  }
   styles?: React.ReactNode
   isServer: boolean
 }
@@ -34,28 +31,48 @@ class Application extends App<TProps> {
   private apolloClient: App.TApollo
 
   constructor(props: TProps) {
+    console.log('constructor')
     super(props)
 
-    useStaticRendering(AppService.isServer)
+    const { ssr: ssrInstances, initialApolloState, initialStoreState } = props
 
-    if (!AppService.isServer) {
-      StoreService.rehydrate()
+    if (ssrInstances) {
+      const { store, services } = ssrInstances
 
-      if (AppService.isDev) {
-        StoreService.makeLogger()
+      this.stores = store.getChildStores()
+      this.apolloClient = services.getServices().apollo.getClient()
+    } else {
+      const services = new ServicesBuilder({})
+      const appService = new AppService({ root: services })
+      const apolloService = new ApolloService({
+        initialState: ApolloService.convertFromJSON(initialApolloState),
+        root: services
+      })
+      const store = new Store({
+        initialState: Store.convertFromJSON(initialStoreState),
+        services
+      })
+
+      this.stores = store.getChildStores()
+      this.apolloClient = apolloService.getClient()
+
+      if (appService.isDev && appService.isServer) {
+        Store.makeLogger()
       }
     }
 
-    this.stores = StoreService.getChildStores()
-    this.apolloClient = ApolloService.createClient(
-      AppService.isServer ? undefined : ApolloService.convertFromJSON()
-    )
+    console.log(props)
   }
 
-  public static async getInitialProps({ ctx, Component }: AppContext) {
+  public static async getInitialProps({ ctx, Component, AppTree }: AppContext) {
+    useStaticRendering(true)
+
     // Use getInitialProps as a step in the lifecycle when
-    // we can initialize our store
-    StoreService.initialize()
+    // we can initialize our services and store
+    const services = new ServicesBuilder({})
+    const appService = new AppService({ root: services })
+    const apolloService = new ApolloService({ root: services })
+    const store = new Store({ services })
 
     // Check whether the page being rendered by the App has a
     // static getInitialProps method and if so call it
@@ -65,7 +82,15 @@ class Application extends App<TProps> {
       pageProps = await Component.getInitialProps(ctx)
     }
 
+    console.log('get data from tree')
+    await getDataFromTree(
+      <AppTree ssr={{ store, services }} pageProps={pageProps} />
+    )
+    console.log('get data from tree: ended')
+
     return {
+      initialStoreState: Store.convertToJSON(store),
+      initialApolloState: ApolloService.convertToJSON(apolloService),
       pageProps
     }
   }
@@ -73,12 +98,6 @@ class Application extends App<TProps> {
   componentDidMount() {
     // Remove the server-side injected CSS
     this.removeElementByID('jss-server-side')
-
-    // Remove the server-side injected store state
-    this.removeElementByID('store-server-side')
-
-    // Remove the server-side injected apollo state
-    this.removeElementByID('apollo-server-side')
   }
 
   removeElementByID(id: string) {
@@ -91,18 +110,17 @@ class Application extends App<TProps> {
 
   render() {
     const { Component, pageProps } = this.props
+    console.log('render app')
 
     return (
       <ApolloProvider client={this.apolloClient}>
         <ThemeProvider theme={defaultTheme}>
-          <Container>
-            <Provider {...this.stores}>
-              <Layout>
-                <NextSEO config={defaultSeoConfig} />
-                <Component {...pageProps} />
-              </Layout>
-            </Provider>
-          </Container>
+          <Provider {...this.stores}>
+            <Layout>
+              <NextSEO config={defaultSeoConfig} />
+              <Component {...pageProps} />
+            </Layout>
+          </Provider>
         </ThemeProvider>
       </ApolloProvider>
     )

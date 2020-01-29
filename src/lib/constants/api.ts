@@ -5,4 +5,5 @@ export enum STATE {
   FAILED = 'failed'
 }
 
-export const GRAPHQL_API_URL = 'https://ecor.91.team/api/graphql'
+export const GRAPHQL_API_URL =
+  'https://api.graph.cool/simple/v1/cixmkt2ul01q00122mksg82pn'

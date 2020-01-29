@@ -6,5 +6,5 @@ export abstract class CStore {
 
 export type TRootStoreOptions = {
   initialState?: Partial<Store>
-  isServer?: boolean
+  services: unknown
 }

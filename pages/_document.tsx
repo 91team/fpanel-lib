@@ -10,13 +10,8 @@ import Document, {
 import { SheetsRegistry, JssProvider, createGenerateId } from 'react-jss'
 import sprite from 'svg-sprite-loader/runtime/sprite.build'
 
-import ApolloService from 'services/apollo'
-import StoreService from 'services/store'
-
 type TProps = DocumentProps & {
   spriteContent: string
-  storeInitialState: string
-  apolloInitialState: string
 }
 
 class AppDocument extends Document<TProps> {
@@ -40,10 +35,6 @@ class AppDocument extends Document<TProps> {
     // await new Promise(resolve => setTimeout(resolve, 2000))
 
     const spriteContent = sprite.stringify() as string
-    const storeInitialState = StoreService.convertToJSON()
-    const apolloInitialState = ApolloService.convertToJSON()
-
-    console.log('taked state', apolloInitialState)
 
     return {
       ...initialProps,
@@ -53,32 +44,17 @@ class AppDocument extends Document<TProps> {
           <style id="jss-server-side">{registry.toString()}</style>
         </Fragment>
       ],
-      spriteContent,
-      storeInitialState,
-      apolloInitialState
+      spriteContent
     }
   }
 
   render() {
-    const { spriteContent, storeInitialState, apolloInitialState } = this.props
+    const { spriteContent } = this.props
     console.log('render dom')
 
     return (
       <Html>
-        <Head>
-          <script
-            id="store-server-side"
-            dangerouslySetInnerHTML={{
-              __html: `window.__INITIAL_STATE__ = '${storeInitialState}'`
-            }}
-          />
-          <script
-            id="apollo-server-side"
-            dangerouslySetInnerHTML={{
-              __html: `window.__APOLLO_INITIAL_STATE__ = '${apolloInitialState}'`
-            }}
-          />
-        </Head>
+        <Head />
         <body>
           <div
             style={{ display: 'none' }}

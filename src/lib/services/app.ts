@@ -1,9 +1,19 @@
+import BaseService, { TOptions as TBaseOptions } from './base'
+
 export const ENVIROMENT = {
   PRODUCTION: 'production',
   DEVELOPMENT: 'development'
 } as const
 
-class AppService {
+type TOptions = TBaseOptions
+
+class AppService extends BaseService {
+  constructor(options: TOptions) {
+    super(options)
+
+    this.getRoot().addService('app', this)
+  }
+
   public get isDev() {
     return process.env.NODE_ENV === ENVIROMENT.DEVELOPMENT
   }
@@ -13,4 +23,4 @@ class AppService {
   }
 }
 
-export default new AppService()
+export default AppService

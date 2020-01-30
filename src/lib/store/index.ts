@@ -1,14 +1,14 @@
 import { observable } from 'mobx'
-import { enableLogging } from 'mobx-logger'
 
+import ServiceBuilder from 'services/builder'
 import User from './user'
 import { CStore, TRootStoreOptions } from './types'
 
 class Store implements CStore {
-  public childStores = {
+  private childStores = {
     user: User
   }
-  public services: unknown
+  private services: ServiceBuilder
 
   constructor({ initialState = {}, services }: TRootStoreOptions) {
     this.services = services
@@ -22,8 +22,12 @@ class Store implements CStore {
 
   @observable user: null | User = null
 
-  get serializableWhitelist(): (keyof this['childStores'])[] {
+  private get serializableWhitelist(): string[] {
     return ['user']
+  }
+
+  public getServices(): ServiceBuilder {
+    return this.services
   }
 
   public getChildStores(): Record<string, CStore> {
@@ -44,27 +48,12 @@ class Store implements CStore {
     Object.keys(this.childStores).forEach(key => {
       const childStore = this[key]
 
-      if (
-        childStore &&
-        this.serializableWhitelist.includes(key as keyof this['childStores'])
-      ) {
+      if (childStore && this.serializableWhitelist.includes(key)) {
         result[key] = (this[key] as CStore).serialize()
       }
     })
 
     return result
-  }
-
-  public static convertToJSON(store: Store): string {
-    return JSON.stringify(store.serialize())
-  }
-
-  public static convertFromJSON(state: string): Object {
-    return JSON.parse(state || '{}')
-  }
-
-  public static makeLogger() {
-    enableLogging()
   }
 }
 

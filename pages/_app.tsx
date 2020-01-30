@@ -1,15 +1,20 @@
-import 'isomorphic-unfetch'
-import 'modern-normalize'
-import React from 'react'
+import React, { ReactNode } from 'react'
+import { ApolloProvider } from '@apollo/react-hooks'
+import { getDataFromTree } from '@apollo/react-ssr'
 import { Provider, useStaticRendering } from 'mobx-react'
 import App, { AppProps, AppContext } from 'next/app'
 import NextSEO from 'next-seo'
-import { ApolloProvider } from '@apollo/react-hooks'
-import { getDataFromTree } from '@apollo/react-ssr'
 import { ThemeProvider } from 'react-jss'
 
-import { ServicesBuilder, ApolloService, AppService } from 'services/index'
-import Store from 'lib/store'
+import 'isomorphic-unfetch'
+import 'modern-normalize'
+
+import {
+  ServicesBuilder,
+  ApolloService,
+  AppService,
+  StoreService
+} from 'services/index'
 import Layout from 'containers/PageLayout'
 import { defaultTheme } from 'lib/theme'
 import { defaultSeoConfig } from 'constants/seo'
@@ -18,12 +23,8 @@ import { CStore } from 'lib/store/types'
 type TProps = AppProps & {
   initialStoreState?: string
   initialApolloState?: string
-  ssr?: {
-    services: ServicesBuilder
-    store: Store
-  }
-  styles?: React.ReactNode
-  isServer: boolean
+  ssrServices?: ServicesBuilder
+  styles?: ReactNode
 }
 
 class Application extends App<TProps> {
@@ -34,13 +35,14 @@ class Application extends App<TProps> {
     console.log('constructor')
     super(props)
 
-    const { ssr: ssrInstances, initialApolloState, initialStoreState } = props
+    const { ssrServices, initialApolloState, initialStoreState } = props
 
-    if (ssrInstances) {
-      const { store, services } = ssrInstances
+    if (ssrServices) {
+      const { apollo, store } = ssrServices.getServices()
+      console.log(store)
 
       this.stores = store.getChildStores()
-      this.apolloClient = services.getServices().apollo.getClient()
+      this.apolloClient = apollo.getClient()
     } else {
       const services = new ServicesBuilder({})
       const appService = new AppService({ root: services })
@@ -48,16 +50,16 @@ class Application extends App<TProps> {
         initialState: ApolloService.convertFromJSON(initialApolloState),
         root: services
       })
-      const store = new Store({
-        initialState: Store.convertFromJSON(initialStoreState),
-        services
+      const storeService = new StoreService({
+        initialState: StoreService.convertFromJSON(initialStoreState),
+        root: services
       })
 
-      this.stores = store.getChildStores()
+      this.stores = storeService.getChildStores()
       this.apolloClient = apolloService.getClient()
 
-      if (appService.isDev && appService.isServer) {
-        Store.makeLogger()
+      if (appService.isDev && !appService.isServer) {
+        StoreService.makeLogger()
       }
     }
 
@@ -72,7 +74,7 @@ class Application extends App<TProps> {
     const services = new ServicesBuilder({})
     const appService = new AppService({ root: services })
     const apolloService = new ApolloService({ root: services })
-    const store = new Store({ services })
+    const storeService = new StoreService({ root: services })
 
     // Check whether the page being rendered by the App has a
     // static getInitialProps method and if so call it
@@ -84,12 +86,12 @@ class Application extends App<TProps> {
 
     console.log('get data from tree')
     await getDataFromTree(
-      <AppTree ssr={{ store, services }} pageProps={pageProps} />
+      <AppTree ssrServices={services} pageProps={pageProps} />
     )
     console.log('get data from tree: ended')
 
     return {
-      initialStoreState: Store.convertToJSON(store),
+      initialStoreState: StoreService.convertToJSON(storeService),
       initialApolloState: ApolloService.convertToJSON(apolloService),
       pageProps
     }

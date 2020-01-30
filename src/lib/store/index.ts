@@ -20,14 +20,14 @@ class Store implements CStore {
     })
   }
 
-  @observable user: null | User = null
+  @observable public user: null | User = null
 
   private get serializableWhitelist(): string[] {
     return ['user']
   }
 
-  public getServices(): ServiceBuilder {
-    return this.services
+  public getServices() {
+    return this.services.getServices()
   }
 
   public getChildStores(): Record<string, CStore> {

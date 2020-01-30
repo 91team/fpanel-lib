@@ -50,7 +50,6 @@ class AppDocument extends Document<TProps> {
 
   render() {
     const { spriteContent } = this.props
-    console.log('render dom')
 
     return (
       <Html>

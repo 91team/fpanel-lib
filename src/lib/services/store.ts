@@ -25,12 +25,8 @@ class StoreService extends BaseService {
     return this.getRootStore().getChildStores()
   }
 
-  public static convertToJSON(storeService: StoreService): string {
-    return JSON.stringify(storeService.getRootStore().serialize())
-  }
-
-  public static convertFromJSON(state: string): Object {
-    return JSON.parse(state || '{}')
+  public convertToJSON(): Object {
+    return this.getRootStore().serialize()
   }
 
   public static makeLogger() {

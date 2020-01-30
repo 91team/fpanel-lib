@@ -21,8 +21,8 @@ import { defaultSeoConfig } from 'constants/seo'
 import { CStore } from 'lib/store/types'
 
 type TProps = AppProps & {
-  initialStoreState?: string
-  initialApolloState?: string
+  initialStoreState?: Object
+  initialApolloState?: Object
   ssrServices?: ServicesBuilder
   styles?: ReactNode
 }
@@ -32,14 +32,12 @@ class Application extends App<TProps> {
   private apolloClient: App.TApollo
 
   constructor(props: TProps) {
-    console.log('constructor')
     super(props)
 
     const { ssrServices, initialApolloState, initialStoreState } = props
 
     if (ssrServices) {
       const { apollo, store } = ssrServices.getServices()
-      console.log(store)
 
       this.stores = store.getChildStores()
       this.apolloClient = apollo.getClient()
@@ -47,11 +45,11 @@ class Application extends App<TProps> {
       const services = new ServicesBuilder({})
       const appService = new AppService({ root: services })
       const apolloService = new ApolloService({
-        initialState: ApolloService.convertFromJSON(initialApolloState),
+        initialState: initialApolloState,
         root: services
       })
       const storeService = new StoreService({
-        initialState: StoreService.convertFromJSON(initialStoreState),
+        initialState: initialStoreState,
         root: services
       })
 
@@ -62,8 +60,6 @@ class Application extends App<TProps> {
         StoreService.makeLogger()
       }
     }
-
-    console.log(props)
   }
 
   public static async getInitialProps({ ctx, Component, AppTree }: AppContext) {
@@ -81,18 +77,19 @@ class Application extends App<TProps> {
     let pageProps: { [key: string]: any } = {}
 
     if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx)
+      pageProps = await Component.getInitialProps({
+        ...ctx,
+        services
+      } as App.TPageContext)
     }
 
-    console.log('get data from tree')
     await getDataFromTree(
       <AppTree ssrServices={services} pageProps={pageProps} />
     )
-    console.log('get data from tree: ended')
 
     return {
-      initialStoreState: StoreService.convertToJSON(storeService),
-      initialApolloState: ApolloService.convertToJSON(apolloService),
+      initialStoreState: storeService.convertToJSON(),
+      initialApolloState: apolloService.convertToJSON(),
       pageProps
     }
   }
@@ -112,7 +109,6 @@ class Application extends App<TProps> {
 
   render() {
     const { Component, pageProps } = this.props
-    console.log('render app')
 
     return (
       <ApolloProvider client={this.apolloClient}>

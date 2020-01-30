@@ -7,8 +7,6 @@ import { createLink as createUploadLink } from 'apollo-absinthe-upload-link'
 import universalFetch from 'isomorphic-unfetch'
 
 import BaseService, { TOptions as TBaseOptions } from './base'
-import ServiceBuilder from './builder'
-import AppService from 'services/app'
 import { GRAPHQL_API_URL } from 'constants/api'
 // import AuthPersistService from 'services/authPersist'
 
@@ -24,7 +22,7 @@ class ApolloService extends BaseService {
   constructor({ initialState = {}, root }: TOptions) {
     super({ root })
 
-    const appService = root.getServices().app as AppService
+    const appService = root.getServices().app
 
     this.client = new ApolloClient<NormalizedCacheObject>({
       connectToDevTools: !appService.isServer,
@@ -36,7 +34,7 @@ class ApolloService extends BaseService {
   }
 
   private getClientLink = () => {
-    const appService = this.getRoot().getServices().app as AppService
+    const appService = this.getRoot().getServices().app
     const linkOptions = { uri: GRAPHQL_API_URL, credentials: 'same-origin' }
     // HTTP-link is a part of upload link
     const uploadLink = createUploadLink({
@@ -72,12 +70,8 @@ class ApolloService extends BaseService {
     return this.client
   }
 
-  public static convertToJSON(apolloService: ApolloService): string {
-    return JSON.stringify(apolloService.getClient().extract())
-  }
-
-  public static convertFromJSON(state: string): TInitialState {
-    return JSON.parse(state || '{}')
+  public convertToJSON(): Object {
+    return this.getClient().extract()
   }
 }
 

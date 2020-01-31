@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
 import { getDataFromTree } from '@apollo/react-ssr'
 import { Provider, useStaticRendering } from 'mobx-react'
@@ -9,57 +9,52 @@ import { ThemeProvider } from 'react-jss'
 import 'isomorphic-unfetch'
 import 'modern-normalize'
 
-import {
-  ServicesBuilder,
-  ApolloService,
-  AppService,
-  StoreService
-} from 'services/index'
+import { ServicesManager } from 'services/index'
+import ServicesContext from 'lib/contexts/services'
 import Layout from 'containers/PageLayout'
 import { defaultTheme } from 'lib/theme'
 import { defaultSeoConfig } from 'constants/seo'
+import { TInitialState as TApolloInitialState } from 'services/apollo'
+import { TInitialState as TStoreInitialState } from 'services/store'
 import { CStore } from 'lib/store/types'
 
 type TProps = AppProps & {
-  initialStoreState?: Object
-  initialApolloState?: Object
-  ssrServices?: ServicesBuilder
-  styles?: ReactNode
+  initialStoreState?: TStoreInitialState
+  initialApolloState?: TApolloInitialState
+  servicesManager?: ServicesManager
 }
 
 class Application extends App<TProps> {
+  private servicesManager: ServicesManager
   private stores: Record<string, CStore>
   private apolloClient: App.TApollo
 
   constructor(props: TProps) {
     super(props)
 
-    const { ssrServices, initialApolloState, initialStoreState } = props
+    const { servicesManager, initialApolloState, initialStoreState } = props
 
-    if (ssrServices) {
-      const { apollo, store } = ssrServices.getServices()
-
-      this.stores = store.getChildStores()
-      this.apolloClient = apollo.getClient()
+    if (servicesManager) {
+      this.servicesManager = servicesManager
     } else {
-      const services = new ServicesBuilder({})
-      const appService = new AppService({ root: services })
-      const apolloService = new ApolloService({
-        initialState: initialApolloState,
-        root: services
+      this.servicesManager = ServicesManager.build({
+        initialApolloState,
+        initialStoreState
       })
-      const storeService = new StoreService({
-        initialState: initialStoreState,
-        root: services
-      })
-
-      this.stores = storeService.getChildStores()
-      this.apolloClient = apolloService.getClient()
-
-      if (appService.isDev && !appService.isServer) {
-        StoreService.makeLogger()
-      }
     }
+
+    const {
+      apollo: apolloService,
+      app: appService,
+      store: storeService
+    } = this.servicesManager.getServices()
+
+    if (appService.isDev && !appService.isServer) {
+      storeService.makeLogger()
+    }
+
+    this.stores = storeService.getChildStores()
+    this.apolloClient = apolloService.getClient()
   }
 
   public static async getInitialProps({ ctx, Component, AppTree }: AppContext) {
@@ -67,10 +62,11 @@ class Application extends App<TProps> {
 
     // Use getInitialProps as a step in the lifecycle when
     // we can initialize our services and store
-    const services = new ServicesBuilder({})
-    const appService = new AppService({ root: services })
-    const apolloService = new ApolloService({ root: services })
-    const storeService = new StoreService({ root: services })
+    const servicesManager = ServicesManager.build()
+    const {
+      apollo: apolloService,
+      store: storeService
+    } = servicesManager.getServices()
 
     // Check whether the page being rendered by the App has a
     // static getInitialProps method and if so call it
@@ -79,14 +75,16 @@ class Application extends App<TProps> {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps({
         ...ctx,
-        services
+        servicesManager
       } as App.TPageContext)
     }
 
     await getDataFromTree(
-      <AppTree ssrServices={services} pageProps={pageProps} />
+      <AppTree ssrServices={servicesManager} pageProps={pageProps} />
     )
 
+    // We only forward the state of services,
+    // because they have circular links
     return {
       initialStoreState: storeService.convertToJSON(),
       initialApolloState: apolloService.convertToJSON(),
@@ -111,16 +109,18 @@ class Application extends App<TProps> {
     const { Component, pageProps } = this.props
 
     return (
-      <ApolloProvider client={this.apolloClient}>
-        <ThemeProvider theme={defaultTheme}>
-          <Provider {...this.stores}>
-            <Layout>
-              <NextSEO config={defaultSeoConfig} />
-              <Component {...pageProps} />
-            </Layout>
-          </Provider>
-        </ThemeProvider>
-      </ApolloProvider>
+      <ServicesContext.Provider value={this.servicesManager}>
+        <ApolloProvider client={this.apolloClient}>
+          <ThemeProvider theme={defaultTheme}>
+            <Provider {...this.stores}>
+              <Layout>
+                <NextSEO config={defaultSeoConfig} />
+                <Component {...pageProps} />
+              </Layout>
+            </Provider>
+          </ThemeProvider>
+        </ApolloProvider>
+      </ServicesContext.Provider>
     )
   }
 }

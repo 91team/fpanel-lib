@@ -1,22 +1,20 @@
 import React, { PureComponent } from 'react'
 import { inject, observer } from 'mobx-react'
 import Link from 'next/link'
-import { withApollo } from '@apollo/react-hoc'
 
 import compose from 'utils/compose'
+import withServices, { TWithServicesProps } from 'lib/HOCs/withServices'
 
 type TOuterProps = {}
 type TStateProps = {
   user: App.TStore['user']
+  token: string
 }
-type TProps = TOuterProps &
-  TStateProps & {
-    client: App.TApollo
-  }
+type TProps = TOuterProps & TStateProps & TWithServicesProps
 
 class LoginPage extends PureComponent<TProps> {
-  static async getInitialProps({ services }: App.TPageContext) {
-    await services
+  static async getInitialProps({ servicesManager }: App.TPageContext) {
+    await servicesManager
       .getServices()
       .store.getRootStore()
       .user.createSession()
@@ -27,7 +25,7 @@ class LoginPage extends PureComponent<TProps> {
   render() {
     return (
       <div>
-        Login
+        Login (token: {this.props.user.token})
         <Link href="/">
           <a href="/">Home</a>
         </Link>
@@ -37,7 +35,7 @@ class LoginPage extends PureComponent<TProps> {
 }
 
 export default compose(
-  withApollo,
+  withServices,
   inject('user'),
   observer
 )(LoginPage)

@@ -1,17 +1,17 @@
-import ServiceBuilder from './builder'
+import ServicesManager from './manager'
 
 export type TOptions = {
-  root: ServiceBuilder
+  root: ServicesManager
 }
 
 class BaseService {
-  private root: ServiceBuilder
+  private root: ServicesManager
 
   constructor({ root }: TOptions) {
     this.root = root
   }
 
-  public getRoot(): ServiceBuilder {
+  public getRoot(): ServicesManager {
     if (!this.root) {
       throw new Error('Has no link to root service')
     }

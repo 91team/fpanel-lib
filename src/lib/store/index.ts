@@ -1,6 +1,6 @@
 import { observable } from 'mobx'
 
-import ServiceBuilder from 'services/builder'
+import ServicesManager from 'lib/services/manager'
 import User from './user'
 import { CStore, TRootStoreOptions } from './types'
 
@@ -8,10 +8,10 @@ class Store implements CStore {
   private childStores = {
     user: User
   }
-  private services: ServiceBuilder
+  private services: ReturnType<ServicesManager['getServices']>
 
-  constructor({ initialState = {}, services }: TRootStoreOptions) {
-    this.services = services
+  constructor({ initialState = {}, servicesManager }: TRootStoreOptions) {
+    this.services = servicesManager.getServices()
 
     Object.entries(this.childStores).forEach(([key, Factory]) => {
       const initialStoreData = initialState[key]
@@ -27,7 +27,7 @@ class Store implements CStore {
   }
 
   public getServices() {
-    return this.services.getServices()
+    return this.services
   }
 
   public getChildStores(): Record<string, CStore> {

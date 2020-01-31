@@ -5,15 +5,9 @@ export const ENVIROMENT = {
   DEVELOPMENT: 'development'
 } as const
 
-type TOptions = TBaseOptions
+export type TOptions = TBaseOptions
 
 class AppService extends BaseService {
-  constructor(options: TOptions) {
-    super(options)
-
-    this.getRoot().addService('app', this)
-  }
-
   public get isDev() {
     return process.env.NODE_ENV === ENVIROMENT.DEVELOPMENT
   }

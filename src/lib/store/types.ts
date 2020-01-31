@@ -1,4 +1,4 @@
-import ServiceBuilder from 'services/builder'
+import ServicesManager from 'lib/services/manager'
 import Store from './index'
 
 export abstract class CStore {
@@ -7,5 +7,5 @@ export abstract class CStore {
 
 export type TRootStoreOptions = {
   initialState?: Partial<Store>
-  services: ServiceBuilder
+  servicesManager: ServicesManager
 }

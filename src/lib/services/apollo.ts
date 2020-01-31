@@ -11,15 +11,15 @@ import { GRAPHQL_API_URL } from 'constants/api'
 // import AuthPersistService from 'services/authPersist'
 
 export type IApollo = ApolloClient<NormalizedCacheObject>
-export type TInitialState = any
-type TOptions = TBaseOptions & {
-  initialState?: TInitialState
+export type TInitialState = NormalizedCacheObject
+export type TOptions = TBaseOptions & {
+  cacheState?: TInitialState
 }
 
 class ApolloService extends BaseService {
   private client: IApollo
 
-  constructor({ initialState = {}, root }: TOptions) {
+  constructor({ cacheState: initialApolloState = {}, root }: TOptions) {
     super({ root })
 
     const appService = root.getServices().app
@@ -28,9 +28,8 @@ class ApolloService extends BaseService {
       connectToDevTools: !appService.isServer,
       ssrMode: false,
       link: this.getClientLink(),
-      cache: this.getClientCache(initialState)
+      cache: this.getClientCache(initialApolloState)
     })
-    this.getRoot().addService('apollo', this)
   }
 
   private getClientLink = () => {

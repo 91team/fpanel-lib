@@ -4,7 +4,8 @@ import Store from 'lib/store'
 import BaseService, { TOptions as TBaseOptions } from './base'
 import { TRootStoreOptions, CStore } from 'lib/store/types'
 
-type TOptions = TBaseOptions & Omit<TRootStoreOptions, 'services'>
+export type TInitialState = TRootStoreOptions['initialState']
+export type TOptions = TBaseOptions & Omit<TRootStoreOptions, 'servicesManager'>
 
 class StoreService extends BaseService {
   private rootStore: Store
@@ -12,9 +13,7 @@ class StoreService extends BaseService {
   constructor({ initialState = {}, root }: TOptions) {
     super({ root })
 
-    this.rootStore = new Store({ initialState, services: root })
-
-    this.getRoot().addService('store', this)
+    this.rootStore = new Store({ initialState, servicesManager: root })
   }
 
   public getRootStore(): Store {
@@ -29,7 +28,7 @@ class StoreService extends BaseService {
     return this.getRootStore().serialize()
   }
 
-  public static makeLogger() {
+  public makeLogger() {
     enableLogging()
   }
 }

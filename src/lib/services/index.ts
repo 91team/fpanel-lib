@@ -1,4 +1,4 @@
-export { default as ServicesBuilder } from './builder'
+export { default as ServicesManager } from './manager'
 
 export { default as ApolloService } from './apollo'
 export { default as AppService } from './app'

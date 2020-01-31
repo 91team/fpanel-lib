@@ -4,6 +4,7 @@ import { getDataFromTree } from '@apollo/react-ssr'
 import { Provider, useStaticRendering } from 'mobx-react'
 import App, { AppProps, AppContext } from 'next/app'
 import NextSEO from 'next-seo'
+import nookies from 'nookies'
 import { ThemeProvider } from 'react-jss'
 
 import 'isomorphic-unfetch'
@@ -55,6 +56,10 @@ class Application extends App<TProps> {
 
     this.stores = storeService.getChildStores()
     this.apolloClient = apolloService.getClient()
+
+    if (!appService.isServer) {
+      apolloService.getToken = () => storeService.getRootStore().user.token
+    }
   }
 
   public static async getInitialProps({ ctx, Component, AppTree }: AppContext) {
@@ -67,6 +72,9 @@ class Application extends App<TProps> {
       apollo: apolloService,
       store: storeService
     } = servicesManager.getServices()
+    const cookies = nookies.get(ctx)
+
+    apolloService.getToken = () => cookies && cookies.token
 
     // Check whether the page being rendered by the App has a
     // static getInitialProps method and if so call it

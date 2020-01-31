@@ -18,11 +18,12 @@ class AppDocument extends Document<TProps> {
   static async getInitialProps(ctx: DocumentContext) {
     const registry = new SheetsRegistry()
     const originalRenderPage = ctx.renderPage
+    const generateId = createGenerateId()
 
     ctx.renderPage = () =>
       originalRenderPage({
         enhanceApp: App => props => (
-          <JssProvider registry={registry} generateId={createGenerateId}>
+          <JssProvider registry={registry} generateId={generateId}>
             <App {...props} />
           </JssProvider>
         )

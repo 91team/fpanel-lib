@@ -1,13 +1,13 @@
 import React, { FC } from 'react'
-import withStyles, { JSSProps } from 'react-jss'
 
+import withStyles, { WithStylesProps } from 'HOCs/withStyles'
 import styles from './styles'
 
 type TOuterProps = {}
-type TProps = TOuterProps & JSSProps<typeof styles>
+type TProps = TOuterProps & WithStylesProps<typeof styles>
 
 const Layout: FC<TProps> = ({ classes, children }) => (
   <section className={classes.layout}>{children}</section>
 )
 
-export default withStyles<TOuterProps>(styles)(Layout)
+export default withStyles<TOuterProps, typeof styles>(styles)(Layout)

@@ -42,8 +42,7 @@ class ApolloService extends BaseService {
     })
 
     const authLink = setContext((_, { headers }) => {
-      // const token = AuthPersistService.getData().token
-      const token = '60f41ab0-46b5-4224-971e-a88effb7d9e6'
+      const token = this.getToken()
 
       return {
         headers: {
@@ -67,6 +66,10 @@ class ApolloService extends BaseService {
     }
 
     return this.client
+  }
+
+  public getToken: () => string | undefined = () => {
+    throw new Error(`Apollo getter for token isn't initializes`)
   }
 
   public convertToJSON(): Object {

@@ -19,4 +19,3 @@ export const API_HOSTNAME =
     ? window.location.origin
     : API.API_HOSTNAME
 export const CDN_HOSTNAME = API.CDN_HOSTNAME
-export const GRAPHQL_API_URL = `${API_HOSTNAME}/api/graphql`

@@ -22,7 +22,6 @@
     "noUnusedParameters": false,
     "paths": {
       "lib/*": ["src/lib/*"],
-      "gql/*": ["src/lib/gql/*"],
       "HOCs/*": ["src/lib/HOCs/*"],
       "hooks/*": ["src/lib/hooks/*"],
       "utils/*": ["src/lib/utils/*"],
@@ -41,12 +40,6 @@
     "strictNullChecks": false,
     "typeRoots": ["./types", "./node_modules/@types"]
   },
-  "exclude": [
-    ".next",
-    "config",
-    "next.config.js",
-    "node_modules",
-    "**/lib/gql/generated/*"
-  ],
+  "exclude": [".next", "config", "next.config.js", "node_modules"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

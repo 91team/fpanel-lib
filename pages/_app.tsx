@@ -1,6 +1,4 @@
 import React from 'react'
-import { ApolloProvider } from '@apollo/react-hooks'
-import { getDataFromTree } from '@apollo/react-ssr'
 import { Provider, useStaticRendering } from 'mobx-react'
 import App, { AppProps, AppContext } from 'next/app'
 import NextSEO from 'next-seo'
@@ -14,37 +12,32 @@ import ServicesContext from 'lib/contexts/services'
 import Layout from 'containers/PageLayout'
 import { defaultTheme } from 'lib/theme'
 import { defaultSeoConfig } from 'constants/seo'
-import { TInitialState as TApolloInitialState } from 'services/apollo'
 import { TInitialState as TStoreInitialState } from 'services/store'
 import { CStore } from 'lib/store/types'
 
 type TProps = AppProps & {
   initialStoreState?: TStoreInitialState
-  initialApolloState?: TApolloInitialState
   servicesManager?: ServicesManager
 }
 
 class Application extends App<TProps> {
   private servicesManager: ServicesManager
   private stores: Record<string, CStore>
-  private apolloClient: App.TApollo
 
   constructor(props: TProps) {
     super(props)
 
-    const { servicesManager, initialApolloState, initialStoreState } = props
+    const { servicesManager, initialStoreState } = props
 
     if (servicesManager) {
       this.servicesManager = servicesManager
     } else {
       this.servicesManager = ServicesManager.build({
-        initialApolloState,
         initialStoreState
       })
     }
 
     const {
-      apollo: apolloService,
       app: appService,
       store: storeService
     } = this.servicesManager.getServices()
@@ -54,11 +47,6 @@ class Application extends App<TProps> {
     }
 
     this.stores = storeService.getChildStores()
-    this.apolloClient = apolloService.getClient()
-
-    if (!appService.isServer) {
-      apolloService.getToken = () => storeService.getRootStore().user.token
-    }
   }
 
   public static async getInitialProps({ ctx, Component, AppTree }: AppContext) {
@@ -68,13 +56,9 @@ class Application extends App<TProps> {
     // we can initialize our services and store
     const servicesManager = ServicesManager.build({ ctx })
     const {
-      apollo: apolloService,
       store: storeService,
       cookies: cookiesService
     } = servicesManager.getServices()
-    const cookies = cookiesService.getCookies()
-
-    apolloService.getToken = () => cookies && cookies.token
 
     // Check whether the page being rendered by the App has a
     // static getInitialProps method and if so call it
@@ -87,15 +71,10 @@ class Application extends App<TProps> {
       } as App.TPageContext)
     }
 
-    await getDataFromTree(
-      <AppTree ssrServices={servicesManager} pageProps={pageProps} />
-    )
-
     // We only forward the state of services,
     // because they have circular links
     return {
       initialStoreState: storeService.convertToJSON(),
-      initialApolloState: apolloService.convertToJSON(),
       pageProps
     }
   }
@@ -118,16 +97,14 @@ class Application extends App<TProps> {
 
     return (
       <ServicesContext.Provider value={this.servicesManager}>
-        <ApolloProvider client={this.apolloClient}>
-          <ThemeProvider theme={defaultTheme}>
-            <Provider {...this.stores}>
-              <Layout>
-                <NextSEO config={defaultSeoConfig} />
-                <Component {...pageProps} />
-              </Layout>
-            </Provider>
-          </ThemeProvider>
-        </ApolloProvider>
+        <ThemeProvider theme={defaultTheme}>
+          <Provider {...this.stores}>
+            <Layout>
+              <NextSEO config={defaultSeoConfig} />
+              <Component {...pageProps} />
+            </Layout>
+          </Provider>
+        </ThemeProvider>
       </ServicesContext.Provider>
     )
   }

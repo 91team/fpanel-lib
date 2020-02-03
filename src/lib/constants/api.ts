@@ -5,4 +5,15 @@ export enum STATE {
   FAILED = 'failed'
 }
 
-export const GRAPHQL_API_URL = 'https://ecor.91.team/api/graphql'
+const API = (process.env.API as unknown) as {
+  HOSTNAME: string
+  API_HOSTNAME: string
+  CDN_HOSTNAME: string
+}
+export const HOSTNAME = API.HOSTNAME
+export const API_HOSTNAME =
+  process.env.NODE_ENV === 'production' && typeof window !== 'undefined'
+    ? window.location.origin
+    : API.API_HOSTNAME
+export const CDN_HOSTNAME = API.CDN_HOSTNAME
+export const GRAPHQL_API_URL = `${API_HOSTNAME}/api/graphql`

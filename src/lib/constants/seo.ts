@@ -1,7 +1,7 @@
 import { Config } from 'next-seo'
 
 export const defaultSeoConfig: Config = {
-  title: 'App',
+  title: '-boilerplate-',
   titleTemplate: '%s | Application',
   openGraph: {
     type: 'website',

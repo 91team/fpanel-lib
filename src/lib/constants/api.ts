@@ -1,3 +1,5 @@
+import { ENVIROMENT } from 'services/app'
+
 export enum STATE {
   IDLE = 'idle',
   LOADING = 'loading',
@@ -12,7 +14,8 @@ const API = (process.env.API as unknown) as {
 }
 export const HOSTNAME = API.HOSTNAME
 export const API_HOSTNAME =
-  process.env.NODE_ENV === 'production' && typeof window !== 'undefined'
+  process.env.NODE_ENV === ENVIROMENT.PRODUCTION &&
+  typeof window !== 'undefined'
     ? window.location.origin
     : API.API_HOSTNAME
 export const CDN_HOSTNAME = API.CDN_HOSTNAME

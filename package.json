@@ -1,18 +1,22 @@
 {
-  "name": "@nineone/boilerplate-client",
+  "name": "-boilerplate-",
   "version": "1.0.0",
   "license": "Private",
   "private": true,
   "scripts": {
-    "dev": "next",
-    "build": "yarn run clean && next build",
-    "start": "next start",
-    "build:production": "NODE_ENV=production yarn run build",
-    "schema:clean": "yarn rimraf schema.graphql && yarn rimraf src/lib/gql/generated",
-    "schema:generate-types": "yarn run schema:clean && graphql-codegen --config codegen.yml",
-    "start:production": "yarn run build:production && NODE_ENV=production next start",
+    "build": "yarn clean && next build",
+    "build:development": "NODE_ENV=development yarn build",
+    "build:production": "NODE_ENV=production yarn build",
+    "compile:development": "yarn build:development && yarn start:development",
+    "compile:production": "yarn build:production && yarn start:production",
     "clean": "rimraf .next",
-    "lint": "yarn tsc --noEmit && yarn eslint src --ext ts,tsx"
+    "dev": "yarn next",
+    "lint": "yarn tsc --noEmit && yarn eslint src --ext ts,tsx",
+    "schema:clean": "yarn rimraf schema.graphql && yarn rimraf src/lib/gql/generated",
+    "schema:generate-types": "yarn schema:clean && graphql-codegen --config codegen.yml",
+    "start": "next start",
+    "start:development": "NODE_ENV=development next start",
+    "start:production": "NODE_ENV=production next start"
   },
   "cacheDirectories": [
     "node_modules"

@@ -1,3 +1,4 @@
+// -boilerplate-
 const DEV_API = {
   HOSTNAME: 'http://0.0.0.0:3000',
   API_HOSTNAME: 'https://ecor.91.team',

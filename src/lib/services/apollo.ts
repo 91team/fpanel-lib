@@ -8,7 +8,6 @@ import universalFetch from 'isomorphic-unfetch'
 
 import BaseService, { TOptions as TBaseOptions } from './base'
 import { GRAPHQL_API_URL } from 'constants/api'
-// import AuthPersistService from 'services/authPersist'
 
 export type IApollo = ApolloClient<NormalizedCacheObject>
 export type TInitialState = NormalizedCacheObject

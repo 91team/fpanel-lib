@@ -1,6 +1,6 @@
 overwrite: true
 schema:
-  - 'https://ecor.91.team/api/graphql'
+  - 'https://ecor.91.team/api/graphql' #-boilerplate-
 generates:
   src/lib/gql/generated/introspection-result.tsx:
     documents:

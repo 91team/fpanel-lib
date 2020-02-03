@@ -18,14 +18,14 @@ type TProps = TOuterProps &
   WithStylesProps<typeof styles>
 
 class LoginPage extends PureComponent<TProps> {
-  // static async getInitialProps({ servicesManager }: App.TPageContext) {
-  //   await servicesManager
-  //     .getServices()
-  //     .store.getRootStore()
-  //     .user.createSession()
+  static async getInitialProps({ servicesManager }: App.TPageContext) {
+    await servicesManager
+      .getServices()
+      .store.getRootStore()
+      .user.createSession()
 
-  //   return {}
-  // }
+    return {}
+  }
 
   // componentDidMount() {
   //   this.props.services.store.getRootStore().user.createSession()

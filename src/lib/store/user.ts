@@ -1,7 +1,14 @@
 import { observable, action, flow } from 'mobx'
 
+import Store from './index'
 import BaseStore from './base'
 import { CStore } from './types'
+import {
+  SessionCreateDocument,
+  SessionCreateMutationResult,
+  SessionCreateMutation,
+  SessionCreateMutationVariables
+} from 'gql/generated/types'
 
 type TInitialState = Partial<User>
 
@@ -9,20 +16,26 @@ class User extends BaseStore<TInitialState> implements CStore {
   @observable token: null | string = null
 
   public createSession = flow(function*() {
-    try {
-      const data: { token: string } = yield new Promise(resolve =>
-        setTimeout(
-          () =>
-            resolve({
-              token: 'test_token'
-            }),
-          2000
-        )
-      )
+    // @ts-ignore
+    const apolloClient: App.TApollo = (this.getRoot() as Store)
+      .getServices()
+      .apollo.getClient()
 
-      if (data && data.token) {
+    try {
+      const { data }: SessionCreateMutationResult = yield apolloClient.mutate<
+        SessionCreateMutation,
+        SessionCreateMutationVariables
+      >({
+        mutation: SessionCreateDocument,
+        variables: {
+          email: 'admin@ecor.dev',
+          password: 'password91'
+        }
+      })
+
+      if (data && data.sessionCreate) {
         // @ts-ignore
-        ;(this as User).setToken(data.token)
+        ;(this as User).setToken(data.sessionCreate.token)
       }
     } catch (error) {
       console.error(error)

@@ -1,4 +1,6 @@
 import React from 'react'
+import { ApolloProvider } from '@apollo/react-hooks'
+import { getDataFromTree } from '@apollo/react-ssr'
 import { Provider, useStaticRendering } from 'mobx-react'
 import App, { AppProps, AppContext } from 'next/app'
 import NextSEO from 'next-seo'
@@ -12,29 +14,33 @@ import ServicesContext from 'lib/contexts/services'
 import Layout from 'containers/PageLayout'
 import { defaultTheme } from 'lib/theme'
 import { defaultSeoConfig } from 'constants/seo'
+import { TInitialState as TApolloInitialState } from 'services/apollo'
 import { TInitialState as TStoreInitialState } from 'services/store'
 import { CStore } from 'lib/store/types'
 
 type TProps = AppProps & {
   initialStoreState?: TStoreInitialState
+  initialApolloState?: TApolloInitialState
   servicesManager?: ServicesManager
 }
 
 class Application extends App<TProps> {
   private servicesManager: ServicesManager
   private stores: Record<string, CStore>
+  private apolloClient: App.TApollo
 
   public static clientServicesManager: ServicesManager
 
   constructor(props: TProps) {
     super(props)
 
-    const { servicesManager, initialStoreState } = props
+    const { servicesManager, initialApolloState, initialStoreState } = props
 
     if (servicesManager) {
       this.servicesManager = servicesManager
     } else {
       this.servicesManager = ServicesManager.build({
+        initialApolloState,
         initialStoreState
       })
       // Duplicate instance to avoid services recreation in
@@ -43,6 +49,7 @@ class Application extends App<TProps> {
     }
 
     const {
+      apollo: apolloService,
       app: appService,
       store: storeService
     } = this.servicesManager.getServices()
@@ -52,9 +59,14 @@ class Application extends App<TProps> {
     }
 
     this.stores = storeService.getChildStores()
+    this.apolloClient = apolloService.getClient()
+
+    if (!appService.isServer) {
+      apolloService.getToken = () => storeService.getRootStore().user.token
+    }
   }
 
-  public static async getInitialProps({ ctx, Component }: AppContext) {
+  public static async getInitialProps({ ctx, Component, AppTree }: AppContext) {
     // It's a fake manager for creating the app service
     let servicesManager = new ServicesManager()
 
@@ -67,6 +79,14 @@ class Application extends App<TProps> {
 
       // Disable memory-leak for observer
       useStaticRendering(true)
+
+      const {
+        apollo: apolloService,
+        cookies: cookiesService
+      } = servicesManager.getServices()
+      const cookies = cookiesService.getCookies()
+
+      apolloService.getToken = () => cookies && cookies.token
     } else {
       servicesManager = Application.clientServicesManager
     }
@@ -82,15 +102,26 @@ class Application extends App<TProps> {
       } as App.TPageContext)
     }
 
-    const result: Pick<TProps, 'pageProps' | 'initialStoreState'> = {
+    const result: Pick<
+      TProps,
+      'pageProps' | 'initialApolloState' | 'initialStoreState'
+    > = {
       pageProps
     }
 
     if (appService.isServer) {
       // We only forward the state of services,
       // because they have circular links
-      const { store: storeService } = servicesManager.getServices()
+      const {
+        store: storeService,
+        apollo: apolloService
+      } = servicesManager.getServices()
 
+      await getDataFromTree(
+        <AppTree ssrServices={servicesManager} pageProps={pageProps} />
+      )
+
+      result.initialApolloState = apolloService.convertToJSON()
       result.initialStoreState = storeService.convertToJSON()
     }
 
@@ -115,14 +146,16 @@ class Application extends App<TProps> {
 
     return (
       <ServicesContext.Provider value={this.servicesManager}>
-        <ThemeProvider theme={defaultTheme}>
-          <Provider {...this.stores}>
-            <Layout>
-              <NextSEO config={defaultSeoConfig} />
-              <Component {...pageProps} />
-            </Layout>
-          </Provider>
-        </ThemeProvider>
+        <ApolloProvider client={this.apolloClient}>
+          <ThemeProvider theme={defaultTheme}>
+            <Provider {...this.stores}>
+              <Layout>
+                <NextSEO config={defaultSeoConfig} />
+                <Component {...pageProps} />
+              </Layout>
+            </Provider>
+          </ThemeProvider>
+        </ApolloProvider>
       </ServicesContext.Provider>
     )
   }

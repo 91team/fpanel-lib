@@ -1,0 +1,1061 @@
+schema {
+  query: RootQueryType
+  mutation: RootMutationType
+}
+
+type Acl {
+  administration: Boolean
+  bi: Boolean
+  cms: Boolean
+  events: Boolean
+  modeling: Boolean
+  monitoring: Boolean
+}
+
+input AclInput {
+  administration: Boolean
+  bi: Boolean
+  cms: Boolean
+  events: Boolean
+  modeling: Boolean
+  monitoring: Boolean
+}
+
+type AdditionalInfo {
+  id: String
+  label: String
+  value: String
+}
+
+input AdditionalInfoInput {
+  id: String
+  label: String
+  value: String
+}
+
+type AppealType {
+  additionalQuestions: [String]
+  dateEnd: Timestamp
+  dateStart: Timestamp
+  id: Int
+  insertedAt: Timestamp
+  timeLimit: Int
+  title: String
+}
+
+type Attachment {
+  aspectRatio: Float
+  contentType: String
+  id: UUID
+  name: String
+  url: String
+}
+
+type Banner {
+  attachment: Attachment
+  id: Int
+  image: File
+  insertedAt: Timestamp
+  published: Boolean
+  title: String
+  url: String
+}
+
+type Block {
+  attachment: Attachment
+  blockContent: String
+  blockType: NewsBlockType
+  id: String
+  place: Geography
+}
+
+type Card {
+  callerBuilding: String
+  place: Geography
+  withCall: Boolean
+  incidentType: String
+  addrLevel2: String
+  phoneInfoName: String
+  entranceCode: String
+  kladrCallerStreet: String
+  description: String
+  callerAddressStr: String
+  sys112TypeId: Int
+  state02: Sys112StateType
+  callerAddrLevel1: String
+  sys112TypeName: String
+  callerAddrCorps: String
+  limitDate: Timestamp
+  stateCouterTerr: Sys112StateType
+  id: UUID
+  level: String
+  room: String
+  phoneInfoLastName: String
+  callerStreet: String
+  sys112Type: Sys112Type
+  answer: String
+  eventId: UUID
+  kladrStreet: String
+  coordinatorId: Int
+  callerRoom: String
+  callerAddrLevel2: String
+  phone: String
+  callerInfoLastName: String
+  callerInfoName: String
+  entrance: String
+  building: String
+  callerPhone: String
+  ukio: String
+  callerLanguage: String
+  injuredPeople: String
+  cardType: EventCardType
+  state: Sys112StateType
+  street: String
+  kladrCallerAddrLevel2: String
+  km: String
+  kladrAddrLevel2: String
+  kladrAddrLevel1: String
+  phoneInfoPlace: Geography
+  addrLevel1: String
+  phoneInfoAddress: String
+  addrCorps: String
+  attachments: [EcorAttachment]
+  callerAdditionalInfo: String
+  near: String
+  stateJkh: Sys112StateType
+  emergencyId: Int
+  sys112OperatorId: String
+  peopleInDanger: String
+  addressStr: String
+  sys112Id: String
+  state01: Sys112StateType
+  storeys: String
+  additionalInfo: String
+  phoneInfoMiddleName: String
+  executorId: Int
+  state04: Sys112StateType
+  state03: Sys112StateType
+  date: Timestamp
+  sys112Number: String
+  callerInfoMiddleName: String
+  kladrCallerAddrLevel1: String
+}
+
+input CardInput {
+  kladrCallerAddrLevel1: String
+  callerInfoMiddleName: String
+  date: Timestamp
+  executorId: Int
+  phoneInfoMiddleName: String
+  additionalInfo: String
+  storeys: String
+  sys112Id: String
+  addressStr: String
+  peopleInDanger: String
+  sys112OperatorId: String
+  emergencyId: Int
+  near: String
+  callerAdditionalInfo: String
+  addrCorps: String
+  phoneInfoAddress: String
+  addrLevel1: String
+  phoneInfoPlace: PlaceInput
+  kladrAddrLevel1: String
+  kladrAddrLevel2: String
+  km: String
+  kladrCallerAddrLevel2: String
+  street: String
+  cardType: EventCardType
+  injuredPeople: String
+  callerLanguage: String
+  ukio: String
+  callerPhone: String
+  building: String
+  entrance: String
+  callerInfoName: String
+  callerInfoLastName: String
+  phone: String
+  callerAddrLevel2: String
+  callerRoom: String
+  coordinatorId: Int
+  kladrStreet: String
+  answer: String
+  sys112Type: Sys112Type
+  callerStreet: String
+  phoneInfoLastName: String
+  room: String
+  level: String
+  id: UUID
+  limitDate: Timestamp
+  callerAddrCorps: String
+  sys112TypeName: String
+  callerAddrLevel1: String
+  sys112TypeId: Int
+  callerAddressStr: String
+  description: String
+  kladrCallerStreet: String
+  entranceCode: String
+  phoneInfoName: String
+  attachmentIds: [UUID]
+  addrLevel2: String
+  incidentType: String
+  withCall: Boolean
+  place: PlaceInput
+  callerBuilding: String
+}
+
+"""Coordinates scalar"""
+scalar Coordinates
+
+input Coords {
+  lat: Float
+  lon: Float
+}
+
+type Dimension {
+  id: ID
+  physicTitle: String
+  postfix: String
+  title: String
+  values: [DimensionVal]
+}
+
+type DimensionVal {
+  time: Timestamp
+  value: Float
+}
+
+type Document {
+  attachment: Attachment
+  id: Int
+  insertedAt: Timestamp
+  published: Boolean
+  publishedAt: Timestamp
+  title: String
+}
+
+type EcorAttachment {
+  aspectRatio: Float
+  contentType: String
+  id: UUID
+  name: String
+  url: String
+}
+
+enum EcorEventStatus {
+  APPEARED
+  DECLINED
+  DONE
+  IN_PROGRESS
+}
+
+enum EcorEventType {
+  APPEAL
+  PHONE_CALL
+  SIGNAL
+  SYS112
+}
+
+type EcorObject {
+  address: String
+  attachments: [EcorAttachment]
+  description: String
+  id: Int
+  insertedAt: Timestamp
+  objectCategory: EcorObjectCategory
+  place: Geography
+  title: String
+}
+
+type EcorObjectCategory {
+  id: Int
+  insertedAt: Timestamp
+  objects: [EcorObject]
+  position: Int
+  title: String
+}
+
+enum EcorType {
+  ALARM
+  OBJECT
+  SENSOR
+  TRANSPORT
+  VIDEO_CAM
+}
+
+type EmergencyContact {
+  contact: String
+  id: Int
+  position: Int
+  published: Boolean
+  title: String
+}
+
+type Event {
+  ecorEventType: EcorEventType
+  appealUserMiddleName: String
+  appealUserFirstName: String
+  place: Geography
+  cards: [Card]
+  firstName: String
+  addrLevel2: String
+  entranceCode: String
+  description: String
+  appealUserLastName: String
+  appealUserId: Int
+  id: UUID
+  eventCategoryId: Int
+  level: String
+  room: String
+  status: EcorEventStatus
+  appealDate: Timestamp
+  phone: String
+  insertedAt: Timestamp
+  appealPlace: Geography
+  monitoringEventId: Int
+  entrance: String
+  building: String
+  lastName: String
+  phoneCallRecord: String
+  street: String
+  secondName: String
+  appealUserEmail: String
+  label: String
+  userAddress: String
+  phoneCallId: Int
+  addrLevel1: String
+  addrCorps: String
+  attachments: [Attachment]
+  near: String
+  eventTypeId: Int
+  addressStr: String
+  storeys: String
+  additionalInfo: String
+  appealId: Int
+  appealTypeId: Int
+  appealUserPhone: String
+  date: Timestamp
+  scenarioId: Int
+}
+
+enum EventCardType {
+  COORDINATOR
+  EMERGENCY
+  SYS112
+}
+
+type EventCategory {
+  eventTypes: [EventType]
+  id: Int
+  position: Int
+  title: String
+}
+
+type EventType {
+  eventCategoryId: Int
+  id: Int
+  position: Int
+  scenarios: [Scenario]
+  title: String
+}
+
+type File {
+  name: String
+  type: String
+  url: String
+}
+
+type FireModelIteration {
+  iterationNumber: Int
+  place: Geography
+  secondsFromPrevious: Int
+}
+
+type Form {
+  formAnswers: [FormAnswer]
+  formType: FormType
+  id: Int
+  insertedAt: Timestamp
+  operator: Operator
+  question: String
+  respondentIds: [Int]
+  title: String
+  userAnswers: [UserAnswer]
+}
+
+type FormAnswer {
+  answer: String
+  formId: Int
+  id: Int
+  position: Int
+}
+
+input FormAnswerInput {
+  answer: String
+  formId: Int
+  id: Int
+  position: Int
+}
+
+enum FormType {
+  CUSTOM
+  QUIZ
+}
+
+type FullNewsCategory {
+  color: String
+  id: Int
+  title: String
+  titleTranslate: OutputTranslate
+}
+
+union Geography = Point | LineString | Polygon
+
+enum GeographyType {
+  LINE_STRING
+  POINT
+  POLYGON
+}
+
+type GisLayer {
+  name: String
+  title: String
+}
+
+type GroupNotification {
+  activityTypes: [String]
+  actualLocation: Boolean
+  area: Geography
+  id: UUID
+  insertedAt: Timestamp
+  message: String
+  methods: [GroupNotificationMethod]
+  probableLocation: Boolean
+  radius: Int
+  status: GroupNotificationStatus
+  template: Boolean
+  title: String
+  type: GroupNotificationType
+}
+
+enum GroupNotificationMethod {
+  EMAIL
+  PUSH
+  SMS
+  WEBSOCKET
+}
+
+enum GroupNotificationStatus {
+  CREATED
+  DELIVERED
+}
+
+enum GroupNotificationType {
+  EMERGENCY
+  INFO
+  WARNING
+}
+
+input InputBlock {
+  attachmentId: UUID
+  blockContent: Translate
+  blockType: NewsBlockType
+  placeInput: PlaceInput
+}
+
+type Journal {
+  action: String
+  actionLevel: String
+  date: Timestamp
+  description: String
+  object: String
+  objectId: String
+  userId: String
+  userName: String
+}
+
+type LineString {
+  coordinates: [Coordinates]
+}
+
+type MonitoringObject {
+  additionalInfo: [AdditionalInfo]
+  address: String
+  attachments: [EcorAttachment]
+  devices: [MonitoringObjectDevice]
+  ecorType: EcorType
+  id: String
+  link: String
+  place: Geography
+  previewSrc: String
+  region: String
+  source: Source
+  sourceId: String
+  title: String
+}
+
+type MonitoringObjectDevice {
+  deviceType: String
+  dimensions: [Dimension]
+  id: Int
+  title: String
+}
+
+enum NewsBlockType {
+  IMAGE
+  PLACE
+  TEXT
+}
+
+type NewsCategory {
+  color: String
+  id: Int
+  title: String
+}
+
+type NewsEntity {
+  blocks: [Block]
+  categories: [NewsCategory]
+  cover: Attachment
+  id: Int
+  insertedAt: Timestamp
+  localeList: [String]
+  pinned: Boolean
+  published: Boolean
+  routeIds: [String]
+  sendNotification: Boolean
+  showOnMain: Boolean
+  title: String
+  url: String
+}
+
+type Object {
+  address: String
+  attachments: [Attachment]
+  description: String
+  id: Int
+  image: File
+  insertedAt: Timestamp
+  objectCategory: ObjectCategory
+  place: Geography
+  title: String
+}
+
+type ObjectCategory {
+  id: Int
+  insertedAt: Timestamp
+  objects: [Object]
+  position: Int
+  title: String
+}
+
+type OpenDataFile {
+  description: String
+  generatedId: String
+  id: Int
+  insertedAt: Timestamp
+  licence: String
+  openDataFileVersions: [OpenDataFileVersion]
+  orgInn: String
+  orgTitle: String
+  responsibleContacts: String
+  responsibleFio: String
+  rubric: OpendataRubric
+  title: String
+}
+
+type OpenDataFileVersion {
+  attachment: Attachment
+  file: File
+  id: Int
+  updatedAt: Timestamp
+}
+
+type OpendataRubric {
+  id: Int
+  insertedAt: Timestamp
+  openDataFiles: [OpenDataFile]
+  position: Int
+  title: String
+}
+
+type Operator {
+  acl: Acl
+  email: String
+  firstName: String
+  id: Int!
+  lastName: String
+  middleName: String
+  organisation: Organisation
+  phone: String
+  role: OperatorRole
+}
+
+enum OperatorRole {
+  ADMIN
+  CMS
+  COORDINATOR
+  CUSTOM
+  EMERGENCY
+  EXECUTOR
+  OPERATOR
+}
+
+type Organisation {
+  id: Int
+  role: OrganisationRole
+  title: String
+}
+
+enum OrganisationRole {
+  COORDINATOR
+  EMERGENCY
+  EXECUTOR
+}
+
+type OutputTranslate {
+  en: String
+  ru: String
+}
+
+input PlaceInput {
+  lineStringCoordinates: [Coords]
+  pointCoordinates: Coords
+  polygonCoordinates: [[Coords]]
+  type: GeographyType
+}
+
+type Point {
+  coordinates: Coordinates
+}
+
+type Polygon {
+  coordinates: [[Coordinates]]
+}
+
+type RootMutationType {
+  """Refresh session"""
+  sessionUpdate(refreshToken: UUID!): Session
+
+  """Delete object category"""
+  objectCategoryDelete(id: Int): String
+
+  """Create appeal_type"""
+  appealTypeCreate(additionalQuestions: [String], dateEnd: Timestamp, dateStart: Timestamp, timeLimit: Int, title: String): AppealType
+
+  """Update opendata file"""
+  openDataFileUpdate(description: String, id: Int, licence: String, orgInn: String, orgTitle: String, responsibleContacts: String, responsibleFio: String, rubricId: Int, title: String): OpenDataFile
+
+  """Update document"""
+  portalDocumentUpdate(attachmentId: UUID, id: Int, published: Boolean, publishedAt: Timestamp, title: String): Document
+
+  """Delete object category"""
+  ecorObjectCategoryDelete(id: Int): String
+
+  """Delete news category"""
+  portalNewsCategoryDelete(id: Int): String
+
+  """Delete attachment"""
+  ecorAttachmentDelete(id: UUID): String
+
+  """Update scenario (with cards)"""
+  scenarioUpdate(cards: [CardInput], eventCategoryId: Int, eventTypeId: Int, id: Int, position: Int, title: String): Scenario
+
+  """Create opendata rubric"""
+  opendataRubricCreate(position: Int, title: String): OpendataRubric
+
+  """Delete opendata rubric"""
+  opendataRubricDelete(id: Int): String
+
+  """Delete attachment"""
+  portalAttachmentDelete(id: UUID): String
+
+  """Delete form"""
+  formDelete(id: Int): String
+
+  """Update appeal_type"""
+  appealTypeUpdate(additionalQuestions: [String], dateEnd: Timestamp, dateStart: Timestamp, id: Int, timeLimit: Int, title: String): AppealType
+
+  """Create news category"""
+  portalNewsCategoryCreate(color: String, title: String, titleTranslate: Translate): FullNewsCategory
+
+  """Create object"""
+  ecorObjectCreate(address: String, attachmentIds: [UUID], description: String, objectCategoryId: Int, placeInput: PlaceInput, title: String): EcorObject
+
+  """Update news"""
+  portalNewsUpdate(blocks: [InputBlock], categories: [Int], coverId: UUID, id: Int, localeList: [String], pinned: Boolean, published: Boolean, sendNotification: Boolean, showOnMain: Boolean, title: String, titleTranslate: Translate, url: String): NewsEntity
+
+  """Create object"""
+  objectCreate(address: String, attachmentIds: [UUID], description: String, image: Upload, objectCategoryId: Int, placeInput: PlaceInput, title: String): Object
+
+  """Delete operator"""
+  operatorDelete(id: Int): String
+
+  """Delete object"""
+  objectDelete(id: Int): String
+
+  """Create banner"""
+  bannerCreate(attachmentId: String, image: Upload, published: Boolean, title: String, url: String): Banner
+
+  """Update object category"""
+  ecorObjectCategoryUpdate(id: Int, position: Int, title: String): EcorObjectCategory
+
+  """Update object category"""
+  objectCategoryUpdate(id: Int, position: Int, title: String): ObjectCategory
+
+  """Update event_type"""
+  eventTypeUpdate(eventCategoryId: Int, id: Int, position: Int, title: String): EventType
+
+  """Delete document"""
+  portalDocumentDelete(id: Int): String
+
+  """Delete emergency contact"""
+  portalEmergencyContactDelete(id: Int): String
+
+  """Update emergency contact"""
+  portalEmergencyContactUpdate(contact: String, id: Int, position: Int, published: Boolean, title: String): EmergencyContact
+
+  """Delete opendata file"""
+  openDataFileDelete(id: Int): String
+
+  """Update object"""
+  ecorObjectUpdate(address: String, attachmentIds: [UUID], description: String, id: Int, objectCategoryId: Int, placeInput: PlaceInput, title: String): EcorObject
+
+  """Update support_info"""
+  portalSupportInfoUpdate(blocks: [SupportInfoInputBlock], id: Int, published: Boolean, title: String): SupportInfo
+
+  """Create support_info"""
+  portalSupportInfoCreate(blocks: [SupportInfoInputBlock], published: Boolean, title: String): SupportInfo
+
+  """Create opendata file version"""
+  openDataFileVersionCreate(attachmentId: String, file: Upload, openDataFileId: Int): OpenDataFileVersion
+
+  """Update opendata rubric"""
+  opendataRubricUpdate(id: Int, position: Int, title: String): OpendataRubric
+
+  """Create form"""
+  formCreate(formAnswers: [FormAnswerInput], formType: FormType, question: String, respondentIds: [Int], title: String): Form
+
+  """Update operator"""
+  operatorUpdate(acl: AclInput, email: String, firstName: String, id: Int, lastName: String, middleName: String, organisationId: Int, password: String, phone: String, role: OperatorRole): Operator
+
+  """Create document"""
+  portalDocumentCreate(attachmentId: UUID, published: Boolean, publishedAt: Timestamp, title: String): Document
+
+  """Create object category"""
+  objectCategoryCreate(position: Int, title: String): ObjectCategory
+
+  """Create attachment"""
+  ecorAttachmentCreate(file: Upload): EcorAttachment
+
+  """Update opendata file version"""
+  openDataFileVersionUpdate(attachmentId: String, file: Upload, id: Int, openDataFileId: Int): OpenDataFileVersion
+
+  """Create Organisation"""
+  organisationCreate(role: OrganisationRole, title: String): Organisation
+
+  """Create scenario (with cards)"""
+  scenarioCreate(cards: [CardInput], eventCategoryId: Int, eventTypeId: Int, position: Int, title: String): Scenario
+
+  """Delete news"""
+  portalNewsDelete(id: Int): String
+
+  """Create opendata file"""
+  openDataFileCreate(description: String, licence: String, orgInn: String, orgTitle: String, responsibleContacts: String, responsibleFio: String, rubricId: Int, title: String): OpenDataFile
+
+  """Update event_category"""
+  eventCategoryUpdate(id: Int, position: Int, title: String): EventCategory
+
+  """Update card"""
+  eventCardsUpdate(card: CardInput): Card
+
+  """Delete event_category"""
+  eventCategoryDelete(id: Int): String
+
+  """Delete card"""
+  eventCardsDelete(id: UUID): String
+
+  """Sign in"""
+  sessionCreate(email: String!, password: String!): Session
+
+  """Update object"""
+  objectUpdate(address: String, attachmentIds: [UUID], description: String, id: Int, image: Upload, objectCategoryId: Int, placeInput: PlaceInput, title: String): Object
+
+  """Delete Organisation"""
+  organisationDelete(id: Int): String
+
+  """Update monitoring objects"""
+  monitoringObjectUpdate(additionalInfo: [AdditionalInfoInput], id: String): MonitoringObject
+
+  """Delete banner"""
+  bannerDelete(id: Int): String
+
+  """Update news category"""
+  portalNewsCategoryUpdate(color: String, id: Int, title: String, titleTranslate: Translate): FullNewsCategory
+
+  """Delete event_type"""
+  eventTypeDelete(id: Int): String
+
+  """Create event_category"""
+  eventCategoryCreate(position: Int, title: String): EventCategory
+
+  """Answer form"""
+  answerForm(customAnswer: Float, formAnswerId: Int, formId: Int): UserAnswer
+
+  """Delete group notification"""
+  groupNotificationDelete(id: UUID): String
+
+  """Update banner"""
+  bannerUpdate(attachmentId: String, id: Int, image: Upload, published: Boolean, title: String, url: String): Banner
+
+  """Delete appeal_type"""
+  appealTypeDelete(id: Int): String
+
+  """Create group notification"""
+  groupNotificationCreate(activityTypes: [String], actualLocation: Boolean, area: Coords, message: String, methods: [GroupNotificationMethod], probableLocation: Boolean, radius: Int, template: Boolean, title: String, type: GroupNotificationType): GroupNotification
+
+  """Update group notification"""
+  groupNotificationUpdate(activityTypes: [String], actualLocation: Boolean, area: Coords, id: UUID, message: String, methods: [GroupNotificationMethod], probableLocation: Boolean, radius: Int, template: Boolean, title: String, type: GroupNotificationType): GroupNotification
+
+  """Create news"""
+  portalNewsCreate(blocks: [InputBlock], categories: [Int], coverId: UUID, localeList: [String], pinned: Boolean, published: Boolean, sendNotification: Boolean, showOnMain: Boolean, title: String, titleTranslate: Translate, url: String): NewsEntity
+
+  """Delete support_info"""
+  portalSupportInfoDelete(id: Int): String
+
+  """Update Organisation"""
+  organisationUpdate(id: Int, role: OrganisationRole, title: String): Organisation
+
+  """Create emergency contact"""
+  portalEmergencyContactCreate(contact: String, position: Int, published: Boolean, title: String): EmergencyContact
+
+  """Create attachment"""
+  portalAttachmentCreate(file: Upload): Attachment
+
+  """Create operator"""
+  operatorCreate(acl: AclInput, email: String, firstName: String, lastName: String, middleName: String, organisationId: Int, password: String, phone: String, role: OperatorRole): Operator
+
+  """Update event (with cards)"""
+  eventUpdate(additionalInfo: String, addrCorps: String, addrLevel1: String, addrLevel2: String, addressStr: String, building: String, cards: [CardInput], date: Timestamp, description: String, ecorEventType: EcorEventType, entrance: String, entranceCode: String, eventCategoryId: Int, eventTypeId: Int, firstName: String, id: UUID, label: String, lastName: String, level: String, near: String, phone: String, place: PlaceInput, room: String, scenarioId: Int, secondName: String, status: EcorEventStatus, storeys: String, street: String, userAddress: String): Event
+
+  """Delete object"""
+  ecorObjectDelete(id: Int): String
+
+  """Sign out"""
+  sessionDelete: String
+
+  """Create event_type"""
+  eventTypeCreate(eventCategoryId: Int, position: Int, title: String): EventType
+
+  """Update form"""
+  formUpdate(formAnswers: [FormAnswerInput], formType: FormType, id: Int, question: String, respondentIds: [Int], title: String): Form
+
+  """Create object category"""
+  ecorObjectCategoryCreate(position: Int, title: String): EcorObjectCategory
+
+  """Delete opendata file version"""
+  openDataFileVersionDelete(id: Int): String
+}
+
+type RootQueryType {
+  """Get banners by admin"""
+  adminBannersGet(id: ID, limit: Int = 100, offset: Int = 0, published: Boolean): [Banner]
+
+  """Get appeal_types"""
+  appealTypesGet(id: Int): [AppealType]
+
+  """Get cards"""
+  cards(eventIds: [UUID]): [Card]
+
+  """Get object categories"""
+  ecorObjectCategoriesGet(ids: [ID]): [EcorObjectCategory]
+
+  """Get objects"""
+  ecorObjectsGet(ids: [ID]): [EcorObject]
+
+  """Get event_categories"""
+  eventCategoriesGet(ids: [Int]): [EventCategory]
+
+  """Get event_types"""
+  eventTypesGet(ids: [Int]): [EventType]
+
+  """Get events"""
+  events: [Event]
+
+  """Get fire iterations"""
+  fireIterationsGet(fireAgentDistance: Int, fireCenter: PlaceInput, fireClass: Int, fuelTypeCode: Int, iterationStepTime: Int, lastIterationTime: Int, windDirection: Float, windSpeed: Float): [FireModelIteration]
+
+  """Get forms"""
+  formsGet(ids: [ID]): [Form]
+
+  """Get WMS layers"""
+  gisLayersGet: [GisLayer]
+
+  """Get users activity types for group notification"""
+  groupNotificationActivityTypesGet(search: String): [String]
+
+  """Get group notifications"""
+  groupNotificationsGet(ids: [ID], template: Boolean): [GroupNotification]
+
+  """Get journal logs"""
+  journalGet(limit: Int, offset: Int): [Journal]
+
+  """Get monitoring objects"""
+  monitoringObjectsGet(ecorTypes: [EcorType], ids: [String], sources: [Source]): [MonitoringObject]
+
+  """Get object categories"""
+  objectCategoriesGet(ids: [ID]): [ObjectCategory]
+
+  """Get objects"""
+  objectsGet(ids: [ID]): [Object]
+
+  """Get opendata file"""
+  opendataFileGet(id: Int): OpenDataFile
+
+  """Get opendata rubrics"""
+  opendataRubricsGet: [OpendataRubric]
+
+  """Get operators"""
+  operatorsGet(ids: [Int], limit: Int, offset: Int): [Operator]
+
+  """Get organisations"""
+  organisationsGet(roles: [OrganisationRole]): [Organisation]
+
+  """Get documents"""
+  portalDocumentsGet(id: ID, limit: Int = 100, offset: Int = 0, published: Boolean, search: String): [Document]
+
+  """Get emergency contacts"""
+  portalEmergencyContactsGet(id: ID, limit: Int = 100, offset: Int = 0, published: Boolean): [EmergencyContact]
+
+  """Get news categories"""
+  portalNewsCategoriesGet(limit: Int = 100, offset: Int = 0): [FullNewsCategory]
+
+  """Get news"""
+  portalNewsGet(id: ID, limit: Int = 100, offset: Int = 0, pinned: Boolean, published: Boolean, publishedAtGt: Timestamp, publishedAtLt: Timestamp, routeIds: [String], search: String, showOnMain: Boolean): [NewsEntity]
+
+  """Get support_info"""
+  portalSupportInfoGet(id: ID, limit: Int = 100, offset: Int = 0, pinned: Boolean, published: Boolean, publishedAtGt: Timestamp, publishedAtLt: Timestamp, routeIds: [String], search: String, showOnMain: Boolean): [SupportInfo]
+
+  """Get profile"""
+  profileGet: Operator
+
+  """Get scenarios"""
+  scenariosGet(ids: [Int]): [Scenario]
+
+  """Get vk_posts"""
+  vkPostsGet(bboxBottom: Float, bboxLeft: Float, bboxRight: Float, bboxTop: Float, dateFinish: Timestamp, dateStart: Timestamp, ids: [Int], limit: Int, offset: Int, searchTags: [String]): [VkPost]
+}
+
+type Scenario {
+  cards: [Card]
+  eventCategoryId: Int
+  eventTypeId: Int
+  id: Int
+  position: Int
+  title: String
+}
+
+type Session {
+  expireAt: Timestamp
+  operator: Operator
+  refreshToken: UUID
+  token: UUID
+}
+
+enum Source {
+  CSMTO
+  CSOR
+  EVENTS
+  OBJECTS
+  RASCO
+  RNIS
+  SEVSTAR
+  SEVTELECOM
+  SPS
+}
+
+type SupportInfo {
+  blocks: [SupportInfoBlock]
+  id: Int
+  insertedAt: Timestamp
+  published: Boolean
+  title: String
+}
+
+type SupportInfoBlock {
+  attachment: Attachment
+  blockContent: String
+  blockType: SupportInfoBlockType
+  id: String
+}
+
+enum SupportInfoBlockType {
+  IMAGE
+  TEXT
+}
+
+input SupportInfoInputBlock {
+  attachmentId: UUID
+  blockContent: String
+  blockType: NewsBlockType
+}
+
+enum Sys112StateType {
+  DONE
+  IN_ACTION
+  REQUEST_112
+  WATCHED
+}
+
+enum Sys112Type {
+  CHILD
+  COUTER_TERR
+  EDDS
+  FIREFIGHT
+  GAS
+  HEAT_SYS
+  LIE
+  MEDICINE
+  POLICE
+  REGIONAL
+  REPEAT
+  SPR
+}
+
+"""Unix timestamp"""
+scalar Timestamp
+
+input Translate {
+  en: String
+  ru: String
+}
+
+"""Represents an uploaded file."""
+scalar Upload
+
+type UserAnswer {
+  customAnswer: Float
+  formAnswerId: Int
+  formId: Int
+  insertedAt: Timestamp
+  operatorId: Int
+}
+
+"""UUID scalar"""
+scalar UUID
+
+type VkPost {
+  address: String
+  attachments: [EcorAttachment]
+  commentsCount: Int
+  date: Timestamp
+  groupName: String
+  groupUrl: String
+  id: Int
+  likesCount: Int
+  markedAsAds: Boolean
+  place: Geography
+  text: String
+  url: String
+  viewsCount: Int
+}

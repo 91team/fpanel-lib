@@ -7,7 +7,7 @@ import { ThemeProvider } from 'react-jss'
 import 'isomorphic-unfetch'
 import 'modern-normalize'
 
-import { ServicesManager } from 'services/index'
+import { ServicesManager, AppService } from 'services/index'
 import ServicesContext from 'lib/contexts/services'
 import Layout from 'containers/PageLayout'
 import { defaultTheme } from 'lib/theme'
@@ -24,6 +24,8 @@ class Application extends App<TProps> {
   private servicesManager: ServicesManager
   private stores: Record<string, CStore>
 
+  public static clientServicesManager: ServicesManager
+
   constructor(props: TProps) {
     super(props)
 
@@ -35,6 +37,9 @@ class Application extends App<TProps> {
       this.servicesManager = ServicesManager.build({
         initialStoreState
       })
+      // Duplicate instance to avoid services recreation in
+      // getInitialProps method on client side, when we changing a route
+      Application.clientServicesManager = this.servicesManager
     }
 
     const {
@@ -49,16 +54,22 @@ class Application extends App<TProps> {
     this.stores = storeService.getChildStores()
   }
 
-  public static async getInitialProps({ ctx, Component, AppTree }: AppContext) {
-    useStaticRendering(true)
+  public static async getInitialProps({ ctx, Component }: AppContext) {
+    // It's a fake manager for creating the app service
+    let servicesManager = new ServicesManager()
 
-    // Use getInitialProps as a step in the lifecycle when
-    // we can initialize our services and store
-    const servicesManager = ServicesManager.build({ ctx })
-    const {
-      store: storeService,
-      cookies: cookiesService
-    } = servicesManager.getServices()
+    const appService = new AppService({ root: servicesManager })
+
+    if (appService.isServer) {
+      // Use getInitialProps as a step in the lifecycle when
+      // we can initialize our services and store
+      servicesManager = ServicesManager.build({ ctx })
+
+      // Disable memory-leak for observer
+      useStaticRendering(true)
+    } else {
+      servicesManager = Application.clientServicesManager
+    }
 
     // Check whether the page being rendered by the App has a
     // static getInitialProps method and if so call it
@@ -71,12 +82,19 @@ class Application extends App<TProps> {
       } as App.TPageContext)
     }
 
-    // We only forward the state of services,
-    // because they have circular links
-    return {
-      initialStoreState: storeService.convertToJSON(),
+    const result: Pick<TProps, 'pageProps' | 'initialStoreState'> = {
       pageProps
     }
+
+    if (appService.isServer) {
+      // We only forward the state of services,
+      // because they have circular links
+      const { store: storeService } = servicesManager.getServices()
+
+      result.initialStoreState = storeService.convertToJSON()
+    }
+
+    return result
   }
 
   componentDidMount() {

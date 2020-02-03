@@ -4,7 +4,6 @@ import { getDataFromTree } from '@apollo/react-ssr'
 import { Provider, useStaticRendering } from 'mobx-react'
 import App, { AppProps, AppContext } from 'next/app'
 import NextSEO from 'next-seo'
-import nookies from 'nookies'
 import { ThemeProvider } from 'react-jss'
 
 import 'isomorphic-unfetch'
@@ -67,12 +66,13 @@ class Application extends App<TProps> {
 
     // Use getInitialProps as a step in the lifecycle when
     // we can initialize our services and store
-    const servicesManager = ServicesManager.build()
+    const servicesManager = ServicesManager.build({ ctx })
     const {
       apollo: apolloService,
-      store: storeService
+      store: storeService,
+      cookies: cookiesService
     } = servicesManager.getServices()
-    const cookies = nookies.get(ctx)
+    const cookies = cookiesService.getCookies()
 
     apolloService.getToken = () => cookies && cookies.token
 

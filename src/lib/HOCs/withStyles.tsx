@@ -35,7 +35,8 @@ export type HOCProps = {
   theme?: App.TTheme
 }
 
-export interface WithStylesProps<S extends Styles | ((theme: unknown) => any)> {
+export interface WithStylesProps<S extends Styles | ((theme: unknown) => any)>
+  extends Pick<HOCProps, 'ref' | 'theme'> {
   classes: Classes<
     S extends ((theme: unknown) => any) ? keyof ReturnType<S> : keyof S
   >

@@ -24,12 +24,14 @@ function mergeClasses(baseClasses: Classes, additionalClasses: Classes) {
   return combinedClasses
 }
 function getDisplayName(Component: ComponentType<{}>) {
-  return Component.displayName || Component.name || 'Component'
+  return process.env.NODE_ENV === 'development'
+    ? Component.displayName || Component.name || 'Component'
+    : 'c'
 }
 
 const NoRenderer: FC<{}> = props => <>{props.children || null}</>
 
-export type HOCProps = {
+export interface HOCProps {
   ref: RefObject<any>
   classes: Classes
   theme?: App.TTheme

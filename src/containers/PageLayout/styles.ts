@@ -11,16 +11,16 @@ const styles = ({
     '@font-face': [
       {
         fontFamily: 'CR',
-        src: `url("${CirceWOFF}") format('woff')`,
         fontStyle: 'normal',
+        src: `url("${CirceWOFF}") format('woff')`,
         fontDisplay: 'swap'
       }
     ],
     html: {
-      fontFamily: common.fontFamily,
-      fontSize: 16,
       width: '100%',
-      height: '100%'
+      height: '100%',
+      fontFamily: common.fontFamily,
+      fontSize: 16
     },
     'body, #__next': {
       display: 'flex',

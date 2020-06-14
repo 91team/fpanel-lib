@@ -1,8 +1,10 @@
 import { observable } from 'mobx'
 
 import ServicesManager from 'lib/services/manager'
-import User from './user'
+
 import { CStore, TRootStoreOptions } from './types'
+
+import User from './user'
 
 class Store implements CStore {
   private childStores = {

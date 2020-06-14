@@ -1,4 +1,5 @@
 import gql from 'graphql-tag'
+
 import { SessionDataFragment } from './fragments'
 
 export const SessionCreateMutation = gql`

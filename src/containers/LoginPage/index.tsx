@@ -1,10 +1,13 @@
 import React, { PureComponent } from 'react'
+
 import { inject, observer } from 'mobx-react'
 import Link from 'next/link'
 
 import compose from 'utils/compose'
-import withStyles, { WithStylesProps } from 'HOCs/withStyles'
+
 import withServices, { TWithServicesProps } from 'HOCs/withServices'
+import withStyles, { WithStylesProps } from 'HOCs/withStyles'
+
 import styles from './styles'
 
 type TOuterProps = {}

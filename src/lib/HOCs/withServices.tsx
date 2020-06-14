@@ -1,4 +1,5 @@
 import React, { ComponentType } from 'react'
+
 import hoistNonReactStatics from 'hoist-non-react-statics'
 
 import useServices from 'lib/hooks/useServices'

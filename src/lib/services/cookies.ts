@@ -1,6 +1,6 @@
-import nookies from 'nookies'
 import { CookieSerializeOptions } from 'cookie'
 import { NextPageContext } from 'next'
+import nookies from 'nookies'
 
 import BaseService, { TOptions as TBaseOptions } from './base'
 

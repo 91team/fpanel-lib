@@ -1,8 +1,10 @@
 import { enableLogging } from 'mobx-logger'
 
 import Store from 'lib/store'
-import BaseService, { TOptions as TBaseOptions } from './base'
+
 import { TRootStoreOptions, CStore } from 'lib/store/types'
+
+import BaseService, { TOptions as TBaseOptions } from './base'
 
 export type TInitialState = TRootStoreOptions['initialState']
 export type TOptions = TBaseOptions & Omit<TRootStoreOptions, 'servicesManager'>

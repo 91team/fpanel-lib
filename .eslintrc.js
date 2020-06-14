@@ -1,4 +1,7 @@
 // Must be same as tslint.json with hooks rules
+const importsOrder = require('./eslint/.eslintrc.imports.js')
+const stylesKeysOrder = require('./eslint/.eslintrc.sortStylesKeys.js')
+
 module.exports = {
   root: true,
   env: {
@@ -21,6 +24,8 @@ module.exports = {
     '@typescript-eslint/tslint',
     'react',
     'react-hooks',
+    'import',
+    'sort-keys-fix',
     'prettier'
   ],
   rules: {
@@ -158,8 +163,10 @@ module.exports = {
           'prefer-conditional-expression': true
         }
       }
-    ]
+    ],
+    ...importsOrder.rules
   },
+  overrides: [stylesKeysOrder],
   settings: {
     react: {
       version: 'detect'

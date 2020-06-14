@@ -1,7 +1,5 @@
 import { observable, action, flow } from 'mobx'
 
-import Store from './index'
-import BaseStore from './base'
 import { CStore } from './types'
 import {
   SessionCreateDocument,
@@ -9,6 +7,9 @@ import {
   SessionCreateMutation,
   SessionCreateMutationVariables
 } from 'gql/generated/types'
+
+import BaseStore from './base'
+import Store from './index'
 
 type TInitialState = Partial<User>
 

@@ -1,4 +1,5 @@
 import components from './components'
+
 import * as DEFAULT_COLORS from './default'
 
 const colors = {

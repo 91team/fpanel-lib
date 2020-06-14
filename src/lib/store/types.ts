@@ -1,4 +1,5 @@
 import ServicesManager from 'lib/services/manager'
+
 import Store from './index'
 
 export abstract class CStore {

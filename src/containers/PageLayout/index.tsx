@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 
 import withStyles, { WithStylesProps } from 'HOCs/withStyles'
+
 import styles from './styles'
 
 type TOuterProps = {}

@@ -6,10 +6,11 @@ import React, {
   FC,
   RefObject
 } from 'react'
+
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import { Classes, Styles } from 'jss'
-import { ThemeContext as DefaultThemeContext } from 'theming'
 import { createUseStyles, WithStylesOptions } from 'react-jss'
+import { ThemeContext as DefaultThemeContext } from 'theming'
 
 function mergeClasses(baseClasses: Classes, additionalClasses: Classes) {
   const combinedClasses = { ...baseClasses }

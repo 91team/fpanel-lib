@@ -1,15 +1,16 @@
 import { NextPageContext } from 'next'
 
+import { TInitialState as TStoreInitialState } from './store'
+
+import { TServices, TStorage, TOptions } from './types'
+
+import { TInitialState as TApolloInitialState } from './apollo'
 import {
   AppService,
   ApolloService,
   CookiesService,
   StoreService
 } from './index'
-
-import { TInitialState as TApolloInitialState } from './apollo'
-import { TInitialState as TStoreInitialState } from './store'
-import { TServices, TStorage, TOptions } from './types'
 
 class ServicesManager {
   private services: TStorage = {}

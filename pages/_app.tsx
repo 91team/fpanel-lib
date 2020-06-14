@@ -1,22 +1,28 @@
 import React from 'react'
-import { ApolloProvider } from '@apollo/react-hooks'
-import { getDataFromTree } from '@apollo/react-ssr'
-import { Provider, useStaticRendering } from 'mobx-react'
-import App, { AppProps, AppContext } from 'next/app'
-import NextSEO from 'next-seo'
-import { ThemeProvider } from 'react-jss'
 
 import 'isomorphic-unfetch'
 import 'modern-normalize'
 
-import { ServicesManager, AppService } from 'services/index'
-import ServicesContext from 'lib/contexts/services'
-import Layout from 'containers/PageLayout'
-import { defaultTheme } from 'lib/theme'
-import { defaultSeoConfig } from 'constants/seo'
-import { TInitialState as TApolloInitialState } from 'services/apollo'
-import { TInitialState as TStoreInitialState } from 'services/store'
+import { ApolloProvider } from '@apollo/react-hooks'
+import { getDataFromTree } from '@apollo/react-ssr'
+import { Provider, useStaticRendering } from 'mobx-react'
+import NextSEO from 'next-seo'
+import App, { AppProps, AppContext } from 'next/app'
+import { ThemeProvider } from 'react-jss'
+
 import { CStore } from 'lib/store/types'
+
+import { defaultTheme } from 'lib/theme'
+
+import ServicesContext from 'lib/contexts/services'
+
+import { TInitialState as TApolloInitialState } from 'services/apollo'
+import { ServicesManager, AppService } from 'services/index'
+import { TInitialState as TStoreInitialState } from 'services/store'
+
+import Layout from 'containers/PageLayout'
+
+import { defaultSeoConfig } from 'constants/seo'
 
 type TProps = AppProps & {
   initialStoreState?: TStoreInitialState

@@ -1,13 +1,14 @@
-import { ApolloClient } from 'apollo-client'
+import { createLink as createUploadLink } from 'apollo-absinthe-upload-link'
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory'
+import { ApolloClient } from 'apollo-client'
 import { ApolloLink } from 'apollo-link'
 import { setContext } from 'apollo-link-context'
 import loggerLink from 'apollo-link-logger'
-import { createLink as createUploadLink } from 'apollo-absinthe-upload-link'
 import universalFetch from 'isomorphic-unfetch'
 
-import BaseService, { TOptions as TBaseOptions } from './base'
 import { GRAPHQL_API_URL } from 'constants/api'
+
+import BaseService, { TOptions as TBaseOptions } from './base'
 
 export type IApollo = ApolloClient<NormalizedCacheObject>
 export type TInitialState = NormalizedCacheObject

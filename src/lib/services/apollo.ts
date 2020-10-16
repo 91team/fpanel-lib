@@ -28,7 +28,7 @@ class ApolloService extends BaseService {
       connectToDevTools: !appService.isServer,
       ssrMode: false,
       link: this.getClientLink(),
-      cache: this.getClientCache(initialApolloState)
+      cache: this.getClientCache(initialApolloState),
     })
   }
 
@@ -38,7 +38,7 @@ class ApolloService extends BaseService {
     // HTTP-link is a part of upload link
     const uploadLink = createUploadLink({
       ...linkOptions,
-      fetch: universalFetch
+      fetch: universalFetch,
     })
 
     const authLink = setContext((_, { headers }) => {
@@ -47,8 +47,8 @@ class ApolloService extends BaseService {
       return {
         headers: {
           ...headers,
-          Authorization: token ? `Bearer ${token}` : ''
-        }
+          Authorization: token ? `Bearer ${token}` : '',
+        },
       }
     })
 

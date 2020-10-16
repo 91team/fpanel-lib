@@ -1,7 +1,7 @@
 import { Classes } from 'jss'
 import {
+  CreateUseStylesOptions,
   createUseStyles as defaultCreateUseStyles,
-  CreateUseStylesOptions
 } from 'react-jss'
 
 export default function createUseStyles<S>(

@@ -4,7 +4,7 @@ export enum STATE {
   IDLE = 'idle',
   LOADING = 'loading',
   SUCCESS = 'success',
-  FAILED = 'failed'
+  FAILED = 'failed',
 }
 
 const API = (process.env.API as unknown) as {
@@ -12,6 +12,7 @@ const API = (process.env.API as unknown) as {
   API_HOSTNAME: string
   CDN_HOSTNAME: string
 }
+
 export const HOSTNAME = API.HOSTNAME
 export const API_HOSTNAME =
   process.env.NODE_ENV === ENVIROMENT.PRODUCTION &&

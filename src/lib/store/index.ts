@@ -8,7 +8,7 @@ import User from './user'
 
 class Store implements CStore {
   private childStores = {
-    user: User
+    user: User,
   }
   private services: ReturnType<ServicesManager['getServices']>
 

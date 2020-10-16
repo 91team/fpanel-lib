@@ -1,11 +1,11 @@
-import { observable, action, flow } from 'mobx'
+import { action, flow, observable } from 'mobx'
 
 import { CStore } from './types'
 import {
   SessionCreateDocument,
-  SessionCreateMutationResult,
   SessionCreateMutation,
-  SessionCreateMutationVariables
+  SessionCreateMutationResult,
+  SessionCreateMutationVariables,
 } from 'gql/generated/types'
 
 import BaseStore from './base'
@@ -30,8 +30,8 @@ class User extends BaseStore<TInitialState> implements CStore {
         mutation: SessionCreateDocument,
         variables: {
           email: 'admin@ecor.dev',
-          password: 'password91'
-        }
+          password: 'password91',
+        },
       })
 
       if (data && data.sessionCreate) {
@@ -49,7 +49,7 @@ class User extends BaseStore<TInitialState> implements CStore {
 
   public serialize() {
     return {
-      token: this.token
+      token: this.token,
     }
   }
 }

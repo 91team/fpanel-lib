@@ -2,14 +2,14 @@ import { NextPageContext } from 'next'
 
 import { TInitialState as TStoreInitialState } from './store'
 
-import { TServices, TStorage, TOptions } from './types'
+import { TOptions, TServices, TStorage } from './types'
 
 import { TInitialState as TApolloInitialState } from './apollo'
 import {
-  AppService,
   ApolloService,
+  AppService,
   CookiesService,
-  StoreService
+  StoreService,
 } from './index'
 
 class ServicesManager {
@@ -28,7 +28,7 @@ class ServicesManager {
   static build({
     initialApolloState,
     initialStoreState,
-    ctx
+    ctx,
   }: {
     initialStoreState?: TStoreInitialState
     initialApolloState?: TApolloInitialState
@@ -39,30 +39,30 @@ class ServicesManager {
         {
           name: 'app',
           service: AppService,
-          options: {}
+          options: {},
         },
         {
           name: 'apollo',
           service: ApolloService,
           options: {
-            cacheState: initialApolloState
-          }
+            cacheState: initialApolloState,
+          },
         },
         {
           name: 'cookies',
           service: CookiesService,
           options: {
-            ctx
-          }
+            ctx,
+          },
         },
         {
           name: 'store',
           service: StoreService,
           options: {
-            initialState: initialStoreState
-          }
-        }
-      ]
+            initialState: initialStoreState,
+          },
+        },
+      ],
     })
   }
 

@@ -7,6 +7,6 @@ export const defaultSeoConfig: Config = {
     type: 'website',
     url: '',
     title: '',
-    description: ''
-  }
+    description: '',
+  },
 }

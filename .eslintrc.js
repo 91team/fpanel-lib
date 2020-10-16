@@ -81,6 +81,7 @@ module.exports = {
     'arrow-body-style': 'error',
     'arrow-parens': ['off', 'as-needed'],
     camelcase: 'off',
+    'comma-dangle': 'off',
     complexity: 'off',
     'constructor-super': 'error',
     curly: 'off',
@@ -96,7 +97,7 @@ module.exports = {
     'max-classes-per-file': ['error', 1],
     'max-len': 'off',
     'new-parens': 'off',
-    'newline-per-chained-call': 'off',
+    'newline-per-chained-call': 'off', 
     'no-bitwise': 'error',
     'no-caller': 'error',
     'no-cond-assign': 'error',
@@ -134,6 +135,19 @@ module.exports = {
     'no-unused-labels': 'error',
     'no-var': 'error',
     'object-shorthand': 'error',
+    'padding-line-between-statements': [
+      'error',
+      { blankLine: 'always', prev: '*', next: 'return' },
+      { blankLine: 'always', prev: '*', next: 'block-like' },
+      { blankLine: 'always', prev: 'block-like', next: '*' },
+      { blankLine: 'never', prev: 'case', next: 'default' },
+      { blankLine: 'never', prev: 'case', next: 'case' },
+      { blankLine: 'any', prev: '*', next: 'break' },
+      { blankLine: 'always', prev: '*', next: ['const', 'let', 'var'] },
+      { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+      { blankLine: 'any', prev: ['const'], next: ['const'] },
+      { blankLine: 'any', prev: ['let'], next: ['let'] }
+    ],
     'prefer-arrow/prefer-arrow-functions': 'off',
     'prefer-const': 'error',
     'prefer-object-spread': 'error',
@@ -150,6 +164,12 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
     'quote-props': 'off',
     radix: 'error',
+    'sort-imports': [
+      'error',
+      {
+        ignoreDeclarationSort: true
+      }
+    ],
     'spaced-comment': ['error', 'always'],
     'space-before-function-paren': 'off',
     'use-isnan': 'error',

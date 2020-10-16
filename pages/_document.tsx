@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react'
 
 import Document, {
+  DocumentContext,
+  DocumentProps,
   Head,
   Html,
   Main,
   NextScript,
-  DocumentProps,
-  DocumentContext
 } from 'next/document'
-import { SheetsRegistry, JssProvider, createGenerateId } from 'react-jss'
+import { JssProvider, SheetsRegistry, createGenerateId } from 'react-jss'
 import sprite from 'svg-sprite-loader/runtime/sprite.build'
 
 type TProps = DocumentProps & {
@@ -27,7 +27,7 @@ class AppDocument extends Document<TProps> {
           <JssProvider registry={registry} generateId={generateId}>
             <App {...props} />
           </JssProvider>
-        )
+        ),
       })
 
     // In that place rendered <Main /> component
@@ -44,9 +44,9 @@ class AppDocument extends Document<TProps> {
         <Fragment key="ssr-styles">
           {initialProps.styles}
           <style id="jss-server-side">{registry.toString()}</style>
-        </Fragment>
+        </Fragment>,
       ],
-      spriteContent
+      spriteContent,
     }
   }
 
@@ -61,7 +61,7 @@ class AppDocument extends Document<TProps> {
             style={{ display: 'none' }}
             aria-hidden="true"
             dangerouslySetInnerHTML={{
-              __html: spriteContent
+              __html: spriteContent,
             }}
           />
           <Main />

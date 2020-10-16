@@ -4,10 +4,10 @@ import * as DEFAULT_COLORS from './default'
 
 const colors = {
   common: {
-    ...DEFAULT_COLORS
+    ...DEFAULT_COLORS,
   },
   // Components
-  components
+  components,
 }
 
 export default colors

@@ -5,5 +5,5 @@ import sizes from './sizes'
 export const defaultTheme = {
   colors,
   common,
-  sizes
+  sizes,
 } as const

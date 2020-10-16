@@ -7,14 +7,14 @@ const keyMap: { [K in Breakpoint]: Breakpoint } = {
   sm: 'sm',
   md: 'md',
   lg: 'lg',
-  xl: 'xl'
+  xl: 'xl',
 }
 const values: BreakpointValues = {
   xs: 0,
   sm: 600,
   md: 960,
   lg: 1280,
-  xl: 1920
+  xl: 1920,
 }
 
 const unit = 'px'
@@ -22,6 +22,7 @@ const step = 5
 
 function up(key: Breakpoint | number) {
   const value = typeof values[key] === 'number' ? values[key] : key
+
   return `@media (min-width:${value}${unit})`
 }
 
@@ -35,6 +36,7 @@ function down(key: Breakpoint | number) {
 
   const value =
     typeof upperbound === 'number' && endIndex > 0 ? upperbound : key
+
   return `@media (max-width:${+value - step / 100}${unit})`
 }
 
@@ -69,7 +71,7 @@ const breakpoints = {
   down,
   between,
   only,
-  width
+  width,
 }
 
 export default breakpoints

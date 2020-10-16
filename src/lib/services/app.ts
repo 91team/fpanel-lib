@@ -2,7 +2,7 @@ import BaseService, { TOptions as TBaseOptions } from './base'
 
 export const ENVIROMENT = {
   PRODUCTION: 'production',
-  DEVELOPMENT: 'development'
+  DEVELOPMENT: 'development',
 } as const
 
 export type TOptions = TBaseOptions

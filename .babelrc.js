@@ -8,20 +8,21 @@ const config = {
       {
         'preset-env': {
           useBuiltIns: 'usage',
-          corejs: 3
+          corejs: 3,
         },
         'preset-react': {
           useBuiltIns: true,
-          development: isDev
-        }
-      }
-    ]
+          development: isDev,
+        },
+      },
+    ],
+    '@babel/preset-typescript',
   ],
   plugins: [
     ['@babel/plugin-proposal-decorators', { legacy: true }],
     ['@babel/plugin-proposal-class-properties', { loose: true }],
-    'polished'
-  ]
+    'polished',
+  ],
 }
 
 if (isProduction) {

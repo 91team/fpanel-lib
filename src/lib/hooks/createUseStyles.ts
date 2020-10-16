@@ -11,7 +11,7 @@ export default function createUseStyles<S>(
   const useStyles = defaultCreateUseStyles(styles, options)
 
   return (data?: unknown) =>
-    useStyles(data) as S extends ((theme: any) => any)
+    useStyles(data) as S extends (theme: any) => any
       ? Classes<keyof ReturnType<S>>
       : Classes<keyof S>
 }

@@ -1,4 +1,4 @@
-import { Classes, StyleSheetFactoryOptions, Jss } from 'jss'
+import { Classes, Jss, StyleSheetFactoryOptions } from 'jss'
 import { Theming } from 'theming'
 
 declare module 'react-jss' {

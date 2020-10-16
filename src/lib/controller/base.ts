@@ -56,8 +56,8 @@ export class BaseController<
     this.constructor.findRootController(this)
 
   /**
-   * Функция получения инстанса контроллера по имени.
-   * @param {string} name - имя подконтроллера.
+   * Функция получения инстанса подконтроллера по его классу.
+   * @param {typeof BaseController} subControllerFactory - класс подконтроллера.
    * @returns {T extends BaseController}
    */
   public getSubControllerInstance = <
@@ -77,8 +77,8 @@ export class BaseController<
   }
 
   /**
-   * Функция получения инстанса подконтроллера по имени.
-   * @param {string} controllerName - имя подконтроллера.
+   * Функция получения инстанса подконтроллера по его классу (с глубоким поиском).
+   * @param {typeof BaseController} subControllerFactory - класс подконтроллера.
    * @returns {T extends BaseController}
    */
   public getDeepSubControllerInstanceFromRoot = computedFn(
@@ -120,8 +120,8 @@ export class BaseController<
   ) => T | undefined
 
   /**
-   * Функция получения инстансов подконтроллеров по именам из всего дерева.
-   * @param {string[]} subControllersNames - имена подконтроллеров.
+   * Функция получения инстансов подконтроллеров по классам из всего дерева.
+   * @param {typeof BaseController[]} controllerFactories - классы подконтроллеров.
    * @returns {T extends TBaseSubControllers}
    */
   public getDeepSubControllersInstancesFromRoot = computedFn(
@@ -176,7 +176,11 @@ export class BaseController<
       parent: BaseController<TRootController, TParentController>
     ) => T,
     cancelOnCreateCallback?: boolean
-  ) => T | undefined = (subControllerFactory, cancelOnCreateCallback) => {
+  ) => T | undefined = (
+    subControllerFactory,
+
+    cancelOnCreateCallback
+  ) => {
     // @ts-expect-error
     const name: string = subControllerFactory.NAME
 
@@ -216,7 +220,11 @@ export class BaseController<
     const subControllers: BaseController[] = []
 
     for (const subControllerFactory of subControllersFactories) {
-      const subController = this.addSubController(subControllerFactory, true)
+      const subController = this.addSubController(
+        subControllerFactory,
+
+        true
+      )
 
       if (subController) {
         subControllers.push(subController)
@@ -229,8 +237,8 @@ export class BaseController<
   }
 
   /**
-   * Функция удаления подконтроллера по его имени.
-   *  @param {string} name - имя подконтроллера.
+   * Функция удаления подконтроллера по его классу.
+   *  @param {typeof BaseController} subControllerFactory - класс подконтроллера.
    */
   @action.bound public removeSubControllerInstance = <
     T extends BaseController<
@@ -253,8 +261,8 @@ export class BaseController<
   }
 
   /**
-   * Функция удаления подконтроллеров по списку имен.
-   *  @param {string[]} names - массив имен подконтроллеров.
+   * Функция удаления подконтроллеров по списку классов.
+   *  @param {typeof BaseController[]} subControllerFactories - массив классов подконтроллеров.
    */
   @action.bound public removeSubControllersInstance = <
     T extends BaseController<

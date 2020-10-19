@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "typeRoots": [
+      "./types"
+    ]
+  },
+  "include": ["./services/*.ts", "./services/*.tsx"]
+}

@@ -39,7 +39,7 @@
     "sourceMap": true,
     "strict": false,
     "strictNullChecks": false,
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "typeRoots": ["./types", "./node_modules/@types", "./build/types"]
   },
   "exclude": [
     ".next",
@@ -48,5 +48,5 @@
     "node_modules",
     "**/lib/gql/generated/*"
   ],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"]
 }

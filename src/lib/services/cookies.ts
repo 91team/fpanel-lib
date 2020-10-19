@@ -2,7 +2,7 @@ import { CookieSerializeOptions } from 'cookie'
 import { NextPageContext } from 'next'
 import nookies from 'nookies'
 
-import BaseService, { TOptions as TBaseOptions } from './base'
+import { BaseService, TOptions as TBaseOptions } from './base'
 
 export type TOptions = TBaseOptions & {
   ctx?: NextPageContext

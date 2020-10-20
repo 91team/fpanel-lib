@@ -1,4 +1,4 @@
-import React, { ComponentType, Context, forwardRef, useRef } from 'react'
+import React, { ComponentType, Context, forwardRef, useState } from 'react'
 
 import hoistNonReactStatics from 'hoist-non-react-statics'
 
@@ -15,10 +15,10 @@ export function createApplyController<TController>(
       const displayName = getDisplayName(WrappedComponent)
 
       const ApplyControllerHOC = forwardRef<any, TProps>((props, ref) => {
-        const controllerRef = useRef(new Controller())
+        const [controller] = useState(() => new Controller())
 
         return (
-          <Provider value={controllerRef.current}>
+          <Provider value={controller}>
             <WrappedComponent ref={ref} {...props} />
           </Provider>
         )

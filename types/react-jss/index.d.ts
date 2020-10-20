@@ -11,8 +11,4 @@ declare module 'react-jss' {
     injectTheme?: boolean
     jss?: Jss
   }
-
-  export interface CreateUseStylesOptions extends BaseOptions {
-    name?: string
-  }
 }

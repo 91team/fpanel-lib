@@ -9,6 +9,7 @@ import {
   ApolloService,
   AppService,
   CookiesService,
+  RouterService,
   StoreService,
 } from './index'
 
@@ -61,6 +62,11 @@ class ServicesManager {
           options: {
             initialState: initialStoreState,
           },
+        },
+        {
+          name: 'router',
+          service: RouterService,
+          options: {},
         },
       ],
     })

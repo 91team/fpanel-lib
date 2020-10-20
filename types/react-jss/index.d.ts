@@ -15,4 +15,14 @@ declare module 'react-jss' {
   export interface CreateUseStylesOptions extends BaseOptions {
     name?: string
   }
+
+  export interface JSSProviderProps {
+    jss?: Jss
+    registry?: SheetsRegistry
+    generateId?: GenerateId
+    classNamePrefix?: string
+    disableStylesGeneration?: boolean
+    children: ReactNode
+    id?: CreateGenerateIdOptions
+  }
 }

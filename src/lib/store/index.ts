@@ -4,11 +4,13 @@ import ServicesManager from 'lib/services/manager'
 
 import { CStore, TRootStoreOptions } from './types'
 
+import Notifications from './notifications'
 import User from './user'
 
 class Store implements CStore {
   private childStores = {
     user: User,
+    notifications: Notifications,
   }
   private services: ReturnType<ServicesManager['getServices']>
 
@@ -23,9 +25,10 @@ class Store implements CStore {
   }
 
   @observable public user: null | User = null
+  @observable public notifications: null | Notifications = null
 
   private get serializableWhitelist(): string[] {
-    return ['user']
+    return ['user', 'notifications']
   }
 
   public getServices() {

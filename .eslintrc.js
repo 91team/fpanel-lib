@@ -1,3 +1,5 @@
+const path = require('path')
+
 // Must be same as tslint.json with hooks rules
 const importsOrder = require('./eslint/.eslintrc.imports.js')
 const stylesKeysOrder = require('./eslint/.eslintrc.sortStylesKeys.js')
@@ -7,17 +9,17 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
   },
   extends: [
     'prettier/@typescript-eslint',
     'plugin:react/recommended',
-    'plugin:prettier/recommended'
+    'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
-    sourceType: 'module'
+    project: path.resolve(__dirname, './tsconfig.json'),
+    sourceType: 'module',
   },
   plugins: [
     '@typescript-eslint',
@@ -26,7 +28,7 @@ module.exports = {
     'react-hooks',
     'import',
     'sort-keys-fix',
-    'prettier'
+    'prettier',
   ],
   rules: {
     '@typescript-eslint/adjacent-overload-signatures': 'error',
@@ -37,9 +39,9 @@ module.exports = {
       'off',
       {
         overrides: {
-          constructors: 'off'
-        }
-      }
+          constructors: 'off',
+        },
+      },
     ],
     '@typescript-eslint/indent': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
@@ -49,13 +51,13 @@ module.exports = {
       {
         multiline: {
           delimiter: 'none',
-          requireLast: true
+          requireLast: true,
         },
         singleline: {
           delimiter: 'semi',
-          requireLast: false
-        }
-      }
+          requireLast: false,
+        },
+      },
     ],
     '@typescript-eslint/member-ordering': 'off',
     '@typescript-eslint/consistent-type-assertions': 'error',
@@ -97,7 +99,7 @@ module.exports = {
     'max-classes-per-file': ['error', 1],
     'max-len': 'off',
     'new-parens': 'off',
-    'newline-per-chained-call': 'off', 
+    'newline-per-chained-call': 'off',
     'no-bitwise': 'error',
     'no-caller': 'error',
     'no-cond-assign': 'error',
@@ -121,8 +123,8 @@ module.exports = {
     'no-shadow': [
       'off',
       {
-        hoist: 'all'
-      }
+        hoist: 'all',
+      },
     ],
     'no-sparse-arrays': 'error',
     'no-template-curly-in-string': 'error',
@@ -146,7 +148,7 @@ module.exports = {
       { blankLine: 'always', prev: '*', next: ['const', 'let', 'var'] },
       { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
       { blankLine: 'any', prev: ['const'], next: ['const'] },
-      { blankLine: 'any', prev: ['let'], next: ['let'] }
+      { blankLine: 'any', prev: ['let'], next: ['let'] },
     ],
     'prefer-arrow/prefer-arrow-functions': 'off',
     'prefer-const': 'error',
@@ -155,8 +157,8 @@ module.exports = {
     'react/jsx-no-bind': [
       'error',
       {
-        allowArrowFunctions: true
-      }
+        allowArrowFunctions: true,
+      },
     ],
     'react/prop-types': 'off',
     'react/self-closing-comp': 'error',
@@ -167,8 +169,8 @@ module.exports = {
     'sort-imports': [
       'error',
       {
-        ignoreDeclarationSort: true
-      }
+        ignoreDeclarationSort: true,
+      },
     ],
     'spaced-comment': ['error', 'always'],
     'space-before-function-paren': 'off',
@@ -180,16 +182,16 @@ module.exports = {
         rulesDirectory: ['node_modules/tslint-react/rules'],
         rules: {
           'no-reference-import': true,
-          'prefer-conditional-expression': true
-        }
-      }
+          'prefer-conditional-expression': true,
+        },
+      },
     ],
-    ...importsOrder.rules
+    ...importsOrder.rules,
   },
   overrides: [stylesKeysOrder],
   settings: {
     react: {
-      version: 'detect'
-    }
-  }
+      version: 'detect',
+    },
+  },
 }

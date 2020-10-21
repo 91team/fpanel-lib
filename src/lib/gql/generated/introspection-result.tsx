@@ -15,16 +15,40 @@
     "types": [
       {
         "kind": "UNION",
-        "name": "Geography",
+        "name": "SocketMessage",
         "possibleTypes": [
           {
-            "name": "Point"
+            "name": "StepProgress"
           },
           {
-            "name": "LineString"
+            "name": "DatasourceState"
           },
           {
-            "name": "Polygon"
+            "name": "DatasourceProgress"
+          },
+          {
+            "name": "ChatOnline"
+          },
+          {
+            "name": "ChatUser"
+          },
+          {
+            "name": "ChatMessage"
+          },
+          {
+            "name": "ChatRoom"
+          }
+        ]
+      },
+      {
+        "kind": "INTERFACE",
+        "name": "OlapLayer",
+        "possibleTypes": [
+          {
+            "name": "OlapChartLayer"
+          },
+          {
+            "name": "OlapTextLayer"
           }
         ]
       }

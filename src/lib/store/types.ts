@@ -1,4 +1,4 @@
-import ServicesManager from 'lib/services/manager'
+import { ServicesManager } from 'services/manager'
 
 import Store from './index'
 

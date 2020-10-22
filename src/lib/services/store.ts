@@ -34,5 +34,3 @@ export class StoreService extends BaseService {
     enableLogging()
   }
 }
-
-export default StoreService

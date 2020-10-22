@@ -1,8 +1,8 @@
-import StoreService, { TOptions as TStoreOptions } from '../store'
+import { StoreService, TOptions as TStoreOptions } from '../store'
 
-import ApolloService, { TOptions as TApolloOptions } from '../apollo'
+import { ApolloService, TOptions as TApolloOptions } from '../apollo'
 import { AppService, TOptions as TAppOptions } from '../app'
-import CookiesService, { TOptions as TCookiesOptions } from '../cookies'
+import { CookiesService, TOptions as TCookiesOptions } from '../cookies'
 import { RouterService, TOptions as TRouterOptions } from '../router'
 
 export type TServiceConfigTemplate<TName, TService, TOptions> = {

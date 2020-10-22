@@ -13,7 +13,7 @@ import {
   StoreService,
 } from './index'
 
-class ServicesManager {
+export class ServicesManager {
   private services: TStorage = {}
 
   constructor({ services }: TOptions = { services: [] }) {
@@ -91,5 +91,3 @@ class ServicesManager {
     return this.services
   }
 }
-
-export default ServicesManager

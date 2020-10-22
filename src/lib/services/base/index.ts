@@ -1,4 +1,4 @@
-import ServicesManager from '../manager'
+import { ServicesManager } from '../manager'
 
 export type TOptions = {
   root: ServicesManager

@@ -16,7 +16,7 @@ export type TOptions = TBaseOptions & {
   cacheState?: TInitialState
 }
 
-class ApolloService extends BaseService {
+export class ApolloService extends BaseService {
   private client: IApollo
 
   constructor({ cacheState: initialApolloState = {}, root }: TOptions) {
@@ -76,5 +76,3 @@ class ApolloService extends BaseService {
     return this.getClient().extract()
   }
 }
-
-export default ApolloService

@@ -1,6 +1,6 @@
 import { observable } from 'mobx'
 
-import ServicesManager from 'lib/services/manager'
+import { ServicesManager } from 'services/manager'
 
 import { CStore, TRootStoreOptions } from './types'
 

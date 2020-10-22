@@ -8,7 +8,7 @@ export type TOptions = TBaseOptions & {
   ctx?: NextPageContext
 }
 
-class CookiesService extends BaseService {
+export class CookiesService extends BaseService {
   private ctx?: NextPageContext | undefined
 
   constructor({ ctx, ...options }: TOptions) {
@@ -35,5 +35,3 @@ class CookiesService extends BaseService {
     nookies.destroy(this.ctx, key)
   }
 }
-
-export default CookiesService

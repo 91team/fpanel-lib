@@ -13,12 +13,12 @@ type TOuterProps = {}
 type TProps = WithRouterProps & TOuterProps & TWithServicesProps & {}
 
 class AppRouter extends PureComponent<TProps> {
-  getSectionRouteComponent(route: Route) {
+  getRouteComponent(route: Route) {
     const {
       services: { router },
     } = this.props
 
-    return router.getSectionComponent(
+    return router.getRouteComponent(
       route ? route.name : constants.UNKNOWN_ROUTE
     )
   }
@@ -26,7 +26,7 @@ class AppRouter extends PureComponent<TProps> {
   render() {
     const { route, previousRoute } = this.props
 
-    const CurrentRoute = this.getSectionRouteComponent(route)
+    const CurrentRoute = this.getRouteComponent(route)
 
     return (
       <Layout>

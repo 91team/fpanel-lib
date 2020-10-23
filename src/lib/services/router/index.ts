@@ -139,35 +139,12 @@ export class RouterService extends BaseService {
       return route.component
     }
 
-    return null
-  }
-
-  public getSectionNameByRouteName(routeName: string): string {
-    return routeName.split('.')[0]
-  }
-
-  public getSectionByRouteName(routeName: string): ICustomRoute | undefined {
-    const sectionName = this.getSectionNameByRouteName(routeName)
-
-    return this.getRouteByName(sectionName)
-  }
-
-  public getSectionComponent(
-    routeName: string
-  ): ICustomRoute['component'] | null {
-    const sectionName = this.getSectionNameByRouteName(routeName)
-    const component = this.getRouteComponent(sectionName)
-
-    if (component) {
-      return component
-    }
-
     return UNKNOWN_ROUTE.component
   }
 
   public isRouteWithMenu(route: Route): boolean {
     if (route && route.name) {
-      const section = this.getSectionByRouteName(route.name)
+      const section = this.getRouteByName(route.name)
 
       if (section) {
         return section.withMenu

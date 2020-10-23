@@ -1,4 +1,4 @@
-## Клиентский бойлерплейт на [Next.js](https://nextjs.org/docs/getting-started)
+# Клиентский бойлерплейт
 
 ## Старт
 

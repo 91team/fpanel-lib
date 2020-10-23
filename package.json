@@ -4,10 +4,15 @@
   "license": "Private",
   "private": true,
   "scripts": {
+    "clean:production": "yarn rimraf ./public/webpack/production/*",
+    "clean:development": "yarn rimraf ./public/webpack/development/*",
     "lint": "yarn tsc --noEmit && yarn eslint 'src' --ext ts,tsx",
     "schema:clean": "yarn rimraf schema.graphql && yarn rimraf src/lib/gql/generated",
     "schema:generate-types": "yarn schema:clean && graphql-codegen --config codegen.yml",
-    "start:hot": "yarn ts-node -r dotenv/config --project ./src/server/tsconfig.json ./src/server/index.ts dotenv_config_path=.env.development:hot"
+    "server:start": "yarn ts-node -r dotenv/config --project ./src/server/tsconfig.json ./src/server/index.ts dotenv_config_path=.env.development",
+    "server:start:hot": "yarn ts-node -r dotenv/config --project ./src/server/tsconfig.json ./src/server/index.ts dotenv_config_path=.env.development:hot",
+    "start": "yarn clean:development && yarn server:start",
+    "start:hot": "yarn clean:development && yarn server:start:hot"
   },
   "cacheDirectories": [
     "node_modules"

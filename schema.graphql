@@ -4,43 +4,31 @@ schema {
 }
 
 type Acl {
-  administration: Boolean
-  bi: Boolean
-  cms: Boolean
-  events: Boolean
-  modeling: Boolean
-  monitoring: Boolean
+  etl: EtlAcl
+  olap: OlapAcl
+  ose: OseAcl
+  shared: SharedAcl
 }
 
-input AclInput {
-  administration: Boolean
-  bi: Boolean
-  cms: Boolean
-  events: Boolean
-  modeling: Boolean
-  monitoring: Boolean
+enum Agg {
+  AVG
+  COUNT
+  MAX
+  MEDIAN
+  MIN
+  SUM
 }
 
-type AdditionalInfo {
-  id: String
-  label: String
-  value: String
-}
-
-input AdditionalInfoInput {
-  id: String
-  label: String
-  value: String
-}
-
-type AppealType {
-  additionalQuestions: [String]
-  dateEnd: Timestamp
-  dateStart: Timestamp
-  id: Int
-  insertedAt: Timestamp
-  timeLimit: Int
-  title: String
+enum ArgType {
+  ANY_DATE
+  ANY_NUMBER
+  ANY_STRING
+  COL_DATE
+  COL_NUMBER
+  COL_STRING
+  DATE
+  NUMBER
+  STRING
 }
 
 type Attachment {
@@ -51,1011 +39,1669 @@ type Attachment {
   url: String
 }
 
-type Banner {
-  attachment: Attachment
+type Autocomplete {
+  column: Column
+  function: Function
+  name: String
+  type: AutocompleteType
+}
+
+enum AutocompleteType {
+  COLUMN
+  FUNCTION
+  KEYWORD
+}
+
+enum CaseType {
+  CAPITALIZE
+  LOWER
+  NONE
+  UPPER
+}
+
+type Change {
+  after: String
+  before: String
+  changeType: ChangeType
+  column: Column
   id: Int
-  image: File
   insertedAt: Timestamp
-  published: Boolean
-  title: String
-  url: String
 }
 
-type Block {
-  attachment: Attachment
-  blockContent: String
-  blockType: NewsBlockType
+input ChangeCaseTypeInput {
+  value: CaseType
+}
+
+enum ChangeType {
+  CHANGE_CASE_TYPE
+  CHANGE_CODECS
+  CHANGE_DATA_TYPE
+  CHANGE_INCLUDE
+  CHANGE_POSITION
+  CHANGE_TITLE
+  CHANGE_WIDTH
+  DELETE_COLUMN
+  DELETE_COLUMNS
+  REMOVE_LETTERS
+  REMOVE_NUMBERS
+  REMOVE_PUNCTUATION
+  TRIM_SPACES
+  UNION_COLUMNS
+}
+
+type ChatAvatar {
+  large: String
+  small: String
+}
+
+type ChatMessage {
+  embed: Json
+  messageId: String
+  reply: ChatMessage
+  replyId: String
+  roomId: String
+  text: String
+  user: ChatUser
+  userId: String
+}
+
+type ChatOnline {
   id: String
-  place: Geography
+  meta: ChatOnlineMeta
 }
 
-type Card {
-  callerBuilding: String
-  place: Geography
-  withCall: Boolean
-  incidentType: String
-  addrLevel2: String
-  phoneInfoName: String
-  entranceCode: String
-  kladrCallerStreet: String
+type ChatOnlineMeta {
+  onlineAt: Int
+}
+
+type ChatRoom {
+  dialog: Boolean
+  lastMessage: ChatMessage
+  messageId: String
+  metadata: Json
+  name: String
+  roomId: String
+  updatedAt: Int
+  user: ChatUser
+}
+
+type ChatUser {
+  avatar: ChatAvatar
+  id: String
+  name: String
+}
+
+type Codec {
+  level: Int
+  type: CodecType
+}
+
+input CodecInp {
+  level: Int
+  type: CodecType
+}
+
+input CodecInput {
+  value: [CodecInp]
+}
+
+enum CodecType {
+  DELTA
+  DOUBLE_DELTA
+  GORILLA
+  LZ4
+  LZ4HC
+  NONE
+  T64
+  ZSTD
+}
+
+type Column {
+  caseType: CaseType
+  changes: [Change]
+  codecs: [Codec]
+  columnIds: [Int]
+  columnName: String
+  columnStats: [ColumnStat]
+  compressedBytes: Int
+  dataType: DataType
+  defaultExpr: String
+  id: Int
+  include: Boolean
+  insertedAt: Timestamp
+  nullable: Boolean
+  originalTitle: String
+  position: Int
+  removeLetters: Boolean
+  removeNumbers: Boolean
+  removePunctuation: Boolean
+  sourceStepId: Int
+  step: Step
+  stepIds: [Int]
+  title: String
+  trimSpaces: Boolean
+  uncompressedBytes: Int
+  updatedAt: Timestamp
+  width: Int
+}
+
+type ColumnStat {
+  count: Int
+  value: String
+}
+
+type ConnectedEntities {
+  folders: Json
+  objects: Json
+}
+
+type Connection {
+  id: Int
+  joinType: JoinType
+  leftTableFieldId: String
+  leftTableId: Int
+  rightTableFieldId: String
+  rightTableId: Int
+}
+
+type Datasource {
+  datasetCode: String
+  datasourceProgress: DatasourceProgress
+  datasourceState: DatasourceState
+  dbParams: DbParams
+  eisParams: EisParams
+  id: Int
+  link: String
+  locked: Boolean
+  object: Object
+  periodicityType: PeriodicityType
+  periodicityValue: Float
+  sourceType: SourceType
+  steps: [Step]
+  title: String
+}
+
+type DatasourceProgress {
+  datasourceId: Int
+  doneDate: Timestamp
+  futureStartDate: Timestamp
+  processes: [Progress]
+  startDate: Timestamp
+  status: ProgressStatus
+  stopDate: Timestamp
+}
+
+type DatasourceState {
+  allCount: Int
+  currentSubsource: String
+  datasourceId: Int
+  doneCount: Int
+}
+
+enum DataType {
+  DATE
+  DATETIME
+  ENUM
+  FLOAT32
+  FLOAT64
+  INT16
+  INT32
+  INT64
+  INT8
+  STRING
+  STRING_N
+  UINT16
+  UINT32
+  UINT64
+  UINT8
+  UUID
+}
+
+input DataTypeInput {
+  value: DataType
+}
+
+type DataValue {
+  agg: Agg
+  columnId: Int
+  fieldId: String
+  filter: [FormulaToken]
+  groupFieldId: String
+  tableId: Int
+  title: String
+}
+
+input DataValueInput {
+  agg: Agg
+  columnId: Int
+  fieldId: String
+  filter: [FormulaTokenInput]
+  groupFieldId: String
+  tableId: Int
+  title: String
+}
+
+type DbParams {
+  db: String
+  dbType: DbType
+  host: String
+  pass: String
+  port: String
+  tables: [DbTable]
+  user: String
+}
+
+input DbParamsInp {
+  db: String
+  dbType: DbType
+  host: String
+  pass: String
+  port: String
+  tables: [DbTableInp]
+  user: String
+}
+
+type DbTable {
+  name: String
+  periodicityType: PeriodicityType
+  periodicityValue: Float
+  schema: String
+}
+
+input DbTableInp {
+  name: String
+  periodicityType: PeriodicityType
+  periodicityValue: Float
+  schema: String
+}
+
+enum DbType {
+  MSSQL
+  MYSQL
+  ORACLE
+  POSTGRES
+}
+
+type EisDir {
+  includeSubdirs: Boolean
+  path: String
+  queries: [String]
+  regexp: String
+  title: String
+}
+
+input EisDirInp {
+  includeSubdirs: Boolean
+  path: String
+  queries: [String]
+  regexp: String
+  title: String
+}
+
+type EisParams {
+  dirs: [EisDir]
+  host: String
+  pass: String
+  port: String
+  user: String
+}
+
+input EisParamsInp {
+  dirs: [EisDirInp]
+  host: String
+  pass: String
+  port: String
+  user: String
+}
+
+type EtlAcl {
+  datasourceEdit: Boolean
+  datasourceRead: Boolean
+  flowEdit: Boolean
+  flowRead: Boolean
+}
+
+type Field {
+  datatype: FieldDataType
   description: String
-  callerAddressStr: String
-  sys112TypeId: Int
-  state02: Sys112StateType
-  callerAddrLevel1: String
-  sys112TypeName: String
-  callerAddrCorps: String
-  limitDate: Timestamp
-  stateCouterTerr: Sys112StateType
-  id: UUID
-  level: String
-  room: String
-  phoneInfoLastName: String
-  callerStreet: String
-  sys112Type: Sys112Type
-  answer: String
-  eventId: UUID
-  kladrStreet: String
-  coordinatorId: Int
-  callerRoom: String
-  callerAddrLevel2: String
-  phone: String
-  callerInfoLastName: String
-  callerInfoName: String
-  entrance: String
-  building: String
-  callerPhone: String
-  ukio: String
-  callerLanguage: String
-  injuredPeople: String
-  cardType: EventCardType
-  state: Sys112StateType
-  street: String
-  kladrCallerAddrLevel2: String
-  km: String
-  kladrAddrLevel2: String
-  kladrAddrLevel1: String
-  phoneInfoPlace: Geography
-  addrLevel1: String
-  phoneInfoAddress: String
-  addrCorps: String
-  attachments: [EcorAttachment]
-  callerAdditionalInfo: String
-  near: String
-  stateJkh: Sys112StateType
-  emergencyId: Int
-  sys112OperatorId: String
-  peopleInDanger: String
-  addressStr: String
-  sys112Id: String
-  state01: Sys112StateType
-  storeys: String
-  additionalInfo: String
-  phoneInfoMiddleName: String
-  executorId: Int
-  state04: Sys112StateType
-  state03: Sys112StateType
-  date: Timestamp
-  sys112Number: String
-  callerInfoMiddleName: String
-  kladrCallerAddrLevel1: String
-}
-
-input CardInput {
-  kladrCallerAddrLevel1: String
-  callerInfoMiddleName: String
-  date: Timestamp
-  executorId: Int
-  phoneInfoMiddleName: String
-  additionalInfo: String
-  storeys: String
-  sys112Id: String
-  addressStr: String
-  peopleInDanger: String
-  sys112OperatorId: String
-  emergencyId: Int
-  near: String
-  callerAdditionalInfo: String
-  addrCorps: String
-  phoneInfoAddress: String
-  addrLevel1: String
-  phoneInfoPlace: PlaceInput
-  kladrAddrLevel1: String
-  kladrAddrLevel2: String
-  km: String
-  kladrCallerAddrLevel2: String
-  street: String
-  cardType: EventCardType
-  injuredPeople: String
-  callerLanguage: String
-  ukio: String
-  callerPhone: String
-  building: String
-  entrance: String
-  callerInfoName: String
-  callerInfoLastName: String
-  phone: String
-  callerAddrLevel2: String
-  callerRoom: String
-  coordinatorId: Int
-  kladrStreet: String
-  answer: String
-  sys112Type: Sys112Type
-  callerStreet: String
-  phoneInfoLastName: String
-  room: String
-  level: String
-  id: UUID
-  limitDate: Timestamp
-  callerAddrCorps: String
-  sys112TypeName: String
-  callerAddrLevel1: String
-  sys112TypeId: Int
-  callerAddressStr: String
-  description: String
-  kladrCallerStreet: String
-  entranceCode: String
-  phoneInfoName: String
-  attachmentIds: [UUID]
-  addrLevel2: String
-  incidentType: String
-  withCall: Boolean
-  place: PlaceInput
-  callerBuilding: String
-}
-
-"""Coordinates scalar"""
-scalar Coordinates
-
-input Coords {
-  lat: Float
-  lon: Float
-}
-
-type Dimension {
-  id: ID
-  physicTitle: String
+  fieldType: FieldType
+  id: String
+  isFKey: Boolean
+  isInvisible: Boolean
+  position: Int
   postfix: String
   title: String
-  values: [DimensionVal]
 }
 
-type DimensionVal {
-  time: Timestamp
-  value: Float
+enum FieldDataType {
+  DATE
+  DATETIME
+  FLOAT
+  GEO
+  INT
+  STRING
 }
 
-type Document {
-  attachment: Attachment
+enum FieldType {
+  DIMENSION
+  MEASURE
+}
+
+type Flow {
+  acl: FlowAcl
+  connectedEntities: ConnectedEntities
   id: Int
   insertedAt: Timestamp
-  published: Boolean
-  publishedAt: Timestamp
+  object: Object
   title: String
-}
-
-type EcorAttachment {
-  aspectRatio: Float
-  contentType: String
-  id: UUID
-  name: String
-  url: String
-}
-
-enum EcorEventStatus {
-  APPEARED
-  DECLINED
-  DONE
-  IN_PROGRESS
-}
-
-enum EcorEventType {
-  APPEAL
-  PHONE_CALL
-  SIGNAL
-  SYS112
-}
-
-type EcorObject {
-  address: String
-  attachments: [EcorAttachment]
-  description: String
-  id: Int
-  insertedAt: Timestamp
-  objectCategory: EcorObjectCategory
-  place: Geography
-  title: String
-}
-
-type EcorObjectCategory {
-  id: Int
-  insertedAt: Timestamp
-  objects: [EcorObject]
-  position: Int
-  title: String
-}
-
-enum EcorType {
-  ALARM
-  OBJECT
-  SENSOR
-  TRANSPORT
-  VIDEO_CAM
-}
-
-type EmergencyContact {
-  contact: String
-  id: Int
-  position: Int
-  published: Boolean
-  title: String
-}
-
-type Event {
-  ecorEventType: EcorEventType
-  appealUserMiddleName: String
-  appealUserFirstName: String
-  place: Geography
-  cards: [Card]
-  firstName: String
-  addrLevel2: String
-  entranceCode: String
-  description: String
-  appealUserLastName: String
-  appealUserId: Int
-  id: UUID
-  eventCategoryId: Int
-  level: String
-  room: String
-  status: EcorEventStatus
-  appealDate: Timestamp
-  phone: String
-  insertedAt: Timestamp
-  appealPlace: Geography
-  monitoringEventId: Int
-  entrance: String
-  building: String
-  lastName: String
-  phoneCallRecord: String
-  street: String
-  secondName: String
-  appealUserEmail: String
-  label: String
-  userAddress: String
-  phoneCallId: Int
-  addrLevel1: String
-  addrCorps: String
-  attachments: [Attachment]
-  near: String
-  eventTypeId: Int
-  addressStr: String
-  storeys: String
-  additionalInfo: String
-  appealId: Int
-  appealTypeId: Int
-  appealUserPhone: String
-  date: Timestamp
-  scenarioId: Int
-}
-
-enum EventCardType {
-  COORDINATOR
-  EMERGENCY
-  SYS112
-}
-
-type EventCategory {
-  eventTypes: [EventType]
-  id: Int
-  position: Int
-  title: String
-}
-
-type EventType {
-  eventCategoryId: Int
-  id: Int
-  position: Int
-  scenarios: [Scenario]
-  title: String
-}
-
-type File {
-  name: String
-  type: String
-  url: String
-}
-
-type FireModelIteration {
-  iterationNumber: Int
-  place: Geography
-  secondsFromPrevious: Int
-}
-
-type Form {
-  formAnswers: [FormAnswer]
-  formType: FormType
-  id: Int
-  insertedAt: Timestamp
-  operator: Operator
-  question: String
-  respondentIds: [Int]
-  title: String
-  userAnswers: [UserAnswer]
-}
-
-type FormAnswer {
-  answer: String
-  formId: Int
-  id: Int
-  position: Int
-}
-
-input FormAnswerInput {
-  answer: String
-  formId: Int
-  id: Int
-  position: Int
-}
-
-enum FormType {
-  CUSTOM
-  QUIZ
-}
-
-type FullNewsCategory {
-  color: String
-  id: Int
-  title: String
-  titleTranslate: OutputTranslate
-}
-
-union Geography = Point | LineString | Polygon
-
-enum GeographyType {
-  LINE_STRING
-  POINT
-  POLYGON
-}
-
-type GisLayer {
-  name: String
-  title: String
-}
-
-type GroupNotification {
-  activityTypes: [String]
-  actualLocation: Boolean
-  area: Geography
-  id: UUID
-  insertedAt: Timestamp
-  message: String
-  methods: [GroupNotificationMethod]
-  probableLocation: Boolean
-  radius: Int
-  status: GroupNotificationStatus
-  template: Boolean
-  title: String
-  type: GroupNotificationType
-}
-
-enum GroupNotificationMethod {
-  EMAIL
-  PUSH
-  SMS
-  WEBSOCKET
-}
-
-enum GroupNotificationStatus {
-  CREATED
-  DELIVERED
-}
-
-enum GroupNotificationType {
-  EMERGENCY
-  INFO
-  WARNING
-}
-
-input InputBlock {
-  attachmentId: UUID
-  blockContent: Translate
-  blockType: NewsBlockType
-  placeInput: PlaceInput
-}
-
-type Journal {
-  action: String
-  actionLevel: String
-  date: Timestamp
-  description: String
-  object: String
-  objectId: String
-  userId: String
-  userName: String
-}
-
-type LineString {
-  coordinates: [Coordinates]
-}
-
-type MonitoringObject {
-  additionalInfo: [AdditionalInfo]
-  address: String
-  attachments: [EcorAttachment]
-  devices: [MonitoringObjectDevice]
-  ecorType: EcorType
-  id: String
-  link: String
-  place: Geography
-  previewSrc: String
-  region: String
-  source: Source
-  sourceId: String
-  title: String
-}
-
-type MonitoringObjectDevice {
-  deviceType: String
-  dimensions: [Dimension]
-  id: Int
-  title: String
-}
-
-enum NewsBlockType {
-  IMAGE
-  PLACE
-  TEXT
-}
-
-type NewsCategory {
-  color: String
-  id: Int
-  title: String
-}
-
-type NewsEntity {
-  blocks: [Block]
-  categories: [NewsCategory]
-  cover: Attachment
-  id: Int
-  insertedAt: Timestamp
-  localeList: [String]
-  pinned: Boolean
-  published: Boolean
-  routeIds: [String]
-  sendNotification: Boolean
-  showOnMain: Boolean
-  title: String
-  url: String
-}
-
-type Object {
-  address: String
-  attachments: [Attachment]
-  description: String
-  id: Int
-  image: File
-  insertedAt: Timestamp
-  objectCategory: ObjectCategory
-  place: Geography
-  title: String
-}
-
-type ObjectCategory {
-  id: Int
-  insertedAt: Timestamp
-  objects: [Object]
-  position: Int
-  title: String
-}
-
-type OpenDataFile {
-  description: String
-  generatedId: String
-  id: Int
-  insertedAt: Timestamp
-  licence: String
-  openDataFileVersions: [OpenDataFileVersion]
-  orgInn: String
-  orgTitle: String
-  responsibleContacts: String
-  responsibleFio: String
-  rubric: OpendataRubric
-  title: String
-}
-
-type OpenDataFileVersion {
-  attachment: Attachment
-  file: File
-  id: Int
   updatedAt: Timestamp
 }
 
-type OpendataRubric {
+type FlowAcl {
+  copy: Boolean
+  delete: Boolean
+  update: Boolean
+}
+
+type Folder {
+  folders: [Folder]
   id: Int
-  insertedAt: Timestamp
-  openDataFiles: [OpenDataFile]
-  position: Int
+  isLocked: Boolean
+  isOpened: Boolean
+  objects: [Object]
+  sharedAccess: Boolean
+  sharedToken: String
   title: String
 }
 
-type Operator {
-  acl: Acl
-  email: String
-  firstName: String
-  id: Int!
-  lastName: String
-  middleName: String
-  organisation: Organisation
-  phone: String
-  role: OperatorRole
+type FormulaToken {
+  dataValue: DataValue
+  funcValue: FuncValue
+  listValue: ListValue
+  tokenType: TokenType!
+  value: String
 }
 
-enum OperatorRole {
-  ADMIN
-  CMS
-  COORDINATOR
-  CUSTOM
-  EMERGENCY
-  EXECUTOR
-  OPERATOR
+input FormulaTokenInput {
+  dataValue: DataValueInput
+  funcValue: FuncValueInput
+  listValue: ListValueInput
+  tokenType: TokenType!
+  value: String
+}
+
+type FtpEnity {
+  name: String
+  type: FtpEnityType
+}
+
+enum FtpEnityType {
+  DIR
+  FILE
+}
+
+type Function {
+  arg1Type: ArgType
+  arg2Type: ArgType
+  arg3Type: ArgType
+  argsCount: Int
+  description: String
+  examples: [FunctionExample]
+  name: String!
+  resultType: ResultType
+}
+
+type FunctionExample {
+  formula: String
+  result: String
+}
+
+type FuncValue {
+  arg1: [FormulaToken]
+  arg2: [FormulaToken]
+  arg3: [FormulaToken]
+  args: [[FormulaToken]]
+  name: String!
+}
+
+input FuncValueInput {
+  arg1: [FormulaTokenInput]
+  arg2: [FormulaTokenInput]
+  arg3: [FormulaTokenInput]
+  args: [[FormulaTokenInput]]
+  name: String!
+}
+
+type Hierarchy {
+  description: String
+  dims: [HierarchyDim]
+  id: Int
+  insertedAt: Timestamp
+  isInvisible: Boolean
+  isOpened: Boolean
+  position: Int
+  title: String
+  updatedAt: Timestamp
+}
+
+type HierarchyDim {
+  dimId: String
+  position: Int
+}
+
+input HierarchyDimInput {
+  dimId: String
+  position: Int
+}
+
+input IncludeInput {
+  value: Boolean
+}
+
+type Indicator {
+  baseRating: [[String]]
+  connectedEntities: ConnectedEntities
+  displayColumnIds: [String]
+  displayFKeyId: String
+  displayTableId: Int
+  formula: [FormulaToken]
+  id: Int
+  insertedAt: Timestamp
+  object: Object
+  periodicity: Periodicity
+  periodicityDays: Int
+  showCountedFormula: Boolean
+  sortType: SortType
+  sortValue: Float
+  sortValueType: SortValueType
+  title: String
+  updatedAt: Timestamp
+}
+
+type IndicatorsAutocomplete {
+  field: Field
+  function: Function
+  name: String
+  table: Table
+  type: IndicatorsAutocompleteType
+}
+
+enum IndicatorsAutocompleteType {
+  FIELD
+  FUNCTION
+  KEYWORD
+  TABLE
+}
+
+enum JoinType {
+  ALL_FULL
+  ALL_INNER
+  ALL_LEFT
+  ALL_RIGHT
+  ANTI_LEFT
+  ANTI_RIGHT
+  ANY_INNER
+  ANY_LEFT
+  ANY_RIGHT
+  CROSS_JOIN
+  SEMI_LEFT
+  SEMI_RIGHT
+}
+
+"""
+The `Json` scalar type represents arbitrary json string data, represented as UTF-8
+character sequences. The Json type is most often used to represent a free-form
+human-readable json string.
+"""
+scalar Json
+
+type ListValue {
+  list: [String]
+  title: String
+}
+
+input ListValueInput {
+  list: [String]
+  title: String
+}
+
+type Object {
+  attachment: Attachment
+  attachmentId: String
+  entityId: String
+  folderId: Int
+  id: String
+  objectType: ObjectType
+  title: String
+  updatedAt: Timestamp
+}
+
+enum ObjectType {
+  DASHBOARD
+  DATASOURCE
+  FLOW
+  GROUP_CHAT
+  INDICATOR
+  TABLE
+}
+
+type OlapAcl {
+  olapRequest: Boolean
+  panelsEdit: Boolean
+  panelsRead: Boolean
+}
+
+type OlapChartLayer implements OlapLayer {
+  chartType: OlapChartType
+  columns: [OlapRequestField]
+  cubeId: String
+  havingFilters: [FormulaToken]
+  height: Int
+  hierarchy: OlapHierarchy
+  id: UUID!
+  limit: Int
+  mapProperties: OlapLayerMapProperties
+  offset: Int
+  positionX: Int
+  positionY: Int
+  rows: [OlapRequestField]
+  styles: OlapLayerStyles
+  type: OlapLayerType
+  whereFilters: [FormulaToken]
+  width: Int
+}
+
+enum OlapChartType {
+  CONFIGURABLE
+  GRAPH
+  MAP
+  PIE
+  SCANNER
+  SCATTER
+  TABLE
+  VALUE
+}
+
+type OlapDashboard {
+  backgroundColor: String
+  borderColor: String
+  columnsCount: Int
+  horizontalMargin: Int
+  id: UUID!
+  insertedAt: Timestamp
+  layers: [OlapLayer]
+  object: Object
+  rowHeight: Int
+  title: String!
+  updatedAt: Timestamp
+  verticalMargin: Int
+  width: Int
+  workspace: OlapDashboardWorkspace!
+}
+
+input OlapDashboardInput {
+  backgroundColor: String
+  borderColor: String
+  columnsCount: Int
+  horizontalMargin: Int
+  layers: [OlapLayerInput]
+  rowHeight: Int
+  title: String
+  verticalMargin: Int
+  width: Int
+  workspace: OlapDashboardWorkspace
+}
+
+enum OlapDashboardWorkspace {
+  FIXED
+  UNLIMITED
+}
+
+enum OlapFontStyle {
+  ITALIC
+  NORMAL
+}
+
+enum OlapFontWeight {
+  BOLD
+  NORMAL
+}
+
+enum OlapGridType {
+  COMBINED
+  HORIZONTAL
+  VERTICAL
+}
+
+type OlapHierarchy {
+  fields: [OlapRequestField]
+  id: String
+}
+
+input OlapHierarchyInput {
+  fields: [OlapRequestFieldInput]
+  id: String
+}
+
+interface OlapLayer {
+  height: Int
+  id: UUID!
+  positionX: Int
+  positionY: Int
+  type: OlapLayerType
+  width: Int
+}
+
+type OlapLayerAlias {
+  alias: String
+  fieldId: String
+  id: String
+  name: String
+}
+
+input OlapLayerAliasInput {
+  alias: String
+  fieldId: String
+  id: String
+  name: String
+}
+
+type OlapLayerAxis {
+  color: String
+  gridColor: String
+  lineStyle: OlapLayerLineStyle
+  textStyle: OlapLayerTextStyle
+  x: OlapLayerDirectAxis
+  y: OlapLayerDirectAxis
+}
+
+input OlapLayerAxisInput {
+  color: String
+  gridColor: String
+  lineStyle: OlapLayerLineStyleInput
+  textStyle: OlapLayerTextStyleInput
+  x: OlapLayerDirectAxisInput
+  y: OlapLayerDirectAxisInput
+}
+
+type OlapLayerBarFillStyle {
+  color: String
+  opacity: Float
+}
+
+input OlapLayerBarFillStyleInput {
+  color: String
+  opacity: Float
+}
+
+type OlapLayerDirectAxis {
+  withAxisLine: Boolean
+  withLabel: Boolean
+  withName: Boolean
+}
+
+input OlapLayerDirectAxisInput {
+  withAxisLine: Boolean
+  withLabel: Boolean
+  withName: Boolean
+}
+
+type OlapLayerGrid {
+  color: String
+  lineStyle: OlapLayerLineStyle
+  type: OlapGridType
+}
+
+input OlapLayerGridInput {
+  color: String
+  lineStyle: OlapLayerLineStyleInput
+  type: OlapGridType
+}
+
+input OlapLayerInput {
+  chartType: OlapChartType
+  color: String
+  columns: [OlapRequestFieldInput]
+  cubeId: String
+  fontStyle: OlapFontStyle
+  fontWeight: OlapFontWeight
+  havingFilters: [FormulaTokenInput]
+  height: Int
+  hierarchy: OlapHierarchyInput
+  id: UUID
+  limit: Int
+  mapProperties: OlapLayerMapPropertiesInput
+  offset: Int
+  positionX: Int
+  positionY: Int
+  rows: [OlapRequestFieldInput]
+  size: Int
+  styles: OlapLayerStylesInput
+  text: String
+  textAlign: OlapTextAlign
+  textDecoration: OlapTextDecoration
+  type: OlapLayerType
+  whereFilters: [FormulaTokenInput]
+  width: Int
+}
+
+type OlapLayerLegend {
+  show: Boolean
+}
+
+input OlapLayerLegendInput {
+  show: Boolean
+}
+
+type OlapLayerLineStyle {
+  color: String
+  opacity: Float
+  type: OlapLineType
+  width: Float
+}
+
+input OlapLayerLineStyleInput {
+  color: String
+  opacity: Float
+  type: OlapLineType
+  width: Float
+}
+
+type OlapLayerMap {
+  color: String
+  ranges: [OlapLayerRanges]
+}
+
+input OlapLayerMapInput {
+  color: String
+  ranges: [OlapLayerRangesInput]
+}
+
+type OlapLayerMapProperties {
+  center: [Float]
+  zoom: Float
+}
+
+input OlapLayerMapPropertiesInput {
+  center: [Float]
+  zoom: Float
+}
+
+type OlapLayerMark {
+  color: String
+  position: String
+  type: String
+  value: String
+}
+
+input OlapLayerMarkInput {
+  color: String
+  position: String
+  type: String
+  value: String
+}
+
+type OlapLayerMarkLine {
+  category: String
+  color: String
+  label: String
+  position: String
+  type: OlapMarkLineType
+  value: Float
+}
+
+input OlapLayerMarkLineInput {
+  category: String
+  color: String
+  label: String
+  position: String
+  type: OlapMarkLineType
+  value: Float
+}
+
+type OlapLayerPoint {
+  barFill: OlapLayerBarFillStyle
+  barStroke: OlapLayerShapeStyle
+  fill: OlapLayerShapeStyle
+  id: String
+  marks: [OlapLayerMark]
+  stroke: OlapLayerShapeStyle
+}
+
+input OlapLayerPointInput {
+  barFill: OlapLayerBarFillStyleInput
+  barStroke: OlapLayerShapeStyleInput
+  fill: OlapLayerShapeStyleInput
+  id: String
+  marks: [OlapLayerMarkInput]
+  stroke: OlapLayerShapeStyleInput
+}
+
+type OlapLayerRanges {
+  color: String
+  end: Float
+  start: Float
+}
+
+input OlapLayerRangesInput {
+  color: String
+  end: Float
+  start: Float
+}
+
+type OlapLayerSeria {
+  id: String
+  lineStyle: OlapLayerLineStyle
+  marks: [OlapLayerMark]
+  pointStyle: OlapLayerPoint
+  showTrend: Boolean
+  smooth: Boolean
+  stack: String
+  trendLine: TrendLine
+  type: OlapSeriaType
+}
+
+input OlapLayerSeriaInput {
+  id: String
+  lineStyle: OlapLayerLineStyleInput
+  marks: [OlapLayerMarkInput]
+  pointStyle: OlapLayerPointInput
+  showTrend: Boolean
+  smooth: Boolean
+  stack: String
+  trendLine: TrendLineInput
+  type: OlapSeriaType
+}
+
+type OlapLayerShapeStyle {
+  color: String
+  opacity: Float
+  size: Float
+}
+
+input OlapLayerShapeStyleInput {
+  color: String
+  opacity: Float
+  size: Float
+}
+
+type OlapLayerStyles {
+  aliases: [OlapLayerAlias]
+  axis: OlapLayerAxis
+  backgroundColor: String
+  grid: OlapLayerGrid
+  hGrid: OlapLayerVHGrid
+  legend: OlapLayerLegend
+  map: OlapLayerMap
+  markLines: [OlapLayerMarkLine]
+  points: [OlapLayerPoint]
+  series: [OlapLayerSeria]
+  table: OlapLayerTable
+  vGrid: OlapLayerVHGrid
+  valueRounding: Int
+  zooming: OlapLayerZooming
+}
+
+input OlapLayerStylesInput {
+  aliases: [OlapLayerAliasInput]
+  axis: OlapLayerAxisInput
+  backgroundColor: String
+  grid: OlapLayerGridInput
+  hGrid: OlapLayerVHGridInput
+  legend: OlapLayerLegendInput
+  map: OlapLayerMapInput
+  markLines: [OlapLayerMarkLineInput]
+  points: [OlapLayerPointInput]
+  series: [OlapLayerSeriaInput]
+  table: OlapLayerTableInput
+  vGrid: OlapLayerVHGridInput
+  valueRounding: Int
+  zooming: OlapLayerZoomingInput
+}
+
+type OlapLayerTable {
+  horizontalPadding: Int
+  id: String
+  mergeCells: Boolean
+  stickyHeader: Boolean
+  stickySide: Boolean
+  verticalPadding: Int
+}
+
+input OlapLayerTableInput {
+  horizontalPadding: Int
+  id: String
+  mergeCells: Boolean
+  stickyHeader: Boolean
+  stickySide: Boolean
+  verticalPadding: Int
+}
+
+type OlapLayerTextStyle {
+  color: String
+  fontSize: Float
+}
+
+input OlapLayerTextStyleInput {
+  color: String
+  fontSize: Float
+}
+
+enum OlapLayerType {
+  CHART
+  TEXT
+}
+
+type OlapLayerVHGrid {
+  areas: Int
+  show: Boolean
+}
+
+input OlapLayerVHGridInput {
+  areas: Int
+  show: Boolean
+}
+
+type OlapLayerZooming {
+  horizontal: OlapLayerZoomingOpts
+  vertical: OlapLayerZoomingOpts
+}
+
+input OlapLayerZoomingInput {
+  horizontal: OlapLayerZoomingOptsInput
+  vertical: OlapLayerZoomingOptsInput
+}
+
+type OlapLayerZoomingOpts {
+  enabled: Boolean
+  end: Float
+  start: Float
+}
+
+input OlapLayerZoomingOptsInput {
+  enabled: Boolean
+  end: Float
+  start: Float
+}
+
+enum OlapLineType {
+  DASHED
+  DOTTED
+  SOLID
+}
+
+enum OlapMarkLineType {
+  HORIZONTAL
+  VERTICAL
+}
+
+enum OlapRequestAgg {
+  ARG_MAX
+  ARG_MIN
+  AVG
+  CALCULATED
+  COUNT
+  KURTPOP
+  KURTSAMP
+  MAX
+  MEDIAN
+  MIN
+  NONE
+  QUANTILE
+  SKEWPOP
+  SKEWSAMP
+  SUM
+  VAR_POP
+  VAR_SAMP
+}
+
+type OlapRequestArg {
+  columnId: String
+  cubeId: String
+  dataType: FieldDataType
+  dateFormat: String
+  label: String
+  type: OlapRequestArgType!
+  value: String
+}
+
+input OlapRequestArgInput {
+  columnId: String
+  cubeId: String
+  dataType: FieldDataType
+  dateFormat: String
+  label: String
+  type: OlapRequestArgType!
+  value: String
+}
+
+enum OlapRequestArgType {
+  COLUMN
+  FLOAT
+  INTEGER
+  STRING
+}
+
+input OlapRequestConditionInput {
+  field: OlapRequestFieldInput!
+  value: String
+}
+
+type OlapRequestField {
+  agg: OlapRequestAgg!
+  args: [OlapRequestArg]
+  calculatedFormula: [FormulaToken]
+  hierarchyId: String
+  id: String!
+  name: String
+}
+
+input OlapRequestFieldInput {
+  agg: OlapRequestAgg!
+  args: [OlapRequestArgInput]
+  calculatedFormula: [FormulaTokenInput]
+  hierarchyId: String
+  id: String!
+  name: String
+}
+
+input OlapRequestInput {
+  conditions: [OlapRequestConditionInput]
+  cubeId: String
+  fields: [OlapRequestFieldInput!]
+  format: OlapRequestType!
+  havingFilters: [FormulaTokenInput]
+  limit: Int
+  offset: Int
+  scannerId: String
+  whereFilters: [FormulaTokenInput]
+}
+
+enum OlapRequestType {
+  AXIS
+  FLAT
+}
+
+type OlapResponse {
+  data: Json
+}
+
+enum OlapSeriaType {
+  BAR
+  LINE
+  SCATTER
+}
+
+enum OlapTextAlign {
+  CENTER
+  JUSTIFY
+  LEFT
+  RIGHT
+}
+
+enum OlapTextDecoration {
+  LINE_THROUGH
+  NONE
+  UNDERLINE
+}
+
+type OlapTextLayer implements OlapLayer {
+  color: String
+  fontStyle: OlapFontStyle
+  fontWeight: OlapFontWeight
+  height: Int
+  id: UUID!
+  positionX: Int
+  positionY: Int
+  size: Int
+  text: String
+  textAlign: OlapTextAlign
+  textDecoration: OlapTextDecoration
+  type: OlapLayerType
+  width: Int
 }
 
 type Organisation {
+  acl: Acl
+  description: String
+  email: String
   id: Int
-  role: OrganisationRole
+  name: String
+  private: Boolean
+  url: String
+}
+
+type OseAcl {
+  tablesEdit: Boolean
+  tablesRead: Boolean
+}
+
+type OutDbParams {
+  db: String
+  dbType: DbType
+  exportToDb: Boolean
+  host: String
+  pass: String
+  port: String
+  tableName: String
   title: String
+  user: String
 }
 
-enum OrganisationRole {
-  COORDINATOR
-  EMERGENCY
-  EXECUTOR
+input OutDbParamsInput {
+  db: String
+  dbType: DbType
+  exportToDb: Boolean
+  host: String
+  pass: String
+  port: String
+  tableName: String
+  title: String
+  user: String
 }
 
-type OutputTranslate {
-  en: String
-  ru: String
+enum Periodicity {
+  CUSTOM
+  DAY
+  HOUR
+  MONTH
+  NONE
+  QUARTER
+  WEEK
 }
 
-input PlaceInput {
-  lineStringCoordinates: [Coords]
-  pointCoordinates: Coords
-  polygonCoordinates: [[Coords]]
-  type: GeographyType
+enum PeriodicityType {
+  DAYS
+  HOURS
+  NEVER
+  ONCE
 }
 
-type Point {
-  coordinates: Coordinates
+input PositionInput {
+  value: Int
 }
 
-type Polygon {
-  coordinates: [[Coordinates]]
+type Progress {
+  allCount: Int
+  doneCount: Int
+  label: String
+}
+
+enum ProgressStatus {
+  CREATED
+  DONE
+  FAILED
+  IN_PROGRESS
+  STOPPED
+}
+
+enum ResultType {
+  DATE
+  NUMBER
+  STRING
 }
 
 type RootMutationType {
+  """Unshare folder"""
+  unshareFolder(id: Int!): String
+
+  """Update datasource"""
+  updateDatasource(dbParams: DbParamsInp, eisParams: EisParamsInp, id: Int, periodicityType: PeriodicityType, periodicityValue: Float, title: String): Datasource
+
+  """Delete dashboard"""
+  olapDashboardDelete(id: UUID!): Boolean
+
+  """Delete step"""
+  deleteStep(id: Int!): String
+
+  """Create OSE table"""
+  createOseTable(indicatorId: Int!): String
+
+  """Update hierarchy"""
+  updateHierarchy(description: String, dims: [HierarchyDimInput], id: Int!, isInvisible: Boolean, isOpened: Boolean, position: Int, title: String): Hierarchy
+
+  """Create step"""
+  createStep(flowId: Int!, joinType: JoinType, positionX: Int, positionY: Int, sourceStepId: Int, sourceStepIds: [Int], stepType: StepType!, title: String): Step
+
+  """Close folder"""
+  closeFolder(id: Int!, pinnedFolderId: Int): String
+
+  """Close all folders"""
+  closeAllFolders(exceptIds: [Int]): String
+
+  """Set where filter"""
+  setWhereFilter(stepId: Int!, whereCond: [FormulaTokenInput]): Step
+
+  """Create dashboard"""
+  olapDashboardCreate(dashboard: OlapDashboardInput!, folderId: Int): OlapDashboard
+
+  """Calculate join"""
+  calculateJoin(joinId: Int!, joinType: JoinType!, leftStepColumnId: Int!, leftStepId: Int!, rightStepColumnId: Int!, rightStepId: Int!): Step
+
+  """Delete datasources"""
+  deleteDatasource(id: Int!): String
+
+  """Create hierarchy"""
+  createHierarchy(tableId: Int!, title: String!): Hierarchy
+
+  """Delete change"""
+  deleteChange(id: Int!): [Column]
+
+  """Set join steps"""
+  setJoinSteps(joinId: Int!, leftStepId: Int, rightStepId: Int): Step
+
+  """Delete connection"""
+  deleteConnection(id: Int): String
+
   """Refresh session"""
   sessionUpdate(refreshToken: UUID!): Session
 
-  """Delete object category"""
-  objectCategoryDelete(id: Int): String
+  """Update connection"""
+  updateConnection(id: Int, joinType: JoinType, leftTableFieldId: String, leftTableId: Int, rightTableFieldId: String, rightTableId: Int): Connection
 
-  """Create appeal_type"""
-  appealTypeCreate(additionalQuestions: [String], dateEnd: Timestamp, dateStart: Timestamp, timeLimit: Int, title: String): AppealType
+  """Delete indicator"""
+  deleteIndicator(id: Int!): String
 
-  """Update opendata file"""
-  openDataFileUpdate(description: String, id: Int, licence: String, orgInn: String, orgTitle: String, responsibleContacts: String, responsibleFio: String, rubricId: Int, title: String): OpenDataFile
+  """Delete folder"""
+  deleteFolder(id: Int!): String
 
-  """Update document"""
-  portalDocumentUpdate(attachmentId: UUID, id: Int, published: Boolean, publishedAt: Timestamp, title: String): Document
+  """Export Step"""
+  exportStep(db: String, dbType: DbType, host: String, id: Int!, pass: String, port: String, tableName: String, user: String): String
 
-  """Delete object category"""
-  ecorObjectCategoryDelete(id: Int): String
+  """import file"""
+  importFile(file: Upload, flowId: Int!, positionX: Int, positionY: Int): [Step]
 
-  """Delete news category"""
-  portalNewsCategoryDelete(id: Int): String
+  """Create column"""
+  createColumn(formula: [FormulaTokenInput]!, stepId: Int!, title: String!): Column
 
-  """Delete attachment"""
-  ecorAttachmentDelete(id: UUID): String
+  """Update flow"""
+  updateFlow(id: Int!, title: String): Flow
 
-  """Update scenario (with cards)"""
-  scenarioUpdate(cards: [CardInput], eventCategoryId: Int, eventTypeId: Int, id: Int, position: Int, title: String): Scenario
+  """Run step"""
+  runStep(stepId: Int!): String
 
-  """Create opendata rubric"""
-  opendataRubricCreate(position: Int, title: String): OpendataRubric
+  """Create folder"""
+  createFolder(folderId: Int, title: String!): Folder
 
-  """Delete opendata rubric"""
-  opendataRubricDelete(id: Int): String
+  """load table to memory"""
+  loadToMemory(id: Int!): Table
 
-  """Delete attachment"""
-  portalAttachmentDelete(id: UUID): String
+  """Create change"""
+  createChange(changeCaseTypeInput: ChangeCaseTypeInput, changeType: ChangeType, codecInput: CodecInput, columnId: Int, columnIds: [Int], dataTypeInput: DataTypeInput, includeInput: IncludeInput, positionInput: PositionInput, stepId: Int!, titleInput: TitleInput, unionColumnsInput: UnionColumnsInput, widthInput: WidthInput): Change
 
-  """Delete form"""
-  formDelete(id: Int): String
+  """Update organisation"""
+  organisationsUpdate(description: String, email: String, id: Int!, name: String!, private: Boolean, url: String!): Organisation
 
-  """Update appeal_type"""
-  appealTypeUpdate(additionalQuestions: [String], dateEnd: Timestamp, dateStart: Timestamp, id: Int, timeLimit: Int, title: String): AppealType
+  """Share folder"""
+  shareFolder(id: Int!): String
 
-  """Create news category"""
-  portalNewsCategoryCreate(color: String, title: String, titleTranslate: Translate): FullNewsCategory
+  """Pin folder"""
+  pinFolder(folderId: Int!): Folder
 
-  """Create object"""
-  ecorObjectCreate(address: String, attachmentIds: [UUID], description: String, objectCategoryId: Int, placeInput: PlaceInput, title: String): EcorObject
+  """Get csv export link"""
+  getCsvExportLink(stepId: Int!): String
 
-  """Update news"""
-  portalNewsUpdate(blocks: [InputBlock], categories: [Int], coverId: UUID, id: Int, localeList: [String], pinned: Boolean, published: Boolean, sendNotification: Boolean, showOnMain: Boolean, title: String, titleTranslate: Translate, url: String): NewsEntity
+  """remove table from memory"""
+  removeFromMemory(id: Int!): Table
 
-  """Create object"""
-  objectCreate(address: String, attachmentIds: [UUID], description: String, image: Upload, objectCategoryId: Int, placeInput: PlaceInput, title: String): Object
+  """Unpin folder"""
+  unpinFolder(folderId: Int!): String
 
-  """Delete operator"""
-  operatorDelete(id: Int): String
-
-  """Delete object"""
-  objectDelete(id: Int): String
-
-  """Create banner"""
-  bannerCreate(attachmentId: String, image: Upload, published: Boolean, title: String, url: String): Banner
-
-  """Update object category"""
-  ecorObjectCategoryUpdate(id: Int, position: Int, title: String): EcorObjectCategory
-
-  """Update object category"""
-  objectCategoryUpdate(id: Int, position: Int, title: String): ObjectCategory
-
-  """Update event_type"""
-  eventTypeUpdate(eventCategoryId: Int, id: Int, position: Int, title: String): EventType
-
-  """Delete document"""
-  portalDocumentDelete(id: Int): String
-
-  """Delete emergency contact"""
-  portalEmergencyContactDelete(id: Int): String
-
-  """Update emergency contact"""
-  portalEmergencyContactUpdate(contact: String, id: Int, position: Int, published: Boolean, title: String): EmergencyContact
-
-  """Delete opendata file"""
-  openDataFileDelete(id: Int): String
-
-  """Update object"""
-  ecorObjectUpdate(address: String, attachmentIds: [UUID], description: String, id: Int, objectCategoryId: Int, placeInput: PlaceInput, title: String): EcorObject
-
-  """Update support_info"""
-  portalSupportInfoUpdate(blocks: [SupportInfoInputBlock], id: Int, published: Boolean, title: String): SupportInfo
-
-  """Create support_info"""
-  portalSupportInfoCreate(blocks: [SupportInfoInputBlock], published: Boolean, title: String): SupportInfo
-
-  """Create opendata file version"""
-  openDataFileVersionCreate(attachmentId: String, file: Upload, openDataFileId: Int): OpenDataFileVersion
-
-  """Update opendata rubric"""
-  opendataRubricUpdate(id: Int, position: Int, title: String): OpendataRubric
-
-  """Create form"""
-  formCreate(formAnswers: [FormAnswerInput], formType: FormType, question: String, respondentIds: [Int], title: String): Form
-
-  """Update operator"""
-  operatorUpdate(acl: AclInput, email: String, firstName: String, id: Int, lastName: String, middleName: String, organisationId: Int, password: String, phone: String, role: OperatorRole): Operator
-
-  """Create document"""
-  portalDocumentCreate(attachmentId: UUID, published: Boolean, publishedAt: Timestamp, title: String): Document
-
-  """Create object category"""
-  objectCategoryCreate(position: Int, title: String): ObjectCategory
-
-  """Create attachment"""
-  ecorAttachmentCreate(file: Upload): EcorAttachment
-
-  """Update opendata file version"""
-  openDataFileVersionUpdate(attachmentId: String, file: Upload, id: Int, openDataFileId: Int): OpenDataFileVersion
-
-  """Create Organisation"""
-  organisationCreate(role: OrganisationRole, title: String): Organisation
-
-  """Create scenario (with cards)"""
-  scenarioCreate(cards: [CardInput], eventCategoryId: Int, eventTypeId: Int, position: Int, title: String): Scenario
-
-  """Delete news"""
-  portalNewsDelete(id: Int): String
-
-  """Create opendata file"""
-  openDataFileCreate(description: String, licence: String, orgInn: String, orgTitle: String, responsibleContacts: String, responsibleFio: String, rubricId: Int, title: String): OpenDataFile
-
-  """Update event_category"""
-  eventCategoryUpdate(id: Int, position: Int, title: String): EventCategory
-
-  """Update card"""
-  eventCardsUpdate(card: CardInput): Card
-
-  """Delete event_category"""
-  eventCategoryDelete(id: Int): String
-
-  """Delete card"""
-  eventCardsDelete(id: UUID): String
+  """Delete hierarchy"""
+  deleteHierarchy(id: Int!): String
 
   """Sign in"""
   sessionCreate(email: String!, password: String!): Session
 
   """Update object"""
-  objectUpdate(address: String, attachmentIds: [UUID], description: String, id: Int, image: Upload, objectCategoryId: Int, placeInput: PlaceInput, title: String): Object
+  updateObject(attachmentId: String, folderId: Int, id: String!, title: String): Object
 
-  """Delete Organisation"""
-  organisationDelete(id: Int): String
+  """Add steps to union"""
+  addStepsToUnion(stepIds: [Int], unionId: Int!): Step
 
-  """Update monitoring objects"""
-  monitoringObjectUpdate(additionalInfo: [AdditionalInfoInput], id: String): MonitoringObject
+  """Update step"""
+  updateStep(dateColumn: String, exportToMadd: Boolean, fullUpdate: Boolean, id: Int!, outDbParams: [OutDbParamsInput], periodicity: Int, positionX: Int, positionY: Int, title: String): Step
 
-  """Delete banner"""
-  bannerDelete(id: Int): String
+  """Update indicator"""
+  updateIndicator(displayColumnIds: [String], displayFKeyId: String, displayTableId: Int, formula: [FormulaTokenInput], id: Int!, periodicity: Periodicity, periodicityDays: Int, showCountedFormula: Boolean, sortType: SortType, sortValue: Float, sortValueType: SortValueType, title: String!): Indicator
 
-  """Update news category"""
-  portalNewsCategoryUpdate(color: String, id: Int, title: String, titleTranslate: Translate): FullNewsCategory
+  """Create datasource"""
+  createDatasource(dbParams: DbParamsInp, eisParams: EisParamsInp, folderId: Int, periodicityType: PeriodicityType, periodicityValue: Float, sourceType: SourceType, title: String): Datasource
 
-  """Delete event_type"""
-  eventTypeDelete(id: Int): String
-
-  """Create event_category"""
-  eventCategoryCreate(position: Int, title: String): EventCategory
-
-  """Answer form"""
-  answerForm(customAnswer: Float, formAnswerId: Int, formId: Int): UserAnswer
-
-  """Delete group notification"""
-  groupNotificationDelete(id: UUID): String
-
-  """Update banner"""
-  bannerUpdate(attachmentId: String, id: Int, image: Upload, published: Boolean, title: String, url: String): Banner
-
-  """Delete appeal_type"""
-  appealTypeDelete(id: Int): String
-
-  """Create group notification"""
-  groupNotificationCreate(activityTypes: [String], actualLocation: Boolean, area: Coords, message: String, methods: [GroupNotificationMethod], probableLocation: Boolean, radius: Int, template: Boolean, title: String, type: GroupNotificationType): GroupNotification
-
-  """Update group notification"""
-  groupNotificationUpdate(activityTypes: [String], actualLocation: Boolean, area: Coords, id: UUID, message: String, methods: [GroupNotificationMethod], probableLocation: Boolean, radius: Int, template: Boolean, title: String, type: GroupNotificationType): GroupNotification
-
-  """Create news"""
-  portalNewsCreate(blocks: [InputBlock], categories: [Int], coverId: UUID, localeList: [String], pinned: Boolean, published: Boolean, sendNotification: Boolean, showOnMain: Boolean, title: String, titleTranslate: Translate, url: String): NewsEntity
-
-  """Delete support_info"""
-  portalSupportInfoDelete(id: Int): String
-
-  """Update Organisation"""
-  organisationUpdate(id: Int, role: OrganisationRole, title: String): Organisation
-
-  """Create emergency contact"""
-  portalEmergencyContactCreate(contact: String, position: Int, published: Boolean, title: String): EmergencyContact
+  """stop datasource import"""
+  stopImport(datasourceId: Int): Datasource
 
   """Create attachment"""
-  portalAttachmentCreate(file: Upload): Attachment
+  attachmentCreate(file: Upload): Attachment
 
-  """Create operator"""
-  operatorCreate(acl: AclInput, email: String, firstName: String, lastName: String, middleName: String, organisationId: Int, password: String, phone: String, role: OperatorRole): Operator
+  """Unpin object"""
+  unpinObject(id: String!): String
 
-  """Update event (with cards)"""
-  eventUpdate(additionalInfo: String, addrCorps: String, addrLevel1: String, addrLevel2: String, addressStr: String, building: String, cards: [CardInput], date: Timestamp, description: String, ecorEventType: EcorEventType, entrance: String, entranceCode: String, eventCategoryId: Int, eventTypeId: Int, firstName: String, id: UUID, label: String, lastName: String, level: String, near: String, phone: String, place: PlaceInput, room: String, scenarioId: Int, secondName: String, status: EcorEventStatus, storeys: String, street: String, userAddress: String): Event
+  """Export Step to MADD"""
+  exportStepToMadd(id: Int!): String
 
-  """Delete object"""
-  ecorObjectDelete(id: Int): String
+  """Update folder"""
+  updateFolder(folderId: Int, id: Int!, title: String): Folder
+
+  """Add step to union"""
+  addStepToUnion(stepId: Int!, unionId: Int!): Step
+
+  """Update field"""
+  updateField(description: String, fieldType: FieldType, id: String!, isFKey: Boolean, isInvisible: Boolean, position: Int, postfix: String, title: String): Field
+
+  """Create indicator"""
+  createIndicator(displayColumnIds: [String], displayFKeyId: String, displayTableId: Int, folderId: Int, formula: [FormulaTokenInput], periodicity: Periodicity, periodicityDays: Int, showCountedFormula: Boolean, sortType: SortType, sortValue: Float, sortValueType: SortValueType, title: String!): Indicator
+
+  """Create flow"""
+  createFlow(folderId: Int, title: String!): Flow
+
+  """Get duplicates"""
+  getDuplicates(stepId: Int!): [[Int]]
+
+  """Update dashboard"""
+  olapDashboardUpdate(dashboard: OlapDashboardInput!, id: UUID!): OlapDashboard
+
+  """Open folder"""
+  openFolder(id: Int!, pinnedFolderId: Int): Folder
+
+  """Get total column stats"""
+  getTotalColumnStats(columnIds: [Int]): [ColumnStat]
+
+  """Delete attachment"""
+  attachmentDelete(id: UUID): String
+
+  """Delete steps"""
+  deleteSteps(ids: [Int]): String
+
+  """Pin object"""
+  pinObject(id: String!): String
+
+  """Delete organisation"""
+  organisationsDelete(id: Int!): Boolean
+
+  """Update table"""
+  updateTable(cubeDescription: String, cubeTitle: String, description: String, id: Int!, isInvisible: Boolean, isOpened: Boolean, positionX: Int, positionY: Int, tableType: TableType, title: String): Table
 
   """Sign out"""
-  sessionDelete: String
+  sessionDelete: Boolean
 
-  """Create event_type"""
-  eventTypeCreate(eventCategoryId: Int, position: Int, title: String): EventType
+  """Create connection"""
+  createConnection(joinType: JoinType, leftTableFieldId: String, leftTableId: Int, rightTableFieldId: String, rightTableId: Int): Connection
 
-  """Update form"""
-  formUpdate(formAnswers: [FormAnswerInput], formType: FormType, id: Int, question: String, respondentIds: [Int], title: String): Form
+  """Create organisation"""
+  organisationsCreate(description: String, email: String, name: String!, private: Boolean, url: String!): Organisation
 
-  """Create object category"""
-  ecorObjectCategoryCreate(position: Int, title: String): EcorObjectCategory
+  """Delete flow"""
+  deleteFlow(id: Int!): String
 
-  """Delete opendata file version"""
-  openDataFileVersionDelete(id: Int): String
+  """remove step from union"""
+  removeStepFromUnion(stepId: Int!, unionId: Int!): Step
+
+  """init datasource import"""
+  initImport(datasourceId: Int): Datasource
 }
 
 type RootQueryType {
-  """Get banners by admin"""
-  adminBannersGet(id: ID, limit: Int = 100, offset: Int = 0, published: Boolean): [Banner]
+  """chech_indicator_formula"""
+  chechIndicatorFormula(formula: [FormulaTokenInput]): String
 
-  """Get appeal_types"""
-  appealTypesGet(id: Int): [AppealType]
+  """check_where_formula"""
+  checkWhereFormula(whereCond: [FormulaTokenInput]!): String
 
-  """Get cards"""
-  cards(eventIds: [UUID]): [Card]
+  """Get column stats by formula"""
+  getColumnStatsByFormula(formula: [FormulaTokenInput]!, stepId: Int!): [ColumnStat]
 
-  """Get object categories"""
-  ecorObjectCategoriesGet(ids: [ID]): [EcorObjectCategory]
+  """Get column values"""
+  getColumnValues(columnId: Int!, limit: Int, offset: Int, search: String): [String]
+
+  """Get columns"""
+  getColumns(ids: [Int!], limit: Int = 20, offset: Int = 0, orderBy: String, search: String, stepId: Int): [Column]
+
+  """Get datasources"""
+  getDatasources(ids: [Int]): [Datasource]
+
+  """get db tables"""
+  getDbTables(db: String!, dbType: DbType!, host: String!, limit: Int, offset: Int, pass: String!, port: String!, search: String, user: String!): [DbTable]
+
+  """Get autocomplete"""
+  getEtlStepAutocomplete(search: String!, stepId: Int!, types: [AutocompleteType]): [Autocomplete]
+
+  """Get flows"""
+  getFlows(ids: [Int!], limit: Int = 2000, offset: Int = 0, orderBy: String, search: String): [Flow]
+
+  """Get folder trees"""
+  getFolderTree(id: Int): Trees
+
+  """Get folders"""
+  getFolders(id: Int): [Folder]
+
+  """Get functions list"""
+  getFunctions: [Function]
+
+  """Get hierarchies"""
+  getHierarchies(ids: [Int]): [Hierarchy]
+
+  """Get indicator base rating"""
+  getIndicatorBaseRating(displayColumnIds: [String], displayFKeyId: String, displayTableId: Int, formula: [FormulaTokenInput], showCountedFormula: Boolean, sortType: SortType = ASC, sortValue: Float, sortValueType: SortValueType = VALUE): [[String]]
+
+  """Get indicators"""
+  getIndicators(ids: [Int]): [Indicator]
+
+  """Get indicators autocomplete"""
+  getIndicatorsAutocomplete(search: String!, tableId: Int, types: [IndicatorsAutocompleteType]): [IndicatorsAutocomplete]
 
   """Get objects"""
-  ecorObjectsGet(ids: [ID]): [EcorObject]
+  getObjects(limit: Int = 50, offset: Int = 0, search: String, types: [ObjectType]): [Object]
 
-  """Get event_categories"""
-  eventCategoriesGet(ids: [Int]): [EventCategory]
+  """for socket_message to appear in schema"""
+  getSocketMessage: SocketMessage
 
-  """Get event_types"""
-  eventTypesGet(ids: [Int]): [EventType]
+  """Get steps"""
+  getSteps(datasourceId: Int, flowId: Int, ids: [Int!], limit: Int = 100, offset: Int = 0): [Step]
 
-  """Get events"""
-  events: [Event]
+  """Get tables"""
+  getTables(ids: [Int]): [Table]
 
-  """Get fire iterations"""
-  fireIterationsGet(fireAgentDistance: Int, fireCenter: PlaceInput, fireClass: Int, fuelTypeCode: Int, iterationStepTime: Int, lastIterationTime: Int, windDirection: Float, windSpeed: Float): [FireModelIteration]
+  """ls ftp dir"""
+  lsFtpDir(host: String, limit: Int = 100, offset: Int = 0, pass: String, path: String = "/", port: String, regexp: String = ".*", user: String): [FtpEnity]
 
-  """Get forms"""
-  formsGet(ids: [ID]): [Form]
+  """Get dashboards"""
+  olapDashboardGet(ids: [UUID], limit: Int = 20, offset: Int, search: String): [OlapDashboard]
 
-  """Get WMS layers"""
-  gisLayersGet: [GisLayer]
+  """OLAP request"""
+  olapRequest(request: OlapRequestInput!): OlapResponse
 
-  """Get users activity types for group notification"""
-  groupNotificationActivityTypesGet(search: String): [String]
-
-  """Get group notifications"""
-  groupNotificationsGet(ids: [ID], template: Boolean): [GroupNotification]
-
-  """Get journal logs"""
-  journalGet(limit: Int, offset: Int): [Journal]
-
-  """Get monitoring objects"""
-  monitoringObjectsGet(ecorTypes: [EcorType], ids: [String], sources: [Source]): [MonitoringObject]
-
-  """Get object categories"""
-  objectCategoriesGet(ids: [ID]): [ObjectCategory]
-
-  """Get objects"""
-  objectsGet(ids: [ID]): [Object]
-
-  """Get opendata file"""
-  opendataFileGet(id: Int): OpenDataFile
-
-  """Get opendata rubrics"""
-  opendataRubricsGet: [OpendataRubric]
-
-  """Get operators"""
-  operatorsGet(ids: [Int], limit: Int, offset: Int): [Operator]
-
-  """Get organisations"""
-  organisationsGet(roles: [OrganisationRole]): [Organisation]
-
-  """Get documents"""
-  portalDocumentsGet(id: ID, limit: Int = 100, offset: Int = 0, published: Boolean, search: String): [Document]
-
-  """Get emergency contacts"""
-  portalEmergencyContactsGet(id: ID, limit: Int = 100, offset: Int = 0, published: Boolean): [EmergencyContact]
-
-  """Get news categories"""
-  portalNewsCategoriesGet(limit: Int = 100, offset: Int = 0): [FullNewsCategory]
-
-  """Get news"""
-  portalNewsGet(id: ID, limit: Int = 100, offset: Int = 0, pinned: Boolean, published: Boolean, publishedAtGt: Timestamp, publishedAtLt: Timestamp, routeIds: [String], search: String, showOnMain: Boolean): [NewsEntity]
-
-  """Get support_info"""
-  portalSupportInfoGet(id: ID, limit: Int = 100, offset: Int = 0, pinned: Boolean, published: Boolean, publishedAtGt: Timestamp, publishedAtLt: Timestamp, routeIds: [String], search: String, showOnMain: Boolean): [SupportInfo]
+  """Get current user organisations"""
+  organisationsMyGet: [Organisation]
 
   """Get profile"""
-  profileGet: Operator
+  profileGet: User
 
-  """Get scenarios"""
-  scenariosGet(ids: [Int]): [Scenario]
-
-  """Get vk_posts"""
-  vkPostsGet(bboxBottom: Float, bboxLeft: Float, bboxRight: Float, bboxTop: Float, dateFinish: Timestamp, dateStart: Timestamp, ids: [Int], limit: Int, offset: Int, searchTags: [String]): [VkPost]
-}
-
-type Scenario {
-  cards: [Card]
-  eventCategoryId: Int
-  eventTypeId: Int
-  id: Int
-  position: Int
-  title: String
+  """Scanner drill"""
+  scannerDrill(cubeId: String!, limit: Int = 1000, offset: Int = 0, scanDate: String!, scannerId: String!): [[String]]
 }
 
 type Session {
   expireAt: Timestamp
-  operator: Operator
   refreshToken: UUID
   token: UUID
+  user: User
 }
 
-enum Source {
-  CSMTO
-  CSOR
-  EVENTS
-  OBJECTS
-  RASCO
-  RNIS
-  SEVSTAR
-  SEVTELECOM
-  SPS
+type SharedAcl {
+  foldersEdit: Boolean
+  foldersRead: Boolean
+  objectsEdit: Boolean
+  objectsRead: Boolean
+  organisationCreate: Boolean
 }
 
-type SupportInfo {
-  blocks: [SupportInfoBlock]
+union SocketMessage = StepProgress | DatasourceState | DatasourceProgress | ChatOnline | ChatUser | ChatMessage | ChatRoom
+
+enum SortType {
+  ASC
+  DESC
+}
+
+enum SortValueType {
+  REFERENCE
+  REFERENCE_AVG
+  VALUE
+}
+
+enum SourceType {
+  CLICKHOUSE
+  DB
+  EIS
+  FTP
+}
+
+type Step {
+  columnsCount: Int
+  dupColumnsCount: Int
+  positionY: Int
   id: Int
-  insertedAt: Timestamp
-  published: Boolean
+  leftNotInRecords: Int
+  rightInKeys: Int
+  updatedAt: Timestamp
+  leftColumns: [Column]
+  originalSchemaTitle: String
+  rightStepColumnId: Int
   title: String
+  periodicity: Int
+  stepIds: [Int]
+  exportToMadd: Boolean
+  insertedAt: Timestamp
+  flow: Flow
+  leftStepColumnId: Int
+  positionX: Int
+  outDbParams: [OutDbParams]
+  leftInRecords: Int
+  fullUpdate: Boolean
+  leftStepId: Int
+  whereCond: [FormulaToken]
+  matchedKeys: [String]
+  rightStepId: Int
+  tableName: String
+  rightUnmatchedKeys: [String]
+  changes: [Change]
+  datasource: Datasource
+  leftUnmatchedKeys: [String]
+  dateColumn: String
+  leftInKeys: Int
+  leftNotInKeys: Int
+  rightInRecords: Int
+  rightNotInKeys: Int
+  joinType: JoinType
+  originalTitle: String
+  rightColumns: [Column]
+  rightNotInRecords: Int
+  dupGroupsCount: Int
+  stepType: StepType
 }
 
-type SupportInfoBlock {
-  attachment: Attachment
-  blockContent: String
-  blockType: SupportInfoBlockType
-  id: String
+type StepProgress {
+  processes: [Progress]
+  status: ProgressStatus
+  stepId: Int
 }
 
-enum SupportInfoBlockType {
-  IMAGE
-  TEXT
+enum StepType {
+  AGG
+  JOIN
+  OUT
+  PIVOT
+  SOURCE
+  TRANSFORM
+  UNION
 }
 
-input SupportInfoInputBlock {
-  attachmentId: UUID
-  blockContent: String
-  blockType: NewsBlockType
+type Table {
+  connections: [Connection]
+  cubeDescription: String
+  cubeTitle: String
+  description: String
+  fields: [Field]
+  hierarchies: [Hierarchy]
+  id: Int
+  inMemory: Boolean
+  insertedAt: Timestamp
+  isInvisible: Boolean
+  isOpened: Boolean
+  object: Object
+  positionX: Int
+  positionY: Int
+  tableType: TableType
+  title: String
+  updatedAt: Timestamp
 }
 
-enum Sys112StateType {
-  DONE
-  IN_ACTION
-  REQUEST_112
-  WATCHED
-}
-
-enum Sys112Type {
-  CHILD
-  COUTER_TERR
-  EDDS
-  FIREFIGHT
-  GAS
-  HEAT_SYS
-  LIE
-  MEDICINE
-  POLICE
-  REGIONAL
-  REPEAT
-  SPR
+enum TableType {
+  DIMENSION
+  FACT
 }
 
 """Unix timestamp"""
 scalar Timestamp
 
-input Translate {
-  en: String
-  ru: String
+input TitleInput {
+  value: String!
+}
+
+enum TokenType {
+  BRACKET
+  DATA
+  EQ_OPERATOR
+  FUNC
+  IN_OPERATOR
+  LIST
+  LOGIC_OPERATOR
+  NUMBER
+  OPERATOR
+  SPACE
+  STRING
+}
+
+type Tree {
+  folders: [Folder]
+  objects: [Object]
+}
+
+type Trees {
+  pinnedTree: Tree
+  tree: Tree
+}
+
+type TrendLine {
+  color: String
+  opacity: Float
+}
+
+input TrendLineInput {
+  color: String
+  opacity: Float
+}
+
+input UnionColumnsInput {
+  value: [Int]
 }
 
 """Represents an uploaded file."""
 scalar Upload
 
-type UserAnswer {
-  customAnswer: Float
-  formAnswerId: Int
-  formId: Int
-  insertedAt: Timestamp
-  operatorId: Int
+type User {
+  acl: Acl
+  avatar: String
+  email: String
+  firstName: String
+  id: Int
+  lastName: String
+  name: String
 }
 
 """UUID scalar"""
 scalar UUID
 
-type VkPost {
-  address: String
-  attachments: [EcorAttachment]
-  commentsCount: Int
-  date: Timestamp
-  groupName: String
-  groupUrl: String
-  id: Int
-  likesCount: Int
-  markedAsAds: Boolean
-  place: Geography
-  text: String
-  url: String
-  viewsCount: Int
+input WidthInput {
+  value: Int
 }

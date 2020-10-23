@@ -10,6 +10,7 @@ import {
   AppService,
   CookiesService,
   StoreService,
+  graphqlAPIService,
 } from './index'
 
 class ServicesManager {
@@ -61,6 +62,11 @@ class ServicesManager {
           options: {
             initialState: initialStoreState,
           },
+        },
+        {
+          name: 'graphqlAPI',
+          service: graphqlAPIService,
+          options: {},
         },
       ],
     })

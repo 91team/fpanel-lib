@@ -1,0 +1,7 @@
+import {
+  __imports__
+} from 'lib/gql/generated/types'
+
+export type TMutations = {__mutations_actions__}
+
+export type TQueries = {__queries_actions__}

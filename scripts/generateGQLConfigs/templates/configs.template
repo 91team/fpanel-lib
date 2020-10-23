@@ -1,0 +1,6 @@
+import { TMutations, TQueries } from '../graphqlTypes'
+__imports__
+
+export const mutations: { [key in keyof TMutations]: App.TGraphqlConfig } = {__mutations__}
+
+export const queries: { [key in keyof TQueries]: App.TGraphqlConfig } = {__queries__}

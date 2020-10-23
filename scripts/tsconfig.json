@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "baseUrl": "../",
+    "typeRoots": ["../node_modules/@types"]
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules", "**/lib/gql/generated/*"]
+}

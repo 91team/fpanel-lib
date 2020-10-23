@@ -1,4 +1,5 @@
-// Must be same as tslint.json with hooks rules
+const path = require('path')
+
 const importsOrder = require('./eslint/.eslintrc.imports.js')
 const stylesKeysOrder = require('./eslint/.eslintrc.sortStylesKeys.js')
 
@@ -16,7 +17,7 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: path.resolve(__dirname, './tsconfig.json'),
     sourceType: 'module'
   },
   plugins: [

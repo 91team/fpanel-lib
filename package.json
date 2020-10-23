@@ -4,8 +4,11 @@
   "license": "Private",
   "private": true,
   "scripts": {
-    "clean:production": "yarn rimraf ./public/webpack/production/*",
+    "build:development": "yarn clean:development && yarn ts-node -r dotenv/config --project build/tsconfig.json build/index.ts dotenv_config_path=.env.development",
+    "build:development:hot": "yarn clean:development && yarn ts-node -r dotenv/config --project build/tsconfig.json build/index.ts dotenv_config_path=.env.development:hot",
+    "build:production": "yarn clean:production && yarn ts-node -r dotenv/config --project build/tsconfig.json build/index.ts dotenv_config_path=.env.production",
     "clean:development": "yarn rimraf ./public/webpack/development/*",
+    "clean:production": "yarn rimraf ./public/webpack/production/*",
     "lint": "yarn tsc --noEmit && yarn eslint 'src' --ext ts,tsx",
     "schema:clean": "yarn rimraf schema.graphql && yarn rimraf src/lib/gql/generated",
     "schema:generate-types": "yarn schema:clean && graphql-codegen --config codegen.yml",

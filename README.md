@@ -9,6 +9,7 @@
    * `.env.production` - используется для `prod` сборки (проверить, что нет `WITH_HMR`, установлены `NODE_ENV` и `OUTPUT_PATH` для прод-ассетов)
 
 ## Скрипты
+- `yarn build:<env>` - сборка ассетов для среды
 - `yarn lint` - линтинг
 - `yarn schema:generate-types` - генерация типов для GraphQL (необходимо активное подключение к gql-сервису, адрес которого указан в `codegen.yml`)
 - `yarn start` - запуск дев-сервера (без HMR)

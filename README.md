@@ -3,10 +3,10 @@
 ## Старт
 
 - `yarn install`
-- создать три `env`-файла по примеру (`.env.example`):
-   1) в `.env.development:hot` проверить, что `WITH_HMR=true`
-   2) в `.env.development` проверить, что `WITH_HMR=false`
-   3) в `.env.production` проверить, что нет `WITH_HMR`, установлены `NODE_ENV` и `OUTPUT_PATH` для прод-ассетов
+- создать необходимые `env`-файлы по примеру (`.env.example`):
+   * `.env.development` - используется для `dev` сборки (проверить, что `WITH_HMR=false`)
+   * `.env.development:hot` - используется для `dev` сборки с `hmr`  (проверить, что `WITH_HMR=true`)
+   * `.env.production` - используется для `prod` сборки (проверить, что нет `WITH_HMR`, установлены `NODE_ENV` и `OUTPUT_PATH` для прод-ассетов)
 
 ## Скрипты
 - `yarn lint` - линтинг

@@ -1,1 +1,1 @@
-export const NAME = 'FlowPageController' as const
+export const NAME = 'ExamplePageController' as const

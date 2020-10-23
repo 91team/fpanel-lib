@@ -14,7 +14,7 @@ export type TEntityConfig = {
 }
 export type TConfig = Record<string, TEntityConfig>
 export type TGlobalVars = {
-  MODULE_PATH: string
+  PROJECT_PATH: string
   CONFIG_PATH: string
   GENERATED_FOLDER_PATH: string
   GQL_TYPES_FOLDER_NAME: string

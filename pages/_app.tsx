@@ -7,7 +7,7 @@ import { ApolloProvider } from '@apollo/react-hooks'
 import { getDataFromTree } from '@apollo/react-ssr'
 import { Provider, useStaticRendering } from 'mobx-react'
 import NextSEO from 'next-seo'
-import App, { AppProps, AppContext } from 'next/app'
+import App, { AppContext, AppProps } from 'next/app'
 import { ThemeProvider } from 'react-jss'
 
 import { CStore } from 'lib/store/types'
@@ -17,7 +17,7 @@ import { defaultTheme } from 'lib/theme'
 import ServicesContext from 'lib/contexts/services'
 
 import { TInitialState as TApolloInitialState } from 'services/apollo'
-import { ServicesManager, AppService } from 'services/index'
+import { AppService, ServicesManager } from 'services/index'
 import { TInitialState as TStoreInitialState } from 'services/store'
 
 import Layout from 'containers/PageLayout'
@@ -47,7 +47,7 @@ class Application extends App<TProps> {
     } else {
       this.servicesManager = ServicesManager.build({
         initialApolloState,
-        initialStoreState
+        initialStoreState,
       })
       // Duplicate instance to avoid services recreation in
       // getInitialProps method on client side, when we changing a route
@@ -57,7 +57,7 @@ class Application extends App<TProps> {
     const {
       apollo: apolloService,
       app: appService,
-      store: storeService
+      store: storeService,
     } = this.servicesManager.getServices()
 
     if (appService.isDev && !appService.isServer) {
@@ -88,7 +88,7 @@ class Application extends App<TProps> {
 
       const {
         apollo: apolloService,
-        cookies: cookiesService
+        cookies: cookiesService,
       } = servicesManager.getServices()
       const cookies = cookiesService.getCookies()
 
@@ -104,7 +104,7 @@ class Application extends App<TProps> {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps({
         ...ctx,
-        servicesManager
+        servicesManager,
       } as App.TPageContext)
     }
 
@@ -112,7 +112,7 @@ class Application extends App<TProps> {
       TProps,
       'pageProps' | 'initialApolloState' | 'initialStoreState'
     > = {
-      pageProps
+      pageProps,
     }
 
     if (appService.isServer) {
@@ -120,7 +120,7 @@ class Application extends App<TProps> {
       // because they have circular links
       const {
         store: storeService,
-        apollo: apolloService
+        apollo: apolloService,
       } = servicesManager.getServices()
 
       await getDataFromTree(

@@ -2,7 +2,7 @@ import { enableLogging } from 'mobx-logger'
 
 import Store from 'lib/store'
 
-import { TRootStoreOptions, CStore } from 'lib/store/types'
+import { CStore, TRootStoreOptions } from 'lib/store/types'
 
 import BaseService, { TOptions as TBaseOptions } from './base'
 

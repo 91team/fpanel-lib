@@ -1,4 +1,4 @@
-import { Classes, StyleSheetFactoryOptions, Jss } from 'jss'
+import { Classes, Jss, StyleSheetFactoryOptions } from 'jss'
 import { Theming } from 'theming'
 
 declare module 'react-jss' {
@@ -10,9 +10,5 @@ declare module 'react-jss' {
   export interface WithStylesOptions extends BaseOptions {
     injectTheme?: boolean
     jss?: Jss
-  }
-
-  export interface CreateUseStylesOptions extends BaseOptions {
-    name?: string
   }
 }

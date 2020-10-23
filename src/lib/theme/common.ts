@@ -6,7 +6,7 @@ export const common = {
   transition: {
     config: `${transitionTime} ${transitionEasing}`,
     easing: transitionEasing,
-    time: transitionTime
+    time: transitionTime,
   },
   visuallyHidden: {
     position: 'absolute',
@@ -18,8 +18,8 @@ export const common = {
     border: 0,
     overflow: 'hidden',
     clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)'
-  }
+    clipPath: 'inset(50%)',
+  },
 } as const
 
 export default common

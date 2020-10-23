@@ -10,5 +10,5 @@ export const GREY = {
   300: '#35353A',
   400: '#4A4950',
   500: '#7E7E7E',
-  600: '#AAAAAA'
+  600: '#AAAAAA',
 }

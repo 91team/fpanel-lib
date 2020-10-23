@@ -1,15 +1,15 @@
 import React, {
-  useMemo,
-  forwardRef,
-  useContext,
   ComponentType,
   FC,
-  RefObject
+  RefObject,
+  forwardRef,
+  useContext,
+  useMemo,
 } from 'react'
 
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import { Classes, Styles } from 'jss'
-import { createUseStyles, WithStylesOptions } from 'react-jss'
+import { WithStylesOptions, createUseStyles } from 'react-jss'
 import { ThemeContext as DefaultThemeContext } from 'theming'
 
 function mergeClasses(baseClasses: Classes, additionalClasses: Classes) {
@@ -24,6 +24,7 @@ function mergeClasses(baseClasses: Classes, additionalClasses: Classes) {
 
   return combinedClasses
 }
+
 function getDisplayName(Component: ComponentType<{}>) {
   return process.env.NODE_ENV === 'development'
     ? Component.displayName || Component.name || 'Component'
@@ -69,7 +70,7 @@ const withStyles = <OuterProps, S extends (theme: any) => any>(
     >(styles, {
       ...restOptions,
       name: displayName,
-      theming
+      theming,
     })
 
     const WithStyles = forwardRef<unknown, CommonProps>(

@@ -44,6 +44,7 @@ const groups = [
 ]
 // Ordering by importance
 const importImportance = [
+  'controller',
   'controllers',
   'subControllers',
   'services',
@@ -61,7 +62,7 @@ const importImportance = [
   'assets',
   'gql/**/fragments',
   'gql/generated',
-  'types'
+  'types',
 ]
 const pathGroups = []
 

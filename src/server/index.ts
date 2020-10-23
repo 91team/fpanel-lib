@@ -3,7 +3,7 @@ import express, { Express, Handler, Router } from 'express'
 import staticGZIPMiddleware from 'express-static-gzip'
 import { join } from 'path'
 import cookiesMiddleware from 'universal-cookie-express'
-import { Configuration, MultiCompiler } from 'webpack'
+import { Configuration } from 'webpack'
 import webpackDevMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
 
@@ -108,27 +108,25 @@ class ServerFactory {
     devMiddleware.waitUntilValid(this.startServer)
   }
 
-  // public buildProductionApp() {
-  //   this.buildApp()
+  public buildProductionApp() {
+    this.buildApp()
 
-  //   this.compilationInstances.run((err, stats) => {
-  //     const {
-  //       app,
-  //       router,
-  //       clientConfig: {
-  //         output: { path: OUTPUT_PATH, publicPath: PUBLIC_PATH },
-  //       },
-  //     } = this
+    const {
+      app,
+      router,
+      clientConfig: {
+        output: { path: OUTPUT_PATH, publicPath: PUBLIC_PATH },
+      },
+    } = this
 
-  //     // Static assets (with compressed version)
-  //     app.use(PUBLIC_PATH, staticGZIPMiddleware(OUTPUT_PATH, {}))
-  //     app.use('/', router)
+    // Static assets (with compressed version)
+    app.use(PUBLIC_PATH, staticGZIPMiddleware(OUTPUT_PATH, {}))
+    app.use('/', router)
 
-  //     router.get('*', this.appRequestHandler)
+    router.get('*', this.appRequestHandler)
 
-  //     this.startServer()
-  //   })
-  // }
+    this.startServer()
+  }
 
   public appRequestHandler: Handler = (req, res) => {
     const {

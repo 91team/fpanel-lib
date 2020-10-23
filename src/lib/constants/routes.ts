@@ -6,10 +6,6 @@ import { TIconComponent } from 'components/Icons'
 
 export interface ICustomRoute extends Route {
   component?: ReturnType<typeof universalComponent>
-  /**
-   * Indicator for root route of a module
-   */
-  isModule?: boolean
   /** Needed authorization or not */
   withAuth?: boolean
   /** Placed or not in side menu */
@@ -53,5 +49,5 @@ export const routes: ICustomRoute[] = [
 
 export const UNKNOWN_ROUTE: Omit<ICustomRoute, 'path'> = {
   name: constants.UNKNOWN_ROUTE,
-  // component: universalComponent(import('../../pages/NotFound')),
+  component: universalComponent(import('../../pages/NotFound')),
 }

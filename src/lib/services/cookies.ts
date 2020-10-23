@@ -1,37 +1,25 @@
-import { CookieSerializeOptions } from 'cookie'
-import { NextPageContext } from 'next'
-import nookies from 'nookies'
+import cookies from 'js-cookie'
 
 import { BaseService, TOptions as TBaseOptions } from './base'
 
-export type TOptions = TBaseOptions & {
-  ctx?: NextPageContext
-}
+export type TOptions = TBaseOptions
 
 export class CookiesService extends BaseService {
-  private ctx?: NextPageContext | undefined
+  private instance: Cookies.CookiesStatic
 
-  constructor({ ctx, ...options }: TOptions) {
+  constructor(options: TOptions) {
     super(options)
 
-    this.ctx = ctx
+    this.instance = cookies
   }
 
-  public getCookies() {
-    return nookies.get(this.ctx)
+  public set = (name: string, value: any, options?: any) => {
+    this.instance.set(name, value, options)
   }
 
-  public setItem(key: string, value: string, options?: CookieSerializeOptions) {
-    nookies.set(this.ctx, key, value, options || {})
-  }
+  public get = (name: string): string => this.instance.get(name)
 
-  public getItem(key: string) {
-    const cookies = this.getCookies()
-
-    return cookies[key]
-  }
-
-  public removeItem(key: string) {
-    nookies.destroy(this.ctx, key)
+  public remove = (name: string) => {
+    this.instance.remove(name)
   }
 }

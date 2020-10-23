@@ -1,36 +1,3 @@
-export namespace RailsConfig {
-  interface Output {
-    path: string
-    publicPath: string
-    publicPathWithHost: string
-  }
-
-  interface DevServerSettings {
-    host: string
-    port: number
-    https?: boolean
-    hmr?: boolean
-  }
-
-  interface Settings {
-    source_path?: string
-    source_entry_path?: string
-    cache_path?: string
-    resolved_paths?: string[]
-    cache_manifest?: boolean
-
-    compile?: boolean
-    public_output_path?: string
-    dev_server?: DevServerSettings
-    dev_server_hot?: DevServerSettings
-  }
-
-  interface ConfigLoaderResult {
-    output: Output
-    settings: Settings
-  }
-}
-
 export namespace Build {
   /* Environment */
   interface DevServerEnv {

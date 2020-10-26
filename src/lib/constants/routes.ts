@@ -41,9 +41,9 @@ export const routes: ICustomRoute[] = [
     withMenu: true,
   },
   {
-    name: 'test',
-    path: '/test',
-    component: universalComponent(import('../../pages/Test')),
+    name: 'example',
+    path: '/example',
+    component: universalComponent(import('../../pages/Example')),
   },
 ]
 

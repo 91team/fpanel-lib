@@ -14,6 +14,7 @@
 - `yarn schema:generate-types` - генерация типов для GraphQL (необходимо активное подключение к gql-сервису, адрес которого указан в `codegen.yml`)
 - `yarn start` - запуск дев-сервера (без HMR)
 - `yarn start:hot` - запуск дев-сервера (с HMR)
+- `yarn start:prod` - запуск `production` сервера
 
 ## Роутинг и страницы
 

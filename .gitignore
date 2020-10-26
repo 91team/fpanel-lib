@@ -4,4 +4,9 @@ dist
 yarn-error.log
 .DS_Store
 
+.env.*
+!.env.example
+
+/public
+
 static/service-worker.js

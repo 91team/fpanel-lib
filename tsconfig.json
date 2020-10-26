@@ -30,7 +30,7 @@
       "constants/*": ["src/lib/constants/*"],
       "containers/*": ["src/containers/*"],
       "components/*": ["src/components/*"],
-      "static/*": ["static/*"]
+      "assets/*": ["assets/*"]
     },
     "preserveConstEnums": false,
     "removeComments": true,
@@ -39,14 +39,11 @@
     "sourceMap": true,
     "strict": false,
     "strictNullChecks": false,
-    "typeRoots": ["./types", "./node_modules/@types"]
+    "typeRoots": ["./types", "./node_modules/@types", "./build/types"]
   },
   "exclude": [
-    ".next",
-    "config",
-    "next.config.js",
     "node_modules",
     "**/lib/gql/generated/*"
   ],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx"]
 }

@@ -1,5 +1,3 @@
-import { ENVIROMENT } from 'services/app'
-
 export enum STATE {
   IDLE = 'idle',
   LOADING = 'loading',
@@ -7,17 +5,7 @@ export enum STATE {
   FAILED = 'failed',
 }
 
-const API = (process.env.API as unknown) as {
-  HOSTNAME: string
-  API_HOSTNAME: string
-  CDN_HOSTNAME: string
-}
-
-export const HOSTNAME = API.HOSTNAME
-export const API_HOSTNAME =
-  process.env.NODE_ENV === ENVIROMENT.PRODUCTION &&
-  typeof window !== 'undefined'
-    ? window.location.origin
-    : API.API_HOSTNAME
-export const CDN_HOSTNAME = API.CDN_HOSTNAME
-export const GRAPHQL_API_URL = `${API_HOSTNAME}/api/graphql`
+export const HOSTNAME_APP = process.env.HOSTNAME_APP
+export const HOSTNAME_API = process.env.HOSTNAME_API || window.location.origin
+export const HOSTNAME_CDN = process.env.HOSTNAME_CDN
+export const GRAPHQL_API_URL = `${HOSTNAME_API}/api/graphql`

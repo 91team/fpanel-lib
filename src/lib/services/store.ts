@@ -4,12 +4,12 @@ import Store from 'lib/store'
 
 import { CStore, TRootStoreOptions } from 'lib/store/types'
 
-import BaseService, { TOptions as TBaseOptions } from './base'
+import { BaseService, TOptions as TBaseOptions } from './base'
 
 export type TInitialState = TRootStoreOptions['initialState']
 export type TOptions = TBaseOptions & Omit<TRootStoreOptions, 'servicesManager'>
 
-class StoreService extends BaseService {
+export class StoreService extends BaseService {
   private rootStore: Store
 
   constructor({ initialState = {}, root }: TOptions) {
@@ -34,5 +34,3 @@ class StoreService extends BaseService {
     enableLogging()
   }
 }
-
-export default StoreService

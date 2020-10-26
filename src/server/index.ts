@@ -121,15 +121,15 @@ class ServerFactory {
       clientConfig: info,
     } = this
 
-    this.compilationInstances.run()
+    this.compilationInstances.run((err, stats) => {
+      // Static assets (with compressed version)
+      app.use(PUBLIC_PATH, staticGZIPMiddleware(OUTPUT_PATH, {}))
+      app.use('/', router)
 
-    // Static assets (with compressed version)
-    app.use(PUBLIC_PATH, staticGZIPMiddleware(OUTPUT_PATH, {}))
-    app.use('/', router)
+      router.get('*', this.appRequestHandler)
 
-    router.get('*', this.appRequestHandler)
-
-    this.startServer()
+      this.startServer()
+    })
   }
 
   public appRequestHandler: Handler = (req, res) => {

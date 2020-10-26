@@ -4,7 +4,8 @@ class CompilerService {
   private compiler: Compiler
   private watcher: Watching
 
-  constructor(config: Configuration) {
+  constructor(config: Configuration[] | Configuration) {
+    // @ts-expect-error
     this.compiler = webpack(config)
   }
 
@@ -26,8 +27,14 @@ class CompilerService {
     })
   }
 
-  public run() {
-    this.compiler.run(this.handler)
+  public run(handler?: ICompiler.Handler) {
+    this.compiler.run((...args) => {
+      this.handler(...args)
+
+      if (handler) {
+        handler(...args)
+      }
+    })
   }
 
   public getCompiler() {

@@ -1,0 +1,4 @@
+__imports__
+
+export type TMutations = __mutations__
+export type TQueries = __queries__

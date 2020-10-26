@@ -24,10 +24,7 @@ export class ClientEntryFactory {
     router.start(initialPathname, (err, state) => {
       console.log('Router5 is started')
 
-      render(
-        <AppContainer servicesManager={servicesManager} />,
-        document.getElementById('root')
-      )
+      render(<AppContainer servicesManager={servicesManager} />, document.getElementById('root'))
     })
   }
 }

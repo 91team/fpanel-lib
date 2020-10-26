@@ -7,10 +7,7 @@ export interface OuterProps extends SVGAttributes<SVGSVGElement> {
 }
 interface Props extends OuterProps {}
 
-const IconBaseBuilder = (
-  icon: { id: string },
-  defaultProps: OuterProps = {}
-): FC<Props> =>
+const IconBaseBuilder = (icon: { id: string }, defaultProps: OuterProps = {}): FC<Props> =>
   memo(({ loading = false, ...props }) => (
     <svg {...defaultProps} {...props}>
       <use xlinkHref={`#${loading ? LoadingIcon.id : icon.id}`} />

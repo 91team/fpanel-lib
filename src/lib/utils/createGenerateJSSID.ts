@@ -17,19 +17,16 @@ interface ICreateGenerateIdOptions extends CreateGenerateIdOptions {
 }
 
 // https://github.com/cssinjs/jss/blob/master/packages/jss/src/utils/createGenerateId.js
-export const createGenerateID: (
-  options?: ICreateGenerateIdOptions
-) => GenerateId = (options = {}) => {
+export const createGenerateID: (options?: ICreateGenerateIdOptions) => GenerateId = (
+  options = {}
+) => {
   let ruleCounter = 0
 
   return (rule: Rule, sheet?: StyleSheet): string => {
     ruleCounter += 1
 
     if (ruleCounter > maxRules) {
-      warning(
-        false,
-        `[JSS] You might have a memory leak. Rule counter is at ${ruleCounter}.`
-      )
+      warning(false, `[JSS] You might have a memory leak. Rule counter is at ${ruleCounter}.`)
     }
 
     let jssId = ''
@@ -50,8 +47,6 @@ export const createGenerateID: (
       return `${prefix || 'c'}${moduleId}${jssId}${ruleCounter}`
     }
 
-    return `${prefix + rule.key}-${moduleId}${
-      jssId ? `-${jssId}` : ''
-    }-${ruleCounter}`
+    return `${prefix + rule.key}-${moduleId}${jssId ? `-${jssId}` : ''}-${ruleCounter}`
   }
 }

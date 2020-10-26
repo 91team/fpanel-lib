@@ -18,9 +18,7 @@ class AppRouter extends PureComponent<TProps> {
       services: { router },
     } = this.props
 
-    return router.getRouteComponent(
-      route ? route.name : constants.UNKNOWN_ROUTE
-    )
+    return router.getRouteComponent(route ? route.name : constants.UNKNOWN_ROUTE)
   }
 
   render() {

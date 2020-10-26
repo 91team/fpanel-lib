@@ -1,12 +1,13 @@
 import { action, flow, observable } from 'mobx'
 
-import { CStore } from './types'
 import {
   SessionCreateDocument,
   SessionCreateMutation,
   SessionCreateMutationResult,
   SessionCreateMutationVariables,
 } from 'gql/generated/types'
+
+import { CStore } from './types'
 
 import BaseStore from './base'
 import Store from './index'
@@ -16,34 +17,24 @@ type TInitialState = Partial<User>
 class User extends BaseStore<TInitialState> implements CStore {
   @observable token: null | string = null
 
-  public createSession = flow(function*() {
-    // @ts-ignore
-    const apolloClient: App.TApollo = (this.getRoot() as Store)
-      .getServices()
-      .apollo.getClient()
-
+  public createSession = async () => {
     try {
-      const { data }: SessionCreateMutationResult = yield apolloClient.mutate<
-        SessionCreateMutation,
-        SessionCreateMutationVariables
-      >({
-        mutation: SessionCreateDocument,
-        variables: {
-          email: 'admin@ecor.dev',
-          password: 'password91',
-        },
-      })
+      const { sessionCreate } = await this.getRoot()
+        .getServices()
+        .graphqlAPI.mutations.sessionCreate({
+          GQLVariables: {
+            email: 'admin@ecor.dev',
+            password: 'password91',
+          },
+        })
 
-      if (data && data.sessionCreate) {
-        // @ts-ignore
-        ;(this as User).setToken(data.sessionCreate.token)
-      }
-    } catch (error) {
-      console.error(error)
+      this.setToken(sessionCreate.token)
+    } catch (e) {
+      console.error(e)
     }
-  })
+  }
 
-  @action.bound setToken(token: string) {
+  @action.bound private setToken(token: string) {
     this.token = token
   }
 

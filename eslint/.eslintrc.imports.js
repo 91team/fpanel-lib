@@ -62,6 +62,7 @@ const importImportance = [
   'assets',
   'gql/**/fragments',
   'gql/generated',
+  'gqlConfig/generated',
   'types',
 ]
 const pathGroups = []

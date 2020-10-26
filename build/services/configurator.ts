@@ -70,9 +70,7 @@ class ConfiguratorService {
     }
   }
 
-  private getOptimizations({
-    isDev,
-  }: ConfigParams): Configuration['optimization'] {
+  private getOptimizations({ isDev }: ConfigParams): Configuration['optimization'] {
     const optimization: Configuration['optimization'] = {
       noEmitOnErrors: false,
       minimize: false,
@@ -165,12 +163,7 @@ class ConfiguratorService {
     return outputConfig ? outputConfig.content : {}
   }
 
-  private getEntries({
-    entry,
-    isServer,
-    isSG,
-    withHMR,
-  }: ConfigParams): Configuration['entry'] {
+  private getEntries({ entry, isServer, isSG, withHMR }: ConfigParams): Configuration['entry'] {
     const {
       paths: { SRC },
     } = this.envService
@@ -193,10 +186,7 @@ class ConfiguratorService {
       },
       {
         content: {
-          [entryName]: [
-            `webpack-hot-middleware/client?reload=true&timeout=1000`,
-            clientEntry,
-          ],
+          [entryName]: [`webpack-hot-middleware/client?reload=true&timeout=1000`, clientEntry],
         },
         condition: [!isServer, !isSG, withHMR],
       },
@@ -207,9 +197,7 @@ class ConfiguratorService {
         condition: [!isServer, !isSG, !withHMR],
       },
     ]
-    const entryConfig = configs.find(
-      config => !config.condition || config.condition.every(Boolean)
-    )
+    const entryConfig = configs.find(config => !config.condition || config.condition.every(Boolean))
 
     if (entryConfig) {
       return entryConfig.content
@@ -227,13 +215,7 @@ class ConfiguratorService {
   }: ConfigParams): Configuration['plugins'] => {
     const {
       clientAppConfig,
-      paths: {
-        HTML_TEMPLATE_PATH,
-        TS_CONFIG,
-        PUBLIC_PATH,
-        ESLINT_CONFIG,
-        ESLINT_IGNORE,
-      },
+      paths: { HTML_TEMPLATE_PATH, TS_CONFIG, PUBLIC_PATH, ESLINT_CONFIG, ESLINT_IGNORE },
     } = this.envService
 
     interface PluginConfig {
@@ -358,9 +340,7 @@ class ConfiguratorService {
 
     const configs: PluginConfig[] = []
 
-    const entryConfig = configs.find(
-      config => !config.condition || config.condition.every(Boolean)
-    )
+    const entryConfig = configs.find(config => !config.condition || config.condition.every(Boolean))
 
     return entryConfig ? entryConfig.content : {}
   }

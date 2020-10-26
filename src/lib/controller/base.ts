@@ -61,14 +61,9 @@ export class BaseController<
    * @returns {T extends BaseController}
    */
   public getSubControllerInstance = <
-    T extends BaseController<
-      TRootController,
-      BaseController<TRootController, TParentController>
-    >
+    T extends BaseController<TRootController, BaseController<TRootController, TParentController>>
   >(
-    subControllerFactory: new (
-      parent: BaseController<TRootController, TParentController>
-    ) => T
+    subControllerFactory: new (parent: BaseController<TRootController, TParentController>) => T
   ): T => {
     // @ts-expect-error
     const name: string = subControllerFactory.NAME
@@ -82,15 +77,8 @@ export class BaseController<
    * @returns {T extends BaseController}
    */
   public getDeepSubControllerInstanceFromRoot = computedFn(
-    <
-      T extends BaseController<
-        TRootController,
-        BaseController<TRootController, TParentController>
-      >
-    >(
-      controllerFactory: new (
-        parent: BaseController<TRootController, TParentController>
-      ) => T
+    <T extends BaseController<TRootController, BaseController<TRootController, TParentController>>>(
+      controllerFactory: new (parent: BaseController<TRootController, TParentController>) => T
     ): T | undefined => {
       // @ts-expect-error
       const name: string = controllerFactory.NAME
@@ -109,14 +97,9 @@ export class BaseController<
       return controller as T
     }
   ) as <
-    T extends BaseController<
-      TRootController,
-      BaseController<TRootController, TParentController>
-    >
+    T extends BaseController<TRootController, BaseController<TRootController, TParentController>>
   >(
-    controllerFactory: new (
-      parent: BaseController<TRootController, TParentController>
-    ) => T
+    controllerFactory: new (parent: BaseController<TRootController, TParentController>) => T
   ) => T | undefined
 
   /**
@@ -127,10 +110,7 @@ export class BaseController<
   public getDeepSubControllersInstancesFromRoot = computedFn(
     <
       T extends TBaseSubControllers,
-      U extends BaseController<
-        TRootController,
-        BaseController<TRootController, TParentController>
-      >
+      U extends BaseController<TRootController, BaseController<TRootController, TParentController>>
     >(
       controllerFactories: Array<
         new (parent: BaseController<TRootController, TParentController>) => U
@@ -150,10 +130,7 @@ export class BaseController<
     }
   ) as <
     T extends TBaseSubControllers,
-    U extends BaseController<
-      TRootController,
-      BaseController<TRootController, TParentController>
-    >
+    U extends BaseController<TRootController, BaseController<TRootController, TParentController>>
   >(
     controllerFactories: Array<
       new (parent: BaseController<TRootController, TParentController>) => U
@@ -167,14 +144,9 @@ export class BaseController<
    * @returns {BaseController | undefined}
    */
   @action.bound public addSubController: <
-    T extends BaseController<
-      TRootController,
-      BaseController<TRootController, TParentController>
-    >
+    T extends BaseController<TRootController, BaseController<TRootController, TParentController>>
   >(
-    subControllerFactory: new (
-      parent: BaseController<TRootController, TParentController>
-    ) => T,
+    subControllerFactory: new (parent: BaseController<TRootController, TParentController>) => T,
     cancelOnCreateCallback?: boolean
   ) => T | undefined = (
     subControllerFactory,
@@ -209,9 +181,7 @@ export class BaseController<
    */
   @action.bound public addSubControllers: (
     subControllersFactories: Array<
-      new (
-        parent: BaseController<TRootController, TParentController>
-      ) => BaseController<
+      new (parent: BaseController<TRootController, TParentController>) => BaseController<
         TRootController,
         BaseController<TRootController, TParentController>
       >
@@ -241,14 +211,9 @@ export class BaseController<
    *  @param {typeof BaseController} subControllerFactory - класс подконтроллера.
    */
   @action.bound public removeSubControllerInstance = <
-    T extends BaseController<
-      TRootController,
-      BaseController<TRootController, TParentController>
-    >
+    T extends BaseController<TRootController, BaseController<TRootController, TParentController>>
   >(
-    subControllerFactory: new (
-      parent: BaseController<TRootController, TParentController>
-    ) => T
+    subControllerFactory: new (parent: BaseController<TRootController, TParentController>) => T
   ) => {
     // @ts-expect-error
     const name: string = subControllerFactory.NAME
@@ -265,10 +230,7 @@ export class BaseController<
    *  @param {typeof BaseController[]} subControllerFactories - массив классов подконтроллеров.
    */
   @action.bound public removeSubControllersInstance = <
-    T extends BaseController<
-      TRootController,
-      BaseController<TRootController, TParentController>
-    >
+    T extends BaseController<TRootController, BaseController<TRootController, TParentController>>
   >(
     subControllerFactories: Array<
       new (parent: BaseController<TRootController, TParentController>) => T

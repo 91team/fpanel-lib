@@ -52,11 +52,7 @@ export class RouterService extends BaseService {
     return routes.map(RouterService.getFormattedRoute)
   }
 
-  public static getFormattedRoute({
-    children,
-    component,
-    ...route
-  }: ICustomRoute): Route {
+  public static getFormattedRoute({ children, component, ...route }: ICustomRoute): Route {
     if (children) {
       return {
         ...route,
@@ -110,9 +106,7 @@ export class RouterService extends BaseService {
 
     for (let index = 0; index < routePath.length; index += 1) {
       const name = routePath[index]
-      const buffer = currentRoutes.find(
-        routeConfig => routeConfig.name === name
-      )
+      const buffer = currentRoutes.find(routeConfig => routeConfig.name === name)
 
       if (buffer) {
         if (index === routePath.length - 1) {
@@ -130,9 +124,7 @@ export class RouterService extends BaseService {
     }
   }
 
-  public getRouteComponent(
-    routeName: string
-  ): ICustomRoute['component'] | null {
+  public getRouteComponent(routeName: string): ICustomRoute['component'] | null {
     const route = this.getRouteByName(routeName)
 
     if (route) {

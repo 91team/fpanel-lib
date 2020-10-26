@@ -1,11 +1,4 @@
-import React, {
-  ComponentType,
-  FC,
-  RefObject,
-  forwardRef,
-  useContext,
-  useMemo,
-} from 'react'
+import React, { ComponentType, FC, RefObject, forwardRef, useContext, useMemo } from 'react'
 
 import hoistNonReactStatics from 'hoist-non-react-statics'
 import { Classes, Styles } from 'jss'
@@ -41,9 +34,7 @@ export interface HOCProps {
 
 export interface TWithStylesProps<S extends Styles | ((theme: unknown) => any)>
   extends Pick<HOCProps, 'ref' | 'theme'> {
-  classes: Classes<
-    S extends ((theme: unknown) => any) ? keyof ReturnType<S> : keyof S
-  >
+  classes: Classes<S extends ((theme: unknown) => any) ? keyof ReturnType<S> : keyof S>
 }
 
 /**
@@ -60,9 +51,7 @@ const withStyles = <OuterProps, S extends (theme: any) => any>(
   const { injectTheme = false, theming, ...restOptions } = options
   const ThemeContext = (theming && theming.context) || DefaultThemeContext
 
-  return (
-    InnerComponent: ComponentType<CommonProps> = NoRenderer
-  ): ComponentType<OuterProps> => {
+  return (InnerComponent: ComponentType<CommonProps> = NoRenderer): ComponentType<OuterProps> => {
     const displayName = getDisplayName(InnerComponent)
     const useStyles = createUseStyles<
       HOCProps['theme'],
@@ -79,10 +68,7 @@ const withStyles = <OuterProps, S extends (theme: any) => any>(
         const theme = propTheme || contextTheme
         const generatedClasses = useStyles({ theme, ...restProps })
         const classes: Classes = useMemo(
-          () =>
-            propClasses
-              ? mergeClasses(generatedClasses, propClasses)
-              : generatedClasses,
+          () => (propClasses ? mergeClasses(generatedClasses, propClasses) : generatedClasses),
           [propClasses, generatedClasses]
         )
 

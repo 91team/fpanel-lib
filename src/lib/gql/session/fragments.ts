@@ -7,3 +7,14 @@ export const SessionDataFragment = gql`
     expireAt
   }
 `
+
+export const UserFragment = gql`
+  fragment User on User {
+    avatar
+    email
+    firstName
+    id
+    lastName
+    name
+  }
+`

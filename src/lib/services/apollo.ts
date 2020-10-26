@@ -52,9 +52,7 @@ export class ApolloService extends BaseService {
       }
     })
 
-    return ApolloLink.from(
-      [appService.isDev && loggerLink, authLink, uploadLink].filter(Boolean)
-    )
+    return ApolloLink.from([appService.isDev && loggerLink, authLink, uploadLink].filter(Boolean))
   }
 
   private getClientCache = (initialState: TInitialState) =>

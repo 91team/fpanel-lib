@@ -75,9 +75,7 @@ class EnvService {
     }
   }
 
-  private checkParamsIsNotEmpty(
-    params: Record<string, string | number | Object>
-  ) {
+  private checkParamsIsNotEmpty(params: Record<string, string | number | Object>) {
     Object.keys(params).forEach(paramName => {
       if (typeof params[paramName] === 'undefined') {
         throw new Error(`'${paramName}' parameter is not set`)
@@ -89,10 +87,7 @@ class EnvService {
     console.error(error)
   }
 
-  private setBuildParams({
-    PUBLIC_PATH,
-    OUTPUT_PATH,
-  }: Partial<Build.OutputEnv>) {
+  private setBuildParams({ PUBLIC_PATH, OUTPUT_PATH }: Partial<Build.OutputEnv>) {
     try {
       this.checkParamsIsNotEmpty({ PUBLIC_PATH, OUTPUT_PATH })
     } catch (error) {
@@ -177,13 +172,7 @@ class EnvService {
   }
 
   public get devServerConfig(): Build.DevServerConfig {
-    const {
-      DEV_SERVER_HOST,
-      DEV_SERVER_PORT,
-      DEV_SERVER_IS_HTTPS,
-      PUBLIC_PATH,
-      withHMR,
-    } = this
+    const { DEV_SERVER_HOST, DEV_SERVER_PORT, DEV_SERVER_IS_HTTPS, PUBLIC_PATH, withHMR } = this
     const isSecure = DEV_SERVER_IS_HTTPS
     const isHMR = withHMR
     const host = DEV_SERVER_HOST
@@ -234,10 +223,7 @@ class EnvService {
 
   public get paths() {
     const ROOT = this.ROOT_PATH
-    const {
-      publicPath: PUBLIC_PATH,
-      outputPath: OUTPUT_PATH,
-    } = this.outputConfig
+    const { publicPath: PUBLIC_PATH, outputPath: OUTPUT_PATH } = this.outputConfig
     const OUTPUT_PATH_ABSOLUTE = resolve(ROOT, OUTPUT_PATH)
 
     return {
@@ -250,22 +236,13 @@ class EnvService {
       ESLINT_CONFIG: resolve(this.CONFIGS_PATH, './.eslintrc.js'),
       ESLINT_IGNORE: resolve(this.CONFIGS_PATH, './.eslintignore'),
       NODE_MODULES: resolve(this.CONFIGS_PATH, './node_modules'),
-      SERVICE_WORKER: JSON.stringify(
-        join(OUTPUT_PATH_ABSOLUTE, 'service-worker.js')
-      ),
+      SERVICE_WORKER: JSON.stringify(join(OUTPUT_PATH_ABSOLUTE, 'service-worker.js')),
     }
   }
 
   public get urls() {
-    const {
-      DEV_SERVER_HOST,
-      DEV_SERVER_PORT,
-      DEV_SERVER_IS_HTTPS,
-      PUBLIC_PATH,
-    } = this
-    const url = `http${
-      DEV_SERVER_IS_HTTPS ? 's' : ''
-    }://${DEV_SERVER_HOST}:${DEV_SERVER_PORT}`
+    const { DEV_SERVER_HOST, DEV_SERVER_PORT, DEV_SERVER_IS_HTTPS, PUBLIC_PATH } = this
+    const url = `http${DEV_SERVER_IS_HTTPS ? 's' : ''}://${DEV_SERVER_HOST}:${DEV_SERVER_PORT}`
     const publicPathWithURL = url + PUBLIC_PATH
 
     return {

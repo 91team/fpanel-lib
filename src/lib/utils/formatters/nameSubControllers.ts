@@ -1,8 +1,7 @@
-const formatSubControllerName: (
-  parentControllerName: string,
-  controllerName: string
-) => string = (parentControllerName, controllerName) =>
-  `${parentControllerName}.${controllerName}`
+const formatSubControllerName: (parentControllerName: string, controllerName: string) => string = (
+  parentControllerName,
+  controllerName
+) => `${parentControllerName}.${controllerName}`
 
 const parseSubControllersNames: (
   subControllerName: string
@@ -18,9 +17,7 @@ const parseSubControllersNames: (
     subControllersNames: pathArray.reduce(
       (prev, cur) => [
         ...prev,
-        `${
-          prev.length ? `${prev[prev.length - 1]}.` : `${controllerName}.`
-        }${cur}`,
+        `${prev.length ? `${prev[prev.length - 1]}.` : `${controllerName}.`}${cur}`,
       ],
       []
     ),

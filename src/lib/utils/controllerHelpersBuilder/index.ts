@@ -1,10 +1,6 @@
 import { BaseController } from 'lib/controller/base'
 
-import {
-  createApplyController,
-  createWithController,
-  createWithSubControllers,
-} from './HOCs'
+import { createApplyController, createWithController, createWithSubControllers } from './HOCs'
 
 import { createUseController, createUseSubControllers } from './hooks'
 

@@ -6,19 +6,12 @@ export function createUseSubControllers<TController extends BaseController>(
   context: Context<TController>
 ) {
   return function useSubControllers<
-    TSubSontrollers extends TBaseSubControllers<
-      TController,
-      BaseController<any>
-    >
+    TSubSontrollers extends TBaseSubControllers<TController, BaseController<any>>
   >(
-    subControllers: Array<
-      new (parent?: any) => TSubSontrollers[keyof TSubSontrollers]
-    >
+    subControllers: Array<new (parent?: any) => TSubSontrollers[keyof TSubSontrollers]>
   ): TSubSontrollers {
     const controller = useContext<TController>(context)
 
-    return controller.getDeepSubControllersInstancesFromRoot(
-      subControllers
-    ) as TSubSontrollers
+    return controller.getDeepSubControllersInstancesFromRoot(subControllers) as TSubSontrollers
   }
 }

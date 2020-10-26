@@ -22,11 +22,7 @@ class RulesService {
     this.env = env
   }
 
-  private getBabelLoader({
-    isDev,
-    isServer,
-    withHMR,
-  }: ConfigParams): RuleSetLoader {
+  private getBabelLoader({ isDev, isServer, withHMR }: ConfigParams): RuleSetLoader {
     const { LATEST } = this.browserlist
     const loader = {
       loader: 'babel-loader',
@@ -47,10 +43,7 @@ class RulesService {
           ['@babel/react', { development: isDev }],
         ],
         plugins: [
-          [
-            '@babel/plugin-proposal-decorators',
-            { decoratorsBeforeExport: true },
-          ],
+          ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
           [
             '@babel/plugin-transform-runtime',
             {
@@ -143,10 +136,7 @@ class RulesService {
     return loaders
   }
 
-  private getCSSLoader({
-    isServer,
-    withHMR,
-  }: ConfigParams): RuleSetRule['use'] {
+  private getCSSLoader({ isServer, withHMR }: ConfigParams): RuleSetRule['use'] {
     return [
       {
         loader: ExtractCssChunks.loader,
@@ -159,10 +149,7 @@ class RulesService {
     ]
   }
 
-  private getFileLoaderOptions(
-    fileType: string,
-    isDev: boolean
-  ): RuleSetLoader['options'] {
+  private getFileLoaderOptions(fileType: string, isDev: boolean): RuleSetLoader['options'] {
     return {
       name: `assets/${fileType}/${isDev ? '[name].[ext]' : '[hash].[ext]'}`,
     }

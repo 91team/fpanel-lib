@@ -6,9 +6,7 @@ import { FirstSubController } from './subControllers'
 
 import { NAME } from './constants'
 
-export class ExamplePageController extends BaseController<
-  ExamplePageController
-> {
+export class ExamplePageController extends BaseController<ExamplePageController> {
   static NAME = NAME
 
   private services: App.TServices

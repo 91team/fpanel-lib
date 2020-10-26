@@ -7,6 +7,7 @@ import {
   ApolloService,
   AppService,
   CookiesService,
+  GraphqlAPIService,
   RouterService,
   StoreService,
 } from './index'
@@ -51,6 +52,11 @@ export class ServicesManager {
           options: {},
         },
         {
+          name: 'graphqlAPI',
+          service: GraphqlAPIService,
+          options: {},
+        },
+        {
           name: 'store',
           service: StoreService,
           options: {
@@ -66,17 +72,15 @@ export class ServicesManager {
     })
   }
 
-  public addService<
-    TServiceName extends keyof TStorage,
-    TService extends TServices
-  >(serviceName: TServiceName, service: TService) {
+  public addService<TServiceName extends keyof TStorage, TService extends TServices>(
+    serviceName: TServiceName,
+    service: TService
+  ) {
     // @ts-ignore
     this.services[serviceName] = service
   }
 
-  public getService<TService extends TServices>(
-    serviceName: keyof TStorage
-  ): TService {
+  public getService<TService extends TServices>(serviceName: keyof TStorage): TService {
     // @ts-ignore
     return this.services[serviceName]
   }

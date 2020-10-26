@@ -14,14 +14,10 @@ export type TBaseSubControllersProps<
 }
 
 export type TCreateWithSubControllers = (
-  useSubControllers: (
-    subControllers: typeof BaseController[]
-  ) => TBaseSubControllers
+  useSubControllers: (subControllers: typeof BaseController[]) => TBaseSubControllers
 ) => <TSubControllersProps extends TBaseSubControllersProps>(
   subControllersFactories: Array<
-    new (
-      parent?: BaseController
-    ) => TSubControllersProps['subControllers'][string]
+    new (parent?: BaseController) => TSubControllersProps['subControllers'][string]
   >
 ) => <TOuterProps extends {}, TProps extends {}>(
   WrappedComponent: ComponentType<TProps & TSubControllersProps>

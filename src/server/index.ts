@@ -51,7 +51,7 @@ class ServerFactory {
     if (isDev) {
       this.buildDevelopmentApp()
     } else {
-      // this.buildProductionApp()
+      this.buildProductionApp()
     }
   }
 
@@ -86,6 +86,7 @@ class ServerFactory {
         output: { path: OUTPUT_PATH, publicPath: PUBLIC_PATH },
       },
     } = this
+
     const compiler = this.compilationInstances.getCompiler()
 
     const devMiddleware = webpackDevMiddleware(compiler, {
@@ -117,7 +118,10 @@ class ServerFactory {
       clientConfig: {
         output: { path: OUTPUT_PATH, publicPath: PUBLIC_PATH },
       },
+      clientConfig: info,
     } = this
+
+    this.compilationInstances.run()
 
     // Static assets (with compressed version)
     app.use(PUBLIC_PATH, staticGZIPMiddleware(OUTPUT_PATH, {}))

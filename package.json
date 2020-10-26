@@ -12,10 +12,12 @@
     "lint": "yarn tsc --noEmit && yarn eslint 'src' --ext ts,tsx",
     "schema:clean": "yarn rimraf schema.graphql && yarn rimraf src/lib/gql/generated",
     "schema:generate-types": "yarn schema:clean && graphql-codegen --config codegen.yml",
-    "server:start": "yarn ts-node -r dotenv/config --project ./src/server/tsconfig.json ./src/server/index.ts dotenv_config_path=.env.development",
-    "server:start:hot": "yarn ts-node -r dotenv/config --project ./src/server/tsconfig.json ./src/server/index.ts dotenv_config_path=.env.development:hot",
-    "start": "yarn clean:development && yarn server:start",
-    "start:hot": "yarn clean:development && yarn server:start:hot"
+    "server:start:development": "yarn ts-node -r dotenv/config --project ./src/server/tsconfig.json ./src/server/index.ts dotenv_config_path=.env.development",
+    "server:start:development:hot": "yarn ts-node -r dotenv/config --project ./src/server/tsconfig.json ./src/server/index.ts dotenv_config_path=.env.development:hot",
+    "server:start:production": "yarn ts-node -r dotenv/config --project ./src/server/tsconfig.json ./src/server/index.ts dotenv_config_path=.env.production",
+    "start": "yarn clean:development && yarn server:start:development",
+    "start:hot": "yarn clean:development && yarn server:start:development:hot",
+    "start:prod": "yarn clean:production && yarn server:start:production"
   },
   "cacheDirectories": [
     "node_modules"

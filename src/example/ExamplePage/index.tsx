@@ -64,6 +64,7 @@ const ExamplePage: FC<TProps> = ({
 
   return (
     <div className={classes.container}>
+      <div>SOME TEST CHANGES</div>
       <div className={classes.title}>Example</div>
       {firstSubController && (
         <button onClick={firstSubController.onButtonClick}>toggle firstSubSubcontroller</button>

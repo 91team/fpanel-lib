@@ -73,6 +73,7 @@ const ExamplePage: FC<TProps> = ({
         <Link href="login">
           <a>логин</a>
         </Link>
+        <div>SOME TEST CHANGES</div>
         {firstSubController && (
           <button onClick={firstSubController.onButtonClick}>
             toggle firstSubSubcontroller

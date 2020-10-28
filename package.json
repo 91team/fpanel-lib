@@ -176,7 +176,7 @@
     "webpack-hot-middleware": "^2.25.0",
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-stats-plugin": "^0.3.1",
-    "worker-file-loader": "https://github.com/BEGEMOT9I/worker-file-loader",
+    "worker-file-loader": "https://github.com/91team/worker-file-loader",
     "worker-loader": "^2.0.0"
   }
 }

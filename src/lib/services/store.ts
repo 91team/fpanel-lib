@@ -1,6 +1,6 @@
 import { enableLogging } from 'mobx-logger'
 
-import Store from 'lib/store'
+import Store, { TChildStores } from 'lib/store'
 
 import { CStore, TRootStoreOptions } from 'lib/store/types'
 
@@ -22,7 +22,7 @@ class StoreService extends BaseService {
     return this.rootStore
   }
 
-  public getChildStores(): Record<string, CStore> {
+  public getChildStores(): TChildStores {
     return this.getRootStore().getChildStores()
   }
 

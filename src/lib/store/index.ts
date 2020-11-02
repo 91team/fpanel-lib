@@ -7,8 +7,13 @@ import { CStore, TRootStoreOptions } from './types'
 import Notifications from './notifications'
 import User from './user'
 
+export type TChildStores = Omit<
+  Store,
+  'getServices' | 'getChildStores' | 'serialize'
+>
+
 class Store implements CStore {
-  private childStores = {
+  private childStores: { [key in keyof TChildStores]: any } = {
     user: User,
     notifications: Notifications,
   }
@@ -35,8 +40,8 @@ class Store implements CStore {
     return this.services
   }
 
-  public getChildStores(): Record<string, CStore> {
-    const result: Record<string, CStore> = {}
+  public getChildStores(): TChildStores {
+    const result: TChildStores = { user: null, notifications: null }
 
     Object.keys(this.childStores).forEach(key => {
       const childStore = this[key]

@@ -40,8 +40,8 @@ class Store implements CStore {
     return this.services
   }
 
-  public getChildStores(): TChildStores {
-    const result: TChildStores = { user: null, notifications: null }
+  public getChildStores(): Partial<TChildStores> {
+    const result: Partial<TChildStores> = {}
 
     Object.keys(this.childStores).forEach(key => {
       const childStore = this[key]

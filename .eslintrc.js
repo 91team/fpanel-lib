@@ -80,7 +80,7 @@ module.exports = {
     '@typescript-eslint/type-annotation-spacing': 'off',
     '@typescript-eslint/unified-signatures': 'error',
     'arrow-body-style': 'error',
-    'arrow-parens': ['off', 'as-needed'],
+    'arrow-parens': ['warn', 'as-needed'],
     camelcase: 'off',
     'comma-dangle': 'off',
     complexity: 'off',

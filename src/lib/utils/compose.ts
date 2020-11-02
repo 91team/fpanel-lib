@@ -4,7 +4,8 @@ export default function compose<TOutter>(
   ...functions: Function[]
 ): (component: ComponentType<TOutter>) => ComponentType<TOutter> {
   // @ts-ignore
-  return functions.reduce((a, b) => (...args) => a(b(...args)), arg => arg) as (
-    component: ComponentType<TOutter>
-  ) => ComponentType<TOutter>
+  return functions.reduce(
+    (a, b) => (...args) => a(b(...args)),
+    arg => arg
+  ) as (component: ComponentType<TOutter>) => ComponentType<TOutter>
 }

@@ -34,7 +34,4 @@ class AppRouter extends PureComponent<TProps> {
   }
 }
 
-export default compose<TOuterProps>(
-  withRoute,
-  withServices
-)(AppRouter)
+export default compose<TOuterProps>(withRoute, withServices)(AppRouter)

@@ -41,7 +41,7 @@ export class GraphqlAPIService extends BaseService {
   }: App.TCreateGraphqlActionParams): App.TGraphqlAction<any, any> => {
     const self = this
 
-    return flow(function*({
+    return flow(function* ({
       GQLVariables,
       onSuccess,
       onError,
@@ -49,10 +49,8 @@ export class GraphqlAPIService extends BaseService {
       notifications: { ERROR, SUCCESS } = notifications,
     }: App.TCallGraphqlActionParams<TGraphqlResult, TParams>) {
       if (!self.notificationsStore) {
-        self.notificationsStore = self
-          .getRoot()
-          .getService<StoreService>('store')
-          .getChildStores().notifications as NotificationsStore
+        self.notificationsStore = self.getRoot().getService<StoreService>('store').getChildStores()
+          .notifications as NotificationsStore
       }
 
       if (setState) {

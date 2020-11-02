@@ -32,6 +32,8 @@ export class RouterService extends BaseService {
     RouterService.instance = createRouter(formattedRoutes, {
       allowNotFound: true,
     })
+
+    this.setPlugins([this.getBrowserPlugin()])
   }
 
   private traverseRoutes(routes: ICustomRoute[]) {

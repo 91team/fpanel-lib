@@ -7,10 +7,7 @@ import { CStore, TRootStoreOptions } from './types'
 import Notifications from './notifications'
 import User from './user'
 
-export type TChildStores = Omit<
-  Store,
-  'getServices' | 'getChildStores' | 'serialize'
->
+export type TChildStores = Omit<Store, 'getServices' | 'getChildStores' | 'serialize'>
 
 class Store implements CStore {
   private childStores: { [key in keyof TChildStores]: any } = {

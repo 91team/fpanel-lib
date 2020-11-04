@@ -40,7 +40,7 @@ class Store implements CStore {
     return this.services
   }
 
-  public getChildStores(): Partial<TChildStores> {
+  public getChildStores(): TChildStores {
     const result: Partial<TChildStores> = {}
 
     Object.keys(this.childStores).forEach(key => {
@@ -49,7 +49,7 @@ class Store implements CStore {
       result[key] = childStore
     })
 
-    return result
+    return result as TChildStores
   }
 
   public serialize() {

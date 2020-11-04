@@ -22,7 +22,7 @@ class StoreService extends BaseService {
     return this.rootStore
   }
 
-  public getChildStores(): Partial<TChildStores> {
+  public getChildStores(): TChildStores {
     return this.getRootStore().getChildStores()
   }
 

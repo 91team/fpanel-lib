@@ -5,10 +5,10 @@ import hoistNonReactStatics from 'hoist-non-react-statics'
 import { getDisplayName } from 'lib/utils/getDisplayName'
 
 export function createApplyController<TController>(controllerContext: Context<TController>) {
-  return function<TOuterProps extends {}, TProps extends TOuterProps>(
+  return function <TOuterProps extends {}, TProps extends TOuterProps>(
     Controller: new () => TController
   ) {
-    return function(WrappedComponent: ComponentType<TProps>) {
+    return function (WrappedComponent: ComponentType<TProps>) {
       const { Provider } = controllerContext
       const displayName = getDisplayName(WrappedComponent)
 

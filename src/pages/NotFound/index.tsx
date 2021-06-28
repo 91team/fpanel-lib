@@ -1,9 +1,5 @@
-import React, { PureComponent } from 'react'
+import React, { FC } from 'react'
 
-class NotFoundPage extends PureComponent {
-  render() {
-    return <div>Sorry, page not found</div>
-  }
-}
+const NotFoundPage: FC<{}> = () => <div>Sorry, page not found</div>
 
-export default NotFoundPage
+export { NotFoundPage }

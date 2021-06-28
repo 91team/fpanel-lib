@@ -1,11 +1,15 @@
-import { Route, constants } from 'router5'
+import { ComponentType } from 'react'
 
-import { universalComponent } from 'utils/universalComponent'
+import { Route, State, constants } from 'router5'
 
-import { TIconComponent } from 'components/Icons'
+import { LoginPage } from '../../pages/Login/Login'
+import { MainPage } from '../../pages/Main/Main'
+import { NotFoundPage } from '../../pages/NotFound'
+
+type TRouteComponent = ComponentType<{ route: State; previousRoute: State }>
 
 export interface ICustomRoute extends Route {
-  component?: ReturnType<typeof universalComponent>
+  component?: TRouteComponent
   /** Needed authorization or not */
   withAuth?: boolean
   /** Placed or not in side menu */
@@ -17,7 +21,7 @@ export interface ICustomRoute extends Route {
   /**
    * Icon for side menu
    */
-  icon?: TIconComponent
+  icon?: React.FC
   title?: string
   children?: TCustomSubPageRoute[]
 }
@@ -36,18 +40,20 @@ export const routes: ICustomRoute[] = [
   {
     name: 'index',
     path: '/',
-    component: universalComponent(import('../../pages/Index')),
+    component: MainPage,
     withAuth: true,
     withMenu: true,
   },
   {
-    name: 'example',
-    path: '/example',
-    component: universalComponent(import('../../pages/Example')),
+    name: 'login',
+    path: '/login',
+    component: LoginPage,
+    withAuth: true,
+    withMenu: true,
   },
 ]
 
 export const UNKNOWN_ROUTE: Omit<ICustomRoute, 'path'> = {
   name: constants.UNKNOWN_ROUTE,
-  component: universalComponent(import('../../pages/NotFound')),
+  component: NotFoundPage as TRouteComponent,
 }

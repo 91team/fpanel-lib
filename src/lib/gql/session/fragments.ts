@@ -1,20 +1,15 @@
 import gql from 'graphql-tag'
 
+import { UserFragment } from '../users/fragments'
+
 export const SessionDataFragment = gql`
-  fragment SessionData on Session {
+  ${UserFragment}
+  fragment SessionData on UserSession {
     token
     refreshToken
     expireAt
-  }
-`
-
-export const UserFragment = gql`
-  fragment User on User {
-    avatar
-    email
-    firstName
-    id
-    lastName
-    name
+    user {
+      ...User
+    }
   }
 `

@@ -10,10 +10,10 @@ export const SessionCreateMutation = gql`
     }
   }
 `
-export const SessionUpdateMutation = gql`
+export const SessionRefreshMutation = gql`
   ${SessionDataFragment}
-  mutation sessionUpdate($refreshToken: UUID!) {
-    sessionUpdate(refreshToken: $refreshToken) {
+  mutation sessionRefresh($refreshToken: String!) {
+    sessionRefresh(refreshToken: $refreshToken) {
       ...SessionData
     }
   }

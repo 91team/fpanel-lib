@@ -1,75 +1,23 @@
-import { TInitialState as TStoreInitialState } from './store'
-
 import { TOptions, TServices, TStorage } from './types'
 
+import { ServiceName } from './types/constants'
+
 import { TInitialState as TApolloInitialState } from './apollo'
-import {
-  ApolloService,
-  AppService,
-  CookiesService,
-  GraphqlAPIService,
-  RouterService,
-  StoreService,
-} from './index'
+import { ApolloService, CookiesService, GraphqlAPIService, RouterService } from './index'
 
 export class ServicesManager {
+  // @ts-expect-error
   private services: TStorage = {}
 
-  constructor({ services }: TOptions = { services: [] }) {
-    if (services) {
-      services.forEach(({ service: Service, name, options }) => {
-        const serviceInstance = new Service({ ...options, root: this })
-
-        this.addService(name, serviceInstance)
-      })
-    }
-  }
-
-  static build({
+  public initialize({
     initialApolloState,
-    initialStoreState,
   }: {
-    initialStoreState?: TStoreInitialState
     initialApolloState?: TApolloInitialState
-  } = {}): ServicesManager {
-    return new ServicesManager({
-      services: [
-        {
-          name: 'app',
-          service: AppService,
-          options: {},
-        },
-        {
-          name: 'apollo',
-          service: ApolloService,
-          options: {
-            cacheState: initialApolloState,
-          },
-        },
-        {
-          name: 'cookies',
-          service: CookiesService,
-          options: {},
-        },
-        {
-          name: 'graphqlAPI',
-          service: GraphqlAPIService,
-          options: {},
-        },
-        {
-          name: 'store',
-          service: StoreService,
-          options: {
-            initialState: initialStoreState,
-          },
-        },
-        {
-          name: 'router',
-          service: RouterService,
-          options: {},
-        },
-      ],
-    })
+  } = {}) {
+    this.addService(ServiceName.APOLLO, new ApolloService({ cacheState: initialApolloState }))
+    this.addService(ServiceName.COOKIES, new CookiesService())
+    this.addService(ServiceName.GRAPHQL_API, new GraphqlAPIService())
+    this.addService(ServiceName.ROUTER, new RouterService())
   }
 
   public addService<TServiceName extends keyof TStorage, TService extends TServices>(

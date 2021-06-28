@@ -13,7 +13,7 @@ const GENERATED_FOLDER_NAME = 'generated'
 const GQL_TYPES_FOLDER_NAME = 'graphqlTypes'
 const GQL_CONFIGS_FOLDER_NAME = 'graphqlConfigs'
 
-const PROJECT_PATH = process.env.INIT_CWD
+const PROJECT_PATH = process.env.INIT_CWD as string
 const CONFIG_PATH = join(PROJECT_PATH, CONFIG_RELATIVE_PATH)
 
 const GENERATED_FOLDER_PATH = join(dirname(CONFIG_PATH), GENERATED_FOLDER_NAME)

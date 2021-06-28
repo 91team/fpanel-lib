@@ -1,32 +1,23 @@
-import createRouter, {
-  Dependencies,
-  NavigationOptions,
-  PluginFactory,
-  Route,
-  Router,
-  State,
-  cloneRouter,
-} from 'router5'
+import createRouter, { PluginFactory, Route, Router, cloneRouter, constants } from 'router5'
 import browserPlugin from 'router5-plugin-browser'
 import { MiddlewareFactory } from 'router5/types/types/router'
 
+import { getService, getStore } from '../../utils/global'
+
+import { StoreName } from 'lib/store/constants'
+
+import { BASE_URL } from 'lib/constants/api'
+
+import { ServiceName } from '../types/constants'
+
 import { ICustomRoute, UNKNOWN_ROUTE, routes } from 'constants/routes'
 
-import { BaseService, TOptions as TBaseOptions } from '../base'
-
 export type IRouter = Router
-export type TOptions = TBaseOptions
 
-export class RouterService extends BaseService {
-  private appService: App.TServices['app']
-
+export class RouterService {
   protected static instance: IRouter
 
-  constructor({ root }: TOptions) {
-    super({ root })
-
-    this.appService = root.getServices().app
-
+  constructor() {
     const formattedRoutes = RouterService.getFormattedRoutes(routes)
 
     RouterService.instance = createRouter(formattedRoutes, {
@@ -39,7 +30,7 @@ export class RouterService extends BaseService {
   private traverseRoutes(routes: ICustomRoute[]) {
     let result: ICustomRoute[] = []
 
-    routes.forEach(route => {
+    routes.forEach((route) => {
       result.push(route)
 
       if (route.children) {
@@ -75,30 +66,87 @@ export class RouterService extends BaseService {
 
   public getBrowserPlugin(): PluginFactory {
     return browserPlugin({
-      base: this.appService.baseURL === '/' ? '' : this.appService.baseURL,
+      base: BASE_URL === '/' ? '' : BASE_URL,
     })
   }
 
-  // public getAuthorizationMiddleware: () => MiddlewareFactory = () => (
-  //   router,
-  //   { routerStore }: { routerStore: App.TStore['router5'] }
-  // ) => (toState, fromState, done) => {
-  //   routerStore.checkAbilityNavigateToPage(toState, done)
+  public getRouteConfig({
+    route,
+    isModule = false,
+  }: {
+    route: Route | undefined
+    isModule?: boolean
+  }) {
+    if (!route) {
+      return UNKNOWN_ROUTE
+    }
 
-  //   // avoid transition state mutation
-  //   return undefined
-  // }
+    let routeName = route.name
+    let routeConfig = this.getRouteByName(routeName)
+
+    if (routeConfig) {
+      if (isModule) {
+        if (routeName.includes('.')) {
+          routeName = routeName.split('.')[0]
+          routeConfig = this.getRouteByName(routeName)
+        }
+
+        // @ts-expect-error
+        if (!routeConfig.isModule) {
+          return UNKNOWN_ROUTE
+        }
+      }
+
+      return routeConfig
+    }
+
+    return UNKNOWN_ROUTE
+  }
+
+  public getAuthorizationMiddleware: () => MiddlewareFactory = () => () => (
+    toState,
+    fromState,
+    done
+  ) => {
+    const userStore = getStore(StoreName.USER)
+    const routeConfig = this.getRouteConfig({ route: toState })
+    const isUnknownRoute = this.getIsUnknownRoute(routeConfig)
+
+    if (isUnknownRoute || routeConfig.withAuth) {
+      if (userStore.isAuthorized) {
+        done()
+      } else {
+        userStore
+          .refreshSession()
+          .then(() => done())
+          .catch((error) => {
+            console.error(error)
+
+            if (!isUnknownRoute) {
+              this.getInstance().navigate('login')
+            } else {
+              done()
+            }
+          })
+      }
+    } else {
+      done()
+    }
+
+    // avoid transition state mutation
+    return undefined
+  }
 
   public setPlugins(plugins: PluginFactory[]) {
     const instance = this.getInstance()
 
-    plugins.forEach(plugin => instance.usePlugin(plugin))
+    plugins.forEach((plugin) => instance.usePlugin(plugin))
   }
 
   public setMiddlewares(middlewares: MiddlewareFactory[]) {
     const instance = this.getInstance()
 
-    middlewares.forEach(middleware => instance.useMiddleware(middleware))
+    middlewares.forEach((middleware) => instance.useMiddleware(middleware))
   }
 
   public getRouteByName(routeName: string): ICustomRoute | undefined {
@@ -108,7 +156,7 @@ export class RouterService extends BaseService {
 
     for (let index = 0; index < routePath.length; index += 1) {
       const name = routePath[index]
-      const buffer = currentRoutes.find(routeConfig => routeConfig.name === name)
+      const buffer = currentRoutes.find((routeConfig) => routeConfig.name === name)
 
       if (buffer) {
         if (index === routePath.length - 1) {
@@ -136,6 +184,10 @@ export class RouterService extends BaseService {
     return UNKNOWN_ROUTE.component
   }
 
+  public getIsUnknownRoute(route: { name: string }): boolean {
+    return route.name === constants.UNKNOWN_ROUTE
+  }
+
   public isRouteWithMenu(route: Route): boolean {
     if (route && route.name) {
       const section = this.getRouteByName(route.name)
@@ -151,17 +203,16 @@ export class RouterService extends BaseService {
   public getMenuRoutes(): ICustomRoute[] {
     const flattenRoutes = this.traverseRoutes(routes)
 
-    return flattenRoutes.filter(route => route.inMenu)
+    return flattenRoutes.filter((route) => route.inMenu)
   }
 
   public getPathWithoutBaseURL(): string {
-    const { baseURL } = this.appService
     const { pathname } = window.location
 
-    if (baseURL === '/') {
+    if (BASE_URL === '/') {
       return pathname
     }
 
-    return pathname.replace(baseURL, '')
+    return pathname.replace(BASE_URL, '')
   }
 }

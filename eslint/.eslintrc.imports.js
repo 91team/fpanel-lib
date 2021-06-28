@@ -3,15 +3,15 @@ const path = require('path')
 // Groups options
 const internalOptions = {
   group: 'internal',
-  position: 'before'
+  position: 'before',
 }
 const parentOptions = {
   group: 'parent',
-  position: 'before'
+  position: 'before',
 }
 const siblingOptions = {
   group: 'sibling',
-  position: 'before'
+  position: 'before',
 }
 
 // Groups with options and pattern parts
@@ -19,31 +19,32 @@ const groups = [
   {
     prefix: 'lib/',
     postfix: '/**',
-    options: internalOptions
+    options: internalOptions,
   },
   {
     prefix: '../../**',
     postfix: '/**',
-    options: parentOptions
+    options: parentOptions,
   },
   {
     prefix: '../../../**',
     postfix: '/**',
-    options: parentOptions
+    options: parentOptions,
   },
   {
     prefix: '../**/',
     postfix: '/**',
-    options: parentOptions
+    options: parentOptions,
   },
   {
     prefix: './',
     postfix: '/**',
-    options: siblingOptions
-  }
+    options: siblingOptions,
+  },
 ]
 // Ordering by importance
 const importImportance = [
+  'di',
   'controller',
   'controllers',
   'subControllers',
@@ -71,27 +72,27 @@ const pathGroups = []
 pathGroups.push({
   pattern: 'react',
   group: 'builtin',
-  position: 'before'
+  position: 'before',
 })
 
 groups.forEach(({ prefix, postfix, options }) => {
-  importImportance.forEach(part => {
+  importImportance.forEach((part) => {
     pathGroups.push({
       pattern: prefix + part,
-      ...options
+      ...options,
     })
 
     pathGroups.push({
       pattern: prefix + part + postfix,
-      ...options
+      ...options,
     })
   })
 })
 
-importImportance.forEach(part => {
+importImportance.forEach((part) => {
   pathGroups.push({
     pattern: `${part}/**`,
-    ...internalOptions
+    ...internalOptions,
   })
 })
 
@@ -103,17 +104,17 @@ const rules = {
       pathGroupsExcludedImportTypes: [],
       groups: [
         ['builtin', 'external'],
-        ['internal', 'parent', 'sibling', 'index']
+        ['internal', 'parent', 'sibling', 'index'],
       ],
       'newlines-between': 'always',
       alphabetize: {
         order: 'asc',
-        caseInsensitive: true
-      }
-    }
-  ]
+        caseInsensitive: true,
+      },
+    },
+  ],
 }
 
 module.exports = {
-  rules
+  rules,
 }

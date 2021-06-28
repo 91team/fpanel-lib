@@ -25,15 +25,16 @@ module.exports = {
     '@typescript-eslint/tslint',
     'react',
     'react-hooks',
+    'prettier',
     'import',
     'sort-keys-fix',
-    'prettier',
+    'css-modules',
   ],
   rules: {
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/array-type': 'off',
     '@typescript-eslint/ban-types': 'off',
-    '@typescript-eslint/class-name-casing': 'error',
+    '@typescript-eslint/class-name-casing': 'off',
     '@typescript-eslint/explicit-member-accessibility': [
       'off',
       {
@@ -80,7 +81,7 @@ module.exports = {
     '@typescript-eslint/type-annotation-spacing': 'off',
     '@typescript-eslint/unified-signatures': 'error',
     'arrow-body-style': 'error',
-    'arrow-parens': ['warn', 'as-needed'],
+    'arrow-parens': ['off', 'as-needed'],
     camelcase: 'off',
     'comma-dangle': 'off',
     complexity: 'off',
@@ -88,12 +89,11 @@ module.exports = {
     curly: 'off',
     'dot-notation': 'error',
     'eol-last': 'off',
-    eqeqeq: ['off', 'always'],
+    eqeqeq: ['error', 'always', { null: 'ignore' }],
     'guard-for-in': 'off',
     'id-blacklist': 'off',
     'id-match': 'off',
     'import/no-internal-modules': 'off',
-    'import/order': 'off',
     'linebreak-style': 'off',
     'max-classes-per-file': ['error', 1],
     'max-len': 'off',
@@ -178,7 +178,7 @@ module.exports = {
     '@typescript-eslint/tslint/config': [
       'error',
       {
-        rulesDirectory: ['node_modules/tslint-react/rules'],
+        rulesDirectory: [path.resolve(__dirname, './node_modules/tslint-react/rules')],
         rules: {
           'no-reference-import': true,
           'prefer-conditional-expression': true,
@@ -192,5 +192,6 @@ module.exports = {
     react: {
       version: 'detect',
     },
+    ...importsOrder.settings,
   },
 }

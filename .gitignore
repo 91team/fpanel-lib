@@ -1,12 +1,5 @@
 node_modules
-.next
-dist
-yarn-error.log
-.DS_Store
-
-.env.*
+dist/
+.env*
 !.env.example
-
-/public
-
-static/service-worker.js
+*.log

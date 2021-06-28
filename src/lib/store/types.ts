@@ -1,12 +1,11 @@
-import { ServicesManager } from 'services/manager'
+import { StoreName } from './constants'
 
-import Store from './index'
+import Notifications from './notifications'
+import User from './user'
 
-export abstract class CStore {
-  public serialize: () => Record<string, any>
+export type TStores = {
+  [StoreName.USER]: User
+  [StoreName.NOTIFICATIONS]: Notifications
 }
 
-export type TRootStoreOptions = {
-  initialState?: Partial<Store>
-  servicesManager: ServicesManager
-}
+export type TStoresKeys = keyof TStores

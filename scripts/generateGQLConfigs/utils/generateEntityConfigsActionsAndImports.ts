@@ -1,3 +1,5 @@
+import { ACTION_TYPE } from '../constants'
+
 import { TActionType, TEntityConfig } from '../types'
 
 import { convertFirstLetterToUpperCase } from './convertFirstLetterToUpperCase'
@@ -6,9 +8,9 @@ type TEntityResult = {
   imports: string[]
   actions: string[]
 }
-type TResult = Partial<Record<TActionType, TEntityResult>>
+type TResult = Record<TActionType, TEntityResult>
 
-const errorGenerator = (errorMessage: string): string =>
+const errorGenerator = (errorMessage: string | undefined): string =>
   errorMessage
     ? `
       ERROR: {
@@ -31,11 +33,20 @@ const actionGenerator = ({
   }`
 
 export function generateEntityConfigsActionsAndImports(entityConfig: TEntityConfig): TResult {
-  const result: Partial<TResult> = {}
+  const result: TResult = {
+    [ACTION_TYPE.mutations]: {
+      imports: [],
+      actions: [],
+    },
+    [ACTION_TYPE.queries]: {
+      imports: [],
+      actions: [],
+    },
+  }
 
-  Object.keys(entityConfig).map((actionType: TActionType) => {
-    const imports: TEntityResult['imports'] = []
-    const actions: TEntityResult['actions'] = []
+  Object.keys(entityConfig).map((value) => {
+    const actionType = value as TActionType
+    const { imports, actions } = result[actionType]
     const actionsConfigs = entityConfig[actionType]
 
     actionsConfigs.forEach(({ name, errorMessage }) => {
@@ -46,11 +57,6 @@ export function generateEntityConfigsActionsAndImports(entityConfig: TEntityConf
       imports.push(documentType)
       actions.push(actionGenerator({ name, documentType, errorMessageConfig }))
     })
-
-    result[actionType] = {
-      imports,
-      actions,
-    }
   })
 
   return result

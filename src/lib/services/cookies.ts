@@ -1,15 +1,9 @@
 import cookies from 'js-cookie'
 
-import { BaseService, TOptions as TBaseOptions } from './base'
-
-export type TOptions = TBaseOptions
-
-export class CookiesService extends BaseService {
+export class CookiesService {
   private instance: Cookies.CookiesStatic
 
-  constructor(options: TOptions) {
-    super(options)
-
+  constructor() {
     this.instance = cookies
   }
 

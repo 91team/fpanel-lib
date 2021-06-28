@@ -1,15 +1,16 @@
 import {
   __imports__
 } from 'lib/gql/generated/types'
+import { TGraphqlConfig } from 'lib/services/graphqlAPI'
 
 import { TMutations, TQueries } from '../../graphqlTypes/__entity_name__'
 
 const mutations: {
-  [key in keyof TMutations]: App.TGraphqlConfig
+  [key in keyof TMutations]: TGraphqlConfig
 } = {__mutations_actions__}
 
 const queries: {
-  [key in keyof TQueries]: App.TGraphqlConfig
+  [key in keyof TQueries]: TGraphqlConfig
 } = {__queries_actions__}
 
 export { mutations, queries }

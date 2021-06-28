@@ -1,20 +1,17 @@
 import {
-  ProfileGetQueryResult,
-  ProfileGetQueryVariables,
   SessionCreateMutationResult,
   SessionCreateMutationVariables,
   SessionDeleteMutationResult,
   SessionDeleteMutationVariables,
-  SessionUpdateMutationResult,
-  SessionUpdateMutationVariables
+  SessionRefreshMutationResult,
+  SessionRefreshMutationVariables
 } from 'lib/gql/generated/types'
+import { TGraphqlAction } from 'lib/services/graphqlAPI'
 
 export type TMutations = {
-  sessionCreate: App.TGraphqlAction<SessionCreateMutationResult, SessionCreateMutationVariables>
-  sessionUpdate: App.TGraphqlAction<SessionUpdateMutationResult, SessionUpdateMutationVariables>
-  sessionDelete: App.TGraphqlAction<SessionDeleteMutationResult, SessionDeleteMutationVariables>
+  sessionCreate: TGraphqlAction<SessionCreateMutationResult, SessionCreateMutationVariables>
+  sessionRefresh: TGraphqlAction<SessionRefreshMutationResult, SessionRefreshMutationVariables>
+  sessionDelete: TGraphqlAction<SessionDeleteMutationResult, SessionDeleteMutationVariables>
 }
 
-export type TQueries = {
-  profileGet: App.TGraphqlAction<ProfileGetQueryResult, ProfileGetQueryVariables>
-}
+export type TQueries = {}

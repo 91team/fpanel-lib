@@ -1,14 +1,14 @@
 import {
-  ProfileGetDocument,
   SessionCreateDocument,
   SessionDeleteDocument,
-  SessionUpdateDocument
+  SessionRefreshDocument
 } from 'lib/gql/generated/types'
+import { TGraphqlConfig } from 'lib/services/graphqlAPI'
 
 import { TMutations, TQueries } from '../../graphqlTypes/session'
 
 const mutations: {
-  [key in keyof TMutations]: App.TGraphqlConfig
+  [key in keyof TMutations]: TGraphqlConfig
 } = {
   sessionCreate: {
     GQLDocument: SessionCreateDocument,
@@ -18,8 +18,8 @@ const mutations: {
       }
     }
   },
-  sessionUpdate: {
-    GQLDocument: SessionUpdateDocument,
+  sessionRefresh: {
+    GQLDocument: SessionRefreshDocument,
     notifications: {
       ERROR: {
         message: 'Не удалось обновить сессию'
@@ -37,16 +37,7 @@ const mutations: {
 }
 
 const queries: {
-  [key in keyof TQueries]: App.TGraphqlConfig
-} = {
-  profileGet: {
-    GQLDocument: ProfileGetDocument,
-    notifications: {
-      ERROR: {
-        message: 'Не удалось получить профиль'
-      }
-    }
-  }
-}
+  [key in keyof TQueries]: TGraphqlConfig
+} = {}
 
 export { mutations, queries }

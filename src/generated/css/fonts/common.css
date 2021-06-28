@@ -1,0 +1,7 @@
+:root {
+  --font-title-medium---12pt: 500 0.75rem/0.87890625rem 'Inter';
+  --font-subtitle-medium---12pt: 500 0.75rem/0.87890625rem 'Inter';
+  --font-body-medium---12pt: 500 0.75rem/0.87890625rem 'Inter';
+  --font-body-regular---12pt: 400 0.75rem/0.87890625rem 'Inter';
+  --font-caption-regular---11pt: 400 0.6875rem/0.8056640625rem 'Inter';
+}

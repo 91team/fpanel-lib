@@ -3,32 +3,68 @@ import { flow } from 'mobx'
 import { CancellablePromise } from 'mobx/lib/api/flow'
 import { MutationResult, QueryResult } from 'react-apollo'
 
-import NotificationsStore from 'lib/store/notifications'
+import { StoreName } from 'lib/store/constants'
+import { TNotification } from 'lib/store/notifications'
+
+import { getService, getStore } from 'lib/utils/global'
 
 import { STATE } from 'lib/constants/api'
 
 import { mutations, queries } from 'lib/gqlConfig/generated/graphqlConfigs'
 import { TMutations, TQueries } from 'lib/gqlConfig/generated/graphqlTypes'
 
-import { StoreService } from '.'
-import { BaseService, TOptions as TBaseOptions } from './base'
+import { ServiceName } from './types/constants'
 
-export type TOptions = TBaseOptions
+import { IApollo } from './apollo'
 
-export class GraphqlAPIService extends BaseService {
-  private apolloClient: App.TApollo
-  private notificationsStore: NotificationsStore
+type TGraphqlActionType = 'query' | 'mutation'
+type TSetState = (state: STATE) => void
+type TCallGraphqlActionParams<
+  TGraphqlResult extends MutationResult | QueryResult,
+  TParams extends {}
+> = {
+  GQLVariables?: TParams
+  onSuccess?: (data: TGraphqlResult['data']) => void
+  onError?: (erorr: any) => void
+  setState?: TSetState
+  notifications?: {
+    [key in TNotification['type']]?: Omit<TNotification, 'id' | 'type'>
+  }
+}
+export type TGraphqlAction<
+  TGraphqlResult extends MutationResult | QueryResult,
+  TParams extends {}
+> = (
+  params?: TCallGraphqlActionParams<TGraphqlResult, TParams>
+) => CancellablePromise<TGraphqlResult['data']>
+type TCreateGraphqlActionParams = {
+  GQLDocument: DocumentNode
+  type: TGraphqlActionType
+  notifications?: {
+    [key in TNotification['type']]?: Omit<TNotification, 'id' | 'type'>
+  }
+}
+
+export type TGraphqlConfig = Pick<TCreateGraphqlActionParams, 'GQLDocument' | 'notifications'>
+type TGraphqlConfigs = {
+  [key: string]: TGraphqlConfig
+}
+type TGraphqlRequests = {
+  [key in ['queries', 'mutations'][number]]: TGraphqlConfigs
+}
+
+export class GraphqlAPIService {
   public mutations: TMutations
   public queries: TQueries
 
-  constructor(options: TOptions) {
-    super(options)
-
-    const { apollo } = this.getRoot().getServices()
-
-    this.apolloClient = apollo.getClient()
-
+  constructor() {
     this.addConfigs({ mutations, queries })
+  }
+
+  private get apolloClient() {
+    const apollo = getService(ServiceName.APOLLO)
+
+    return apollo.getClient()
   }
 
   private createGraphqlAction = <
@@ -38,8 +74,9 @@ export class GraphqlAPIService extends BaseService {
     GQLDocument,
     type,
     notifications = {},
-  }: App.TCreateGraphqlActionParams): App.TGraphqlAction<any, any> => {
+  }: TCreateGraphqlActionParams): TGraphqlAction<any, any> => {
     const self = this
+    const notificationsStore = getStore(StoreName.NOTIFICATIONS)
 
     return flow(function* ({
       GQLVariables,
@@ -47,12 +84,7 @@ export class GraphqlAPIService extends BaseService {
       onError,
       setState,
       notifications: { ERROR, SUCCESS } = notifications,
-    }: App.TCallGraphqlActionParams<TGraphqlResult, TParams>) {
-      if (!self.notificationsStore) {
-        self.notificationsStore = self.getRoot().getService<StoreService>('store').getChildStores()
-          .notifications as NotificationsStore
-      }
-
+    }: TCallGraphqlActionParams<TGraphqlResult, TParams>) {
       if (setState) {
         setState(STATE.LOADING)
       }
@@ -76,7 +108,7 @@ export class GraphqlAPIService extends BaseService {
 
         if (data) {
           if (SUCCESS) {
-            self.notificationsStore.pushNotification({
+            notificationsStore.pushNotification({
               type: 'SUCCESS',
               ...SUCCESS,
             })
@@ -96,7 +128,7 @@ export class GraphqlAPIService extends BaseService {
         }
       } catch (error) {
         if (ERROR) {
-          self.notificationsStore.pushNotification({
+          notificationsStore.pushNotification({
             type: 'ERROR',
             ...ERROR,
           })
@@ -115,20 +147,22 @@ export class GraphqlAPIService extends BaseService {
     })
   }
 
-  private createGraphqlActions = <T extends App.TGraphqlConfigs>(
+  private createGraphqlActions = <T extends TGraphqlConfigs>(
     configs: T,
-    type: App.TGraphqlActionType
-  ): { [key in keyof T]: App.TGraphqlAction<any, any> } => {
-    const result = {}
+    type: TGraphqlActionType
+  ): { [key in keyof T]: TGraphqlAction<any, any> } => {
+    const result = {} as { [key in keyof T]: TGraphqlAction<any, any> }
 
-    Object.keys(configs).map(key => {
+    Object.keys(configs).map((keyString) => {
+      const key = keyString as keyof T
+
       result[key] = this.createGraphqlAction({ type, ...configs[key] })
     })
 
-    return result as { [key in keyof T]: App.TGraphqlAction<any, any> }
+    return result
   }
 
-  private addConfigs = ({ mutations, queries }: App.TGraphqlRequests) => {
+  private addConfigs = ({ mutations, queries }: TGraphqlRequests) => {
     if (mutations) {
       this.mutations = {
         ...this.mutations,

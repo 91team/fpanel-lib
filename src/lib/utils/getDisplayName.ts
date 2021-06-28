@@ -1,9 +1,9 @@
 import { ComponentType } from 'react'
 
-import { ENVIROMENT } from '../services/app'
+import { isDev } from 'lib/constants/env'
 
 export function getDisplayName(component: ComponentType<any>) {
-  return process.env.NODE_ENV === ENVIROMENT.DEVELOPMENT
+  return isDev
     ? component.displayName ||
         component.name ||
         (component.constructor && component.constructor.name) ||

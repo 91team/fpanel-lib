@@ -1,39 +1,32 @@
-import { StoreService, TOptions as TStoreOptions } from '../store'
+import { ServiceName } from './constants'
 
 import { ApolloService, TOptions as TApolloOptions } from '../apollo'
-import { AppService, TOptions as TAppOptions } from '../app'
-import { CookiesService, TOptions as TCookiesOptions } from '../cookies'
-import { GraphqlAPIService, TOptions as TGraphqlAPIOptions } from '../graphqlAPI'
-import { RouterService, TOptions as TRouterOptions } from '../router'
+import { CookiesService } from '../cookies'
+import { GraphqlAPIService } from '../graphqlAPI'
+import { RouterService } from '../router'
 
-export type TServiceConfigTemplate<TName, TService, TOptions> = {
-  name: TName
+export type TServiceConfigTemplate<TName, TService, TOptions = {}> = {
+  name: TStorageKeys
   service: TService
   options: Omit<TOptions, 'root'>
 }
 export type TServiceConfig =
-  | TServiceConfigTemplate<'app', typeof AppService, TAppOptions>
   | TServiceConfigTemplate<'apollo', typeof ApolloService, TApolloOptions>
-  | TServiceConfigTemplate<'cookies', typeof CookiesService, TCookiesOptions>
-  | TServiceConfigTemplate<'graphqlAPI', typeof GraphqlAPIService, TGraphqlAPIOptions>
-  | TServiceConfigTemplate<'store', typeof StoreService, TStoreOptions>
-  | TServiceConfigTemplate<'router', typeof RouterService, TRouterOptions>
+  | TServiceConfigTemplate<'cookies', typeof CookiesService>
+  | TServiceConfigTemplate<'graphqlAPI', typeof GraphqlAPIService>
+  | TServiceConfigTemplate<'router', typeof RouterService>
 
-export type TServices =
-  | AppService
-  | ApolloService
-  | CookiesService
-  | GraphqlAPIService
-  | StoreService
-  | RouterService
+export type TServices = ApolloService | CookiesService | GraphqlAPIService | RouterService
+
 export type TStorage = {
-  app?: AppService
-  apollo?: ApolloService
-  cookies?: CookiesService
-  graphqlAPI?: GraphqlAPIService
-  store?: StoreService
-  router?: RouterService
+  [ServiceName.APOLLO]: ApolloService
+  [ServiceName.ROUTER]: RouterService
+  [ServiceName.COOKIES]: CookiesService
+  [ServiceName.GRAPHQL_API]: GraphqlAPIService
 }
+
+export type TStorageKeys = keyof TStorage
+
 export type TOptions = {
   services: TServiceConfig[]
 }

@@ -1,31 +1,33 @@
+// @ts-expect-error
 import { createLink as createUploadLink } from 'apollo-absinthe-upload-link'
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
 import { ApolloLink } from 'apollo-link'
 import { setContext } from 'apollo-link-context'
+// @ts-expect-error
 import loggerLink from 'apollo-link-logger'
 import universalFetch from 'isomorphic-unfetch'
 
-import { GRAPHQL_API_URL } from 'constants/api'
+import { StoreName } from 'lib/store/constants'
 
-import { BaseService, TOptions as TBaseOptions } from './base'
+import { isDev } from 'lib/constants/env'
+
+import { getStore } from '../utils/global'
+
+import { GRAPHQL_API_URL } from 'constants/api'
 
 export type IApollo = ApolloClient<NormalizedCacheObject>
 export type TInitialState = NormalizedCacheObject
-export type TOptions = TBaseOptions & {
+export type TOptions = {
   cacheState?: TInitialState
 }
 
-export class ApolloService extends BaseService {
+export class ApolloService {
   private client: IApollo
 
-  constructor({ cacheState: initialApolloState = {}, root }: TOptions) {
-    super({ root })
-
-    const appService = root.getServices().app
-
+  constructor({ cacheState: initialApolloState = {} }: TOptions) {
     this.client = new ApolloClient<NormalizedCacheObject>({
-      connectToDevTools: !appService.isServer,
+      connectToDevTools: true,
       ssrMode: false,
       link: this.getClientLink(),
       cache: this.getClientCache(initialApolloState),
@@ -33,7 +35,6 @@ export class ApolloService extends BaseService {
   }
 
   private getClientLink = () => {
-    const appService = this.getRoot().getServices().app
     const linkOptions = { uri: GRAPHQL_API_URL, credentials: 'same-origin' }
     // HTTP-link is a part of upload link
     const uploadLink = createUploadLink({
@@ -52,7 +53,7 @@ export class ApolloService extends BaseService {
       }
     })
 
-    return ApolloLink.from([appService.isDev && loggerLink, authLink, uploadLink].filter(Boolean))
+    return ApolloLink.from([isDev && loggerLink, authLink, uploadLink].filter(Boolean))
   }
 
   private getClientCache = (initialState: TInitialState) =>
@@ -67,7 +68,9 @@ export class ApolloService extends BaseService {
   }
 
   public getToken: () => string | undefined = () => {
-    throw new Error(`Apollo getter for token isn't initializes`)
+    const userStore = getStore(StoreName.USER)
+
+    return userStore.getTokens().token
   }
 
   public convertToJSON(): NormalizedCacheObject {

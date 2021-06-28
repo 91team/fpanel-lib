@@ -8,7 +8,7 @@ type TEntityResult = {
   imports: string[]
   actions: string[]
 }
-type TResult = Partial<Record<TActionType, TEntityResult>>
+type TResult = Record<TActionType, TEntityResult>
 
 const formattedActionTypeNames = {
   [ACTION_TYPE.mutations]: 'Mutation',
@@ -22,14 +22,23 @@ const actionGenerator = ({
   name: string
   resultType: string
   variableType: string
-}): string => `${name}: App.TGraphqlAction<${resultType}, ${variableType}>`
+}): string => `${name}: TGraphqlAction<${resultType}, ${variableType}>`
 
 export function generateEntityTypesActionsAndImports(entityConfig: TEntityConfig): TResult {
-  const result: Partial<TResult> = {}
+  const result: TResult = {
+    [ACTION_TYPE.mutations]: {
+      imports: [],
+      actions: [],
+    },
+    [ACTION_TYPE.queries]: {
+      imports: [],
+      actions: [],
+    },
+  }
 
-  Object.keys(entityConfig).map((actionType: TActionType) => {
-    const imports: TEntityResult['imports'] = []
-    const actions: TEntityResult['actions'] = []
+  Object.keys(entityConfig).map((value) => {
+    const actionType = value as TActionType
+    const { imports, actions } = result[actionType]
     const actionsConfigs = entityConfig[actionType]
     const formattedActionType = formattedActionTypeNames[actionType]
 

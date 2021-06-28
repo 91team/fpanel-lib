@@ -9,47 +9,46 @@ export interface Scalars {
   Boolean: boolean,
   Int: number,
   Float: number,
-  /** Unix timestamp */
-  Timestamp: number,
-  /** 
- * The `Json` scalar type represents arbitrary json string data, represented as UTF-8
-   * character sequences. The Json type is most often used to represent a free-form
-   * human-readable json string.
- **/
-  Json: any,
   /** UUID scalar */
   UUID: string,
+  /** Date in ISO 8601 format(YYYY-MM-DD) */
+  Date: any,
+  /** Unix timestamp */
+  Timestamp: number,
+  /** JSON scalar */
+  JSON: any,
   /** Represents an uploaded file. */
   Upload: File,
 }
 
-export interface Acl {
-   __typename?: 'Acl',
-  etl?: Maybe<EtlAcl>,
-  olap?: Maybe<OlapAcl>,
-  ose?: Maybe<OseAcl>,
-  shared?: Maybe<SharedAcl>,
+export enum Abilities {
+  UsersControl = 'USERS_CONTROL'
 }
 
-export enum Agg {
-  Avg = 'AVG',
-  Count = 'COUNT',
-  Max = 'MAX',
-  Median = 'MEDIAN',
-  Min = 'MIN',
-  Sum = 'SUM'
+export interface Agency {
+   __typename?: 'Agency',
+  agencyName?: Maybe<Scalars['String']>,
+  agencyPhone?: Maybe<Scalars['Int']>,
+  agencyTimezone?: Maybe<Scalars['String']>,
+  agencyUrl?: Maybe<Scalars['String']>,
+  id?: Maybe<Scalars['UUID']>,
+  originAgencyId?: Maybe<Scalars['String']>,
+  originSource?: Maybe<DataSource>,
 }
 
-export enum ArgType {
-  AnyDate = 'ANY_DATE',
-  AnyNumber = 'ANY_NUMBER',
-  AnyString = 'ANY_STRING',
-  ColDate = 'COL_DATE',
-  ColNumber = 'COL_NUMBER',
-  ColString = 'COL_STRING',
-  Date = 'DATE',
-  Number = 'NUMBER',
-  String = 'STRING'
+export interface AgencyCreateInput {
+  agencyName?: Maybe<Scalars['String']>,
+  agencyPhone?: Maybe<Scalars['Int']>,
+  agencyTimezone?: Maybe<Scalars['String']>,
+  agencyUrl?: Maybe<Scalars['String']>,
+}
+
+export interface AgencyUpdateInput {
+  agencyName?: Maybe<Scalars['String']>,
+  agencyPhone?: Maybe<Scalars['Int']>,
+  agencyTimezone?: Maybe<Scalars['String']>,
+  agencyUrl?: Maybe<Scalars['String']>,
+  id: Scalars['UUID'],
 }
 
 export interface Attachment {
@@ -61,1650 +60,484 @@ export interface Attachment {
   url?: Maybe<Scalars['String']>,
 }
 
-export interface Autocomplete {
-   __typename?: 'Autocomplete',
-  column?: Maybe<Column>,
-  function?: Maybe<Function>,
-  name?: Maybe<Scalars['String']>,
-  type?: Maybe<AutocompleteType>,
-}
-
-export enum AutocompleteType {
-  Column = 'COLUMN',
-  Function = 'FUNCTION',
-  Keyword = 'KEYWORD'
-}
-
-export enum CaseType {
-  Capitalize = 'CAPITALIZE',
-  Lower = 'LOWER',
-  None = 'NONE',
-  Upper = 'UPPER'
-}
-
-export interface Change {
-   __typename?: 'Change',
-  after?: Maybe<Scalars['String']>,
-  before?: Maybe<Scalars['String']>,
-  changeType?: Maybe<ChangeType>,
-  column?: Maybe<Column>,
-  id?: Maybe<Scalars['Int']>,
-  insertedAt?: Maybe<Scalars['Timestamp']>,
-}
-
-export interface ChangeCaseTypeInput {
-  value?: Maybe<CaseType>,
-}
-
-export enum ChangeType {
-  ChangeCaseType = 'CHANGE_CASE_TYPE',
-  ChangeCodecs = 'CHANGE_CODECS',
-  ChangeDataType = 'CHANGE_DATA_TYPE',
-  ChangeInclude = 'CHANGE_INCLUDE',
-  ChangePosition = 'CHANGE_POSITION',
-  ChangeTitle = 'CHANGE_TITLE',
-  ChangeWidth = 'CHANGE_WIDTH',
-  DeleteColumn = 'DELETE_COLUMN',
-  DeleteColumns = 'DELETE_COLUMNS',
-  RemoveLetters = 'REMOVE_LETTERS',
-  RemoveNumbers = 'REMOVE_NUMBERS',
-  RemovePunctuation = 'REMOVE_PUNCTUATION',
-  TrimSpaces = 'TRIM_SPACES',
-  UnionColumns = 'UNION_COLUMNS'
-}
-
-export interface ChatAvatar {
-   __typename?: 'ChatAvatar',
-  large?: Maybe<Scalars['String']>,
-  small?: Maybe<Scalars['String']>,
-}
-
-export interface ChatMessage {
-   __typename?: 'ChatMessage',
-  embed?: Maybe<Scalars['Json']>,
-  messageId?: Maybe<Scalars['String']>,
-  reply?: Maybe<ChatMessage>,
-  replyId?: Maybe<Scalars['String']>,
-  roomId?: Maybe<Scalars['String']>,
-  text?: Maybe<Scalars['String']>,
-  user?: Maybe<ChatUser>,
-  userId?: Maybe<Scalars['String']>,
-}
-
-export interface ChatOnline {
-   __typename?: 'ChatOnline',
-  id?: Maybe<Scalars['String']>,
-  meta?: Maybe<ChatOnlineMeta>,
-}
-
-export interface ChatOnlineMeta {
-   __typename?: 'ChatOnlineMeta',
-  onlineAt?: Maybe<Scalars['Int']>,
-}
-
-export interface ChatRoom {
-   __typename?: 'ChatRoom',
-  dialog?: Maybe<Scalars['Boolean']>,
-  lastMessage?: Maybe<ChatMessage>,
-  messageId?: Maybe<Scalars['String']>,
-  metadata?: Maybe<Scalars['Json']>,
-  name?: Maybe<Scalars['String']>,
-  roomId?: Maybe<Scalars['String']>,
-  updatedAt?: Maybe<Scalars['Int']>,
-  user?: Maybe<ChatUser>,
-}
-
-export interface ChatUser {
-   __typename?: 'ChatUser',
-  avatar?: Maybe<ChatAvatar>,
-  id?: Maybe<Scalars['String']>,
-  name?: Maybe<Scalars['String']>,
-}
-
-export interface Codec {
-   __typename?: 'Codec',
-  level?: Maybe<Scalars['Int']>,
-  type?: Maybe<CodecType>,
-}
-
-export interface CodecInp {
-  level?: Maybe<Scalars['Int']>,
-  type?: Maybe<CodecType>,
-}
-
-export interface CodecInput {
-  value?: Maybe<Array<Maybe<CodecInp>>>,
-}
-
-export enum CodecType {
-  Delta = 'DELTA',
-  DoubleDelta = 'DOUBLE_DELTA',
-  Gorilla = 'GORILLA',
-  Lz4 = 'LZ4',
-  Lz4Hc = 'LZ4HC',
-  None = 'NONE',
-  T64 = 'T64',
-  Zstd = 'ZSTD'
-}
-
-export interface Column {
-   __typename?: 'Column',
-  caseType?: Maybe<CaseType>,
-  changes?: Maybe<Array<Maybe<Change>>>,
-  codecs?: Maybe<Array<Maybe<Codec>>>,
-  columnIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
-  columnName?: Maybe<Scalars['String']>,
-  columnStats?: Maybe<Array<Maybe<ColumnStat>>>,
-  compressedBytes?: Maybe<Scalars['Int']>,
-  dataType?: Maybe<DataType>,
-  defaultExpr?: Maybe<Scalars['String']>,
-  id?: Maybe<Scalars['Int']>,
-  include?: Maybe<Scalars['Boolean']>,
-  insertedAt?: Maybe<Scalars['Timestamp']>,
-  nullable?: Maybe<Scalars['Boolean']>,
-  originalTitle?: Maybe<Scalars['String']>,
-  position?: Maybe<Scalars['Int']>,
-  removeLetters?: Maybe<Scalars['Boolean']>,
-  removeNumbers?: Maybe<Scalars['Boolean']>,
-  removePunctuation?: Maybe<Scalars['Boolean']>,
-  sourceStepId?: Maybe<Scalars['Int']>,
-  step?: Maybe<Step>,
-  stepIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
-  title?: Maybe<Scalars['String']>,
-  trimSpaces?: Maybe<Scalars['Boolean']>,
-  uncompressedBytes?: Maybe<Scalars['Int']>,
-  updatedAt?: Maybe<Scalars['Timestamp']>,
-  width?: Maybe<Scalars['Int']>,
-}
-
-export interface ColumnStat {
-   __typename?: 'ColumnStat',
-  count?: Maybe<Scalars['Int']>,
-  value?: Maybe<Scalars['String']>,
-}
-
-export interface ConnectedEntities {
-   __typename?: 'ConnectedEntities',
-  folders?: Maybe<Scalars['Json']>,
-  objects?: Maybe<Scalars['Json']>,
-}
-
-export interface Connection {
-   __typename?: 'Connection',
-  id?: Maybe<Scalars['Int']>,
-  joinType?: Maybe<JoinType>,
-  leftTableFieldId?: Maybe<Scalars['String']>,
-  leftTableId?: Maybe<Scalars['Int']>,
-  rightTableFieldId?: Maybe<Scalars['String']>,
-  rightTableId?: Maybe<Scalars['Int']>,
-}
-
-export interface Datasource {
-   __typename?: 'Datasource',
-  datasetCode?: Maybe<Scalars['String']>,
-  datasourceProgress?: Maybe<DatasourceProgress>,
-  datasourceState?: Maybe<DatasourceState>,
-  dbParams?: Maybe<DbParams>,
-  eisParams?: Maybe<EisParams>,
-  id?: Maybe<Scalars['Int']>,
-  link?: Maybe<Scalars['String']>,
-  locked?: Maybe<Scalars['Boolean']>,
-  object?: Maybe<Object>,
-  periodicityType?: Maybe<PeriodicityType>,
-  periodicityValue?: Maybe<Scalars['Float']>,
-  sourceType?: Maybe<SourceType>,
-  steps?: Maybe<Array<Maybe<Step>>>,
-  title?: Maybe<Scalars['String']>,
-}
-
-export interface DatasourceProgress {
-   __typename?: 'DatasourceProgress',
-  datasourceId?: Maybe<Scalars['Int']>,
-  doneDate?: Maybe<Scalars['Timestamp']>,
-  futureStartDate?: Maybe<Scalars['Timestamp']>,
-  processes?: Maybe<Array<Maybe<Progress>>>,
-  startDate?: Maybe<Scalars['Timestamp']>,
-  status?: Maybe<ProgressStatus>,
-  stopDate?: Maybe<Scalars['Timestamp']>,
-}
-
-export interface DatasourceState {
-   __typename?: 'DatasourceState',
-  allCount?: Maybe<Scalars['Int']>,
-  currentSubsource?: Maybe<Scalars['String']>,
-  datasourceId?: Maybe<Scalars['Int']>,
-  doneCount?: Maybe<Scalars['Int']>,
-}
-
-export enum DataType {
-  Date = 'DATE',
-  Datetime = 'DATETIME',
-  Enum = 'ENUM',
-  Float32 = 'FLOAT32',
-  Float64 = 'FLOAT64',
-  Int16 = 'INT16',
-  Int32 = 'INT32',
-  Int64 = 'INT64',
-  Int8 = 'INT8',
-  String = 'STRING',
-  StringN = 'STRING_N',
-  Uint16 = 'UINT16',
-  Uint32 = 'UINT32',
-  Uint64 = 'UINT64',
-  Uint8 = 'UINT8',
-  Uuid = 'UUID'
-}
-
-export interface DataTypeInput {
-  value?: Maybe<DataType>,
-}
-
-export interface DataValue {
-   __typename?: 'DataValue',
-  agg?: Maybe<Agg>,
-  columnId?: Maybe<Scalars['Int']>,
-  fieldId?: Maybe<Scalars['String']>,
-  filter?: Maybe<Array<Maybe<FormulaToken>>>,
-  groupFieldId?: Maybe<Scalars['String']>,
-  tableId?: Maybe<Scalars['Int']>,
-  title?: Maybe<Scalars['String']>,
-}
-
-export interface DataValueInput {
-  agg?: Maybe<Agg>,
-  columnId?: Maybe<Scalars['Int']>,
-  fieldId?: Maybe<Scalars['String']>,
-  filter?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-  groupFieldId?: Maybe<Scalars['String']>,
-  tableId?: Maybe<Scalars['Int']>,
-  title?: Maybe<Scalars['String']>,
-}
-
-export interface DbParams {
-   __typename?: 'DbParams',
-  db?: Maybe<Scalars['String']>,
-  dbType?: Maybe<DbType>,
-  host?: Maybe<Scalars['String']>,
-  pass?: Maybe<Scalars['String']>,
-  port?: Maybe<Scalars['String']>,
-  tables?: Maybe<Array<Maybe<DbTable>>>,
-  user?: Maybe<Scalars['String']>,
-}
-
-export interface DbParamsInp {
-  db?: Maybe<Scalars['String']>,
-  dbType?: Maybe<DbType>,
-  host?: Maybe<Scalars['String']>,
-  pass?: Maybe<Scalars['String']>,
-  port?: Maybe<Scalars['String']>,
-  tables?: Maybe<Array<Maybe<DbTableInp>>>,
-  user?: Maybe<Scalars['String']>,
-}
-
-export interface DbTable {
-   __typename?: 'DbTable',
-  name?: Maybe<Scalars['String']>,
-  periodicityType?: Maybe<PeriodicityType>,
-  periodicityValue?: Maybe<Scalars['Float']>,
-  schema?: Maybe<Scalars['String']>,
-}
-
-export interface DbTableInp {
-  name?: Maybe<Scalars['String']>,
-  periodicityType?: Maybe<PeriodicityType>,
-  periodicityValue?: Maybe<Scalars['Float']>,
-  schema?: Maybe<Scalars['String']>,
-}
-
-export enum DbType {
-  Mssql = 'MSSQL',
-  Mysql = 'MYSQL',
-  Oracle = 'ORACLE',
-  Postgres = 'POSTGRES'
-}
-
-export interface EisDir {
-   __typename?: 'EisDir',
-  includeSubdirs?: Maybe<Scalars['Boolean']>,
-  path?: Maybe<Scalars['String']>,
-  queries?: Maybe<Array<Maybe<Scalars['String']>>>,
-  regexp?: Maybe<Scalars['String']>,
-  title?: Maybe<Scalars['String']>,
-}
-
-export interface EisDirInp {
-  includeSubdirs?: Maybe<Scalars['Boolean']>,
-  path?: Maybe<Scalars['String']>,
-  queries?: Maybe<Array<Maybe<Scalars['String']>>>,
-  regexp?: Maybe<Scalars['String']>,
-  title?: Maybe<Scalars['String']>,
-}
-
-export interface EisParams {
-   __typename?: 'EisParams',
-  dirs?: Maybe<Array<Maybe<EisDir>>>,
-  host?: Maybe<Scalars['String']>,
-  pass?: Maybe<Scalars['String']>,
-  port?: Maybe<Scalars['String']>,
-  user?: Maybe<Scalars['String']>,
-}
-
-export interface EisParamsInp {
-  dirs?: Maybe<Array<Maybe<EisDirInp>>>,
-  host?: Maybe<Scalars['String']>,
-  pass?: Maybe<Scalars['String']>,
-  port?: Maybe<Scalars['String']>,
-  user?: Maybe<Scalars['String']>,
-}
-
-export interface EtlAcl {
-   __typename?: 'EtlAcl',
-  datasourceEdit?: Maybe<Scalars['Boolean']>,
-  datasourceRead?: Maybe<Scalars['Boolean']>,
-  flowEdit?: Maybe<Scalars['Boolean']>,
-  flowRead?: Maybe<Scalars['Boolean']>,
-}
-
-export interface Field {
-   __typename?: 'Field',
-  datatype?: Maybe<FieldDataType>,
-  description?: Maybe<Scalars['String']>,
-  fieldType?: Maybe<FieldType>,
-  id?: Maybe<Scalars['String']>,
-  isFKey?: Maybe<Scalars['Boolean']>,
-  isInvisible?: Maybe<Scalars['Boolean']>,
-  position?: Maybe<Scalars['Int']>,
-  postfix?: Maybe<Scalars['String']>,
-  title?: Maybe<Scalars['String']>,
-}
-
-export enum FieldDataType {
-  Date = 'DATE',
-  Datetime = 'DATETIME',
-  Float = 'FLOAT',
-  Geo = 'GEO',
-  Int = 'INT',
-  String = 'STRING'
-}
-
-export enum FieldType {
-  Dimension = 'DIMENSION',
-  Measure = 'MEASURE'
-}
-
-export interface Flow {
-   __typename?: 'Flow',
-  acl?: Maybe<FlowAcl>,
-  connectedEntities?: Maybe<ConnectedEntities>,
-  id?: Maybe<Scalars['Int']>,
-  insertedAt?: Maybe<Scalars['Timestamp']>,
-  object?: Maybe<Object>,
-  title?: Maybe<Scalars['String']>,
-  updatedAt?: Maybe<Scalars['Timestamp']>,
-}
-
-export interface FlowAcl {
-   __typename?: 'FlowAcl',
-  copy?: Maybe<Scalars['Boolean']>,
-  delete?: Maybe<Scalars['Boolean']>,
-  update?: Maybe<Scalars['Boolean']>,
-}
-
-export interface Folder {
-   __typename?: 'Folder',
-  folders?: Maybe<Array<Maybe<Folder>>>,
-  id?: Maybe<Scalars['Int']>,
-  isLocked?: Maybe<Scalars['Boolean']>,
-  isOpened?: Maybe<Scalars['Boolean']>,
-  objects?: Maybe<Array<Maybe<Object>>>,
-  sharedAccess?: Maybe<Scalars['Boolean']>,
-  sharedToken?: Maybe<Scalars['String']>,
-  title?: Maybe<Scalars['String']>,
-}
-
-export interface FormulaToken {
-   __typename?: 'FormulaToken',
-  dataValue?: Maybe<DataValue>,
-  funcValue?: Maybe<FuncValue>,
-  listValue?: Maybe<ListValue>,
-  tokenType: TokenType,
-  value?: Maybe<Scalars['String']>,
-}
-
-export interface FormulaTokenInput {
-  dataValue?: Maybe<DataValueInput>,
-  funcValue?: Maybe<FuncValueInput>,
-  listValue?: Maybe<ListValueInput>,
-  tokenType: TokenType,
-  value?: Maybe<Scalars['String']>,
-}
-
-export interface FtpEnity {
-   __typename?: 'FtpEnity',
-  name?: Maybe<Scalars['String']>,
-  type?: Maybe<FtpEnityType>,
-}
-
-export enum FtpEnityType {
-  Dir = 'DIR',
-  File = 'FILE'
-}
-
-export interface Function {
-   __typename?: 'Function',
-  arg1Type?: Maybe<ArgType>,
-  arg2Type?: Maybe<ArgType>,
-  arg3Type?: Maybe<ArgType>,
-  argsCount?: Maybe<Scalars['Int']>,
-  description?: Maybe<Scalars['String']>,
-  examples?: Maybe<Array<Maybe<FunctionExample>>>,
-  name: Scalars['String'],
-  resultType?: Maybe<ResultType>,
-}
-
-export interface FunctionExample {
-   __typename?: 'FunctionExample',
-  formula?: Maybe<Scalars['String']>,
-  result?: Maybe<Scalars['String']>,
-}
-
-export interface FuncValue {
-   __typename?: 'FuncValue',
-  arg1?: Maybe<Array<Maybe<FormulaToken>>>,
-  arg2?: Maybe<Array<Maybe<FormulaToken>>>,
-  arg3?: Maybe<Array<Maybe<FormulaToken>>>,
-  args?: Maybe<Array<Maybe<Array<Maybe<FormulaToken>>>>>,
-  name: Scalars['String'],
-}
-
-export interface FuncValueInput {
-  arg1?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-  arg2?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-  arg3?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-  args?: Maybe<Array<Maybe<Array<Maybe<FormulaTokenInput>>>>>,
-  name: Scalars['String'],
-}
-
-export interface Hierarchy {
-   __typename?: 'Hierarchy',
-  description?: Maybe<Scalars['String']>,
-  dims?: Maybe<Array<Maybe<HierarchyDim>>>,
-  id?: Maybe<Scalars['Int']>,
-  insertedAt?: Maybe<Scalars['Timestamp']>,
-  isInvisible?: Maybe<Scalars['Boolean']>,
-  isOpened?: Maybe<Scalars['Boolean']>,
-  position?: Maybe<Scalars['Int']>,
-  title?: Maybe<Scalars['String']>,
-  updatedAt?: Maybe<Scalars['Timestamp']>,
-}
-
-export interface HierarchyDim {
-   __typename?: 'HierarchyDim',
-  dimId?: Maybe<Scalars['String']>,
-  position?: Maybe<Scalars['Int']>,
-}
-
-export interface HierarchyDimInput {
-  dimId?: Maybe<Scalars['String']>,
-  position?: Maybe<Scalars['Int']>,
-}
-
-export interface IncludeInput {
-  value?: Maybe<Scalars['Boolean']>,
-}
-
-export interface Indicator {
-   __typename?: 'Indicator',
-  baseRating?: Maybe<Array<Maybe<Array<Maybe<Scalars['String']>>>>>,
-  connectedEntities?: Maybe<ConnectedEntities>,
-  displayColumnIds?: Maybe<Array<Maybe<Scalars['String']>>>,
-  displayFKeyId?: Maybe<Scalars['String']>,
-  displayTableId?: Maybe<Scalars['Int']>,
-  formula?: Maybe<Array<Maybe<FormulaToken>>>,
-  id?: Maybe<Scalars['Int']>,
-  insertedAt?: Maybe<Scalars['Timestamp']>,
-  object?: Maybe<Object>,
-  periodicity?: Maybe<Periodicity>,
-  periodicityDays?: Maybe<Scalars['Int']>,
-  showCountedFormula?: Maybe<Scalars['Boolean']>,
-  sortType?: Maybe<SortType>,
-  sortValue?: Maybe<Scalars['Float']>,
-  sortValueType?: Maybe<SortValueType>,
-  title?: Maybe<Scalars['String']>,
-  updatedAt?: Maybe<Scalars['Timestamp']>,
-}
-
-export interface IndicatorsAutocomplete {
-   __typename?: 'IndicatorsAutocomplete',
-  field?: Maybe<Field>,
-  function?: Maybe<Function>,
-  name?: Maybe<Scalars['String']>,
-  table?: Maybe<Table>,
-  type?: Maybe<IndicatorsAutocompleteType>,
-}
-
-export enum IndicatorsAutocompleteType {
-  Field = 'FIELD',
-  Function = 'FUNCTION',
-  Keyword = 'KEYWORD',
-  Table = 'TABLE'
-}
-
-export enum JoinType {
-  AllFull = 'ALL_FULL',
-  AllInner = 'ALL_INNER',
-  AllLeft = 'ALL_LEFT',
-  AllRight = 'ALL_RIGHT',
-  AntiLeft = 'ANTI_LEFT',
-  AntiRight = 'ANTI_RIGHT',
-  AnyInner = 'ANY_INNER',
-  AnyLeft = 'ANY_LEFT',
-  AnyRight = 'ANY_RIGHT',
-  CrossJoin = 'CROSS_JOIN',
-  SemiLeft = 'SEMI_LEFT',
-  SemiRight = 'SEMI_RIGHT'
-}
-
-
-export interface ListValue {
-   __typename?: 'ListValue',
-  list?: Maybe<Array<Maybe<Scalars['String']>>>,
-  title?: Maybe<Scalars['String']>,
-}
-
-export interface ListValueInput {
-  list?: Maybe<Array<Maybe<Scalars['String']>>>,
-  title?: Maybe<Scalars['String']>,
-}
-
-export interface Object {
-   __typename?: 'Object',
-  attachment?: Maybe<Attachment>,
-  attachmentId?: Maybe<Scalars['String']>,
-  entityId?: Maybe<Scalars['String']>,
-  folderId?: Maybe<Scalars['Int']>,
-  id?: Maybe<Scalars['String']>,
-  objectType?: Maybe<ObjectType>,
-  title?: Maybe<Scalars['String']>,
-  updatedAt?: Maybe<Scalars['Timestamp']>,
-}
-
-export enum ObjectType {
-  Dashboard = 'DASHBOARD',
-  Datasource = 'DATASOURCE',
-  Flow = 'FLOW',
-  GroupChat = 'GROUP_CHAT',
-  Indicator = 'INDICATOR',
-  Table = 'TABLE'
-}
-
-export interface OlapAcl {
-   __typename?: 'OlapAcl',
-  olapRequest?: Maybe<Scalars['Boolean']>,
-  panelsEdit?: Maybe<Scalars['Boolean']>,
-  panelsRead?: Maybe<Scalars['Boolean']>,
-}
-
-export interface OlapChartLayer  extends OlapLayer {
-   __typename?: 'OlapChartLayer',
-  chartType?: Maybe<OlapChartType>,
-  columns?: Maybe<Array<Maybe<OlapRequestField>>>,
-  cubeId?: Maybe<Scalars['String']>,
-  havingFilters?: Maybe<Array<Maybe<FormulaToken>>>,
-  height?: Maybe<Scalars['Int']>,
-  hierarchy?: Maybe<OlapHierarchy>,
-  id: Scalars['UUID'],
-  limit?: Maybe<Scalars['Int']>,
-  mapProperties?: Maybe<OlapLayerMapProperties>,
-  offset?: Maybe<Scalars['Int']>,
-  positionX?: Maybe<Scalars['Int']>,
-  positionY?: Maybe<Scalars['Int']>,
-  rows?: Maybe<Array<Maybe<OlapRequestField>>>,
-  styles?: Maybe<OlapLayerStyles>,
-  type?: Maybe<OlapLayerType>,
-  whereFilters?: Maybe<Array<Maybe<FormulaToken>>>,
-  width?: Maybe<Scalars['Int']>,
-}
-
-export enum OlapChartType {
-  Configurable = 'CONFIGURABLE',
-  Graph = 'GRAPH',
-  Map = 'MAP',
-  Pie = 'PIE',
-  Scanner = 'SCANNER',
-  Scatter = 'SCATTER',
-  Table = 'TABLE',
-  Value = 'VALUE'
-}
-
-export interface OlapDashboard {
-   __typename?: 'OlapDashboard',
-  backgroundColor?: Maybe<Scalars['String']>,
-  borderColor?: Maybe<Scalars['String']>,
-  columnsCount?: Maybe<Scalars['Int']>,
-  horizontalMargin?: Maybe<Scalars['Int']>,
-  id: Scalars['UUID'],
-  insertedAt?: Maybe<Scalars['Timestamp']>,
-  layers?: Maybe<Array<Maybe<OlapLayer>>>,
-  object?: Maybe<Object>,
-  rowHeight?: Maybe<Scalars['Int']>,
-  title: Scalars['String'],
-  updatedAt?: Maybe<Scalars['Timestamp']>,
-  verticalMargin?: Maybe<Scalars['Int']>,
-  width?: Maybe<Scalars['Int']>,
-  workspace: OlapDashboardWorkspace,
-}
-
-export interface OlapDashboardInput {
-  backgroundColor?: Maybe<Scalars['String']>,
-  borderColor?: Maybe<Scalars['String']>,
-  columnsCount?: Maybe<Scalars['Int']>,
-  horizontalMargin?: Maybe<Scalars['Int']>,
-  layers?: Maybe<Array<Maybe<OlapLayerInput>>>,
-  rowHeight?: Maybe<Scalars['Int']>,
-  title?: Maybe<Scalars['String']>,
-  verticalMargin?: Maybe<Scalars['Int']>,
-  width?: Maybe<Scalars['Int']>,
-  workspace?: Maybe<OlapDashboardWorkspace>,
-}
-
-export enum OlapDashboardWorkspace {
-  Fixed = 'FIXED',
-  Unlimited = 'UNLIMITED'
-}
-
-export enum OlapFontStyle {
-  Italic = 'ITALIC',
-  Normal = 'NORMAL'
-}
-
-export enum OlapFontWeight {
-  Bold = 'BOLD',
-  Normal = 'NORMAL'
-}
-
-export enum OlapGridType {
-  Combined = 'COMBINED',
-  Horizontal = 'HORIZONTAL',
-  Vertical = 'VERTICAL'
-}
-
-export interface OlapHierarchy {
-   __typename?: 'OlapHierarchy',
-  fields?: Maybe<Array<Maybe<OlapRequestField>>>,
-  id?: Maybe<Scalars['String']>,
-}
-
-export interface OlapHierarchyInput {
-  fields?: Maybe<Array<Maybe<OlapRequestFieldInput>>>,
-  id?: Maybe<Scalars['String']>,
-}
-
-export interface OlapLayer {
-  height?: Maybe<Scalars['Int']>,
-  id: Scalars['UUID'],
-  positionX?: Maybe<Scalars['Int']>,
-  positionY?: Maybe<Scalars['Int']>,
-  type?: Maybe<OlapLayerType>,
-  width?: Maybe<Scalars['Int']>,
-}
-
-export interface OlapLayerAlias {
-   __typename?: 'OlapLayerAlias',
-  alias?: Maybe<Scalars['String']>,
-  fieldId?: Maybe<Scalars['String']>,
-  id?: Maybe<Scalars['String']>,
-  name?: Maybe<Scalars['String']>,
-}
-
-export interface OlapLayerAliasInput {
-  alias?: Maybe<Scalars['String']>,
-  fieldId?: Maybe<Scalars['String']>,
-  id?: Maybe<Scalars['String']>,
-  name?: Maybe<Scalars['String']>,
-}
-
-export interface OlapLayerAxis {
-   __typename?: 'OlapLayerAxis',
-  color?: Maybe<Scalars['String']>,
-  gridColor?: Maybe<Scalars['String']>,
-  lineStyle?: Maybe<OlapLayerLineStyle>,
-  textStyle?: Maybe<OlapLayerTextStyle>,
-  x?: Maybe<OlapLayerDirectAxis>,
-  y?: Maybe<OlapLayerDirectAxis>,
-}
-
-export interface OlapLayerAxisInput {
-  color?: Maybe<Scalars['String']>,
-  gridColor?: Maybe<Scalars['String']>,
-  lineStyle?: Maybe<OlapLayerLineStyleInput>,
-  textStyle?: Maybe<OlapLayerTextStyleInput>,
-  x?: Maybe<OlapLayerDirectAxisInput>,
-  y?: Maybe<OlapLayerDirectAxisInput>,
-}
-
-export interface OlapLayerBarFillStyle {
-   __typename?: 'OlapLayerBarFillStyle',
-  color?: Maybe<Scalars['String']>,
-  opacity?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerBarFillStyleInput {
-  color?: Maybe<Scalars['String']>,
-  opacity?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerDirectAxis {
-   __typename?: 'OlapLayerDirectAxis',
-  withAxisLine?: Maybe<Scalars['Boolean']>,
-  withLabel?: Maybe<Scalars['Boolean']>,
-  withName?: Maybe<Scalars['Boolean']>,
-}
-
-export interface OlapLayerDirectAxisInput {
-  withAxisLine?: Maybe<Scalars['Boolean']>,
-  withLabel?: Maybe<Scalars['Boolean']>,
-  withName?: Maybe<Scalars['Boolean']>,
-}
-
-export interface OlapLayerGrid {
-   __typename?: 'OlapLayerGrid',
-  color?: Maybe<Scalars['String']>,
-  lineStyle?: Maybe<OlapLayerLineStyle>,
-  type?: Maybe<OlapGridType>,
-}
-
-export interface OlapLayerGridInput {
-  color?: Maybe<Scalars['String']>,
-  lineStyle?: Maybe<OlapLayerLineStyleInput>,
-  type?: Maybe<OlapGridType>,
-}
-
-export interface OlapLayerInput {
-  chartType?: Maybe<OlapChartType>,
-  color?: Maybe<Scalars['String']>,
-  columns?: Maybe<Array<Maybe<OlapRequestFieldInput>>>,
-  cubeId?: Maybe<Scalars['String']>,
-  fontStyle?: Maybe<OlapFontStyle>,
-  fontWeight?: Maybe<OlapFontWeight>,
-  havingFilters?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-  height?: Maybe<Scalars['Int']>,
-  hierarchy?: Maybe<OlapHierarchyInput>,
+export interface Avatar {
+   __typename?: 'Avatar',
+  aspectRatio?: Maybe<Scalars['Float']>,
+  contentType?: Maybe<Scalars['String']>,
   id?: Maybe<Scalars['UUID']>,
-  limit?: Maybe<Scalars['Int']>,
-  mapProperties?: Maybe<OlapLayerMapPropertiesInput>,
-  offset?: Maybe<Scalars['Int']>,
-  positionX?: Maybe<Scalars['Int']>,
-  positionY?: Maybe<Scalars['Int']>,
-  rows?: Maybe<Array<Maybe<OlapRequestFieldInput>>>,
-  size?: Maybe<Scalars['Int']>,
-  styles?: Maybe<OlapLayerStylesInput>,
-  text?: Maybe<Scalars['String']>,
-  textAlign?: Maybe<OlapTextAlign>,
-  textDecoration?: Maybe<OlapTextDecoration>,
-  type?: Maybe<OlapLayerType>,
-  whereFilters?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-  width?: Maybe<Scalars['Int']>,
-}
-
-export interface OlapLayerLegend {
-   __typename?: 'OlapLayerLegend',
-  show?: Maybe<Scalars['Boolean']>,
-}
-
-export interface OlapLayerLegendInput {
-  show?: Maybe<Scalars['Boolean']>,
-}
-
-export interface OlapLayerLineStyle {
-   __typename?: 'OlapLayerLineStyle',
-  color?: Maybe<Scalars['String']>,
-  opacity?: Maybe<Scalars['Float']>,
-  type?: Maybe<OlapLineType>,
-  width?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerLineStyleInput {
-  color?: Maybe<Scalars['String']>,
-  opacity?: Maybe<Scalars['Float']>,
-  type?: Maybe<OlapLineType>,
-  width?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerMap {
-   __typename?: 'OlapLayerMap',
-  color?: Maybe<Scalars['String']>,
-  ranges?: Maybe<Array<Maybe<OlapLayerRanges>>>,
-}
-
-export interface OlapLayerMapInput {
-  color?: Maybe<Scalars['String']>,
-  ranges?: Maybe<Array<Maybe<OlapLayerRangesInput>>>,
-}
-
-export interface OlapLayerMapProperties {
-   __typename?: 'OlapLayerMapProperties',
-  center?: Maybe<Array<Maybe<Scalars['Float']>>>,
-  zoom?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerMapPropertiesInput {
-  center?: Maybe<Array<Maybe<Scalars['Float']>>>,
-  zoom?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerMark {
-   __typename?: 'OlapLayerMark',
-  color?: Maybe<Scalars['String']>,
-  position?: Maybe<Scalars['String']>,
-  type?: Maybe<Scalars['String']>,
-  value?: Maybe<Scalars['String']>,
-}
-
-export interface OlapLayerMarkInput {
-  color?: Maybe<Scalars['String']>,
-  position?: Maybe<Scalars['String']>,
-  type?: Maybe<Scalars['String']>,
-  value?: Maybe<Scalars['String']>,
-}
-
-export interface OlapLayerMarkLine {
-   __typename?: 'OlapLayerMarkLine',
-  category?: Maybe<Scalars['String']>,
-  color?: Maybe<Scalars['String']>,
-  label?: Maybe<Scalars['String']>,
-  position?: Maybe<Scalars['String']>,
-  type?: Maybe<OlapMarkLineType>,
-  value?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerMarkLineInput {
-  category?: Maybe<Scalars['String']>,
-  color?: Maybe<Scalars['String']>,
-  label?: Maybe<Scalars['String']>,
-  position?: Maybe<Scalars['String']>,
-  type?: Maybe<OlapMarkLineType>,
-  value?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerPoint {
-   __typename?: 'OlapLayerPoint',
-  barFill?: Maybe<OlapLayerBarFillStyle>,
-  barStroke?: Maybe<OlapLayerShapeStyle>,
-  fill?: Maybe<OlapLayerShapeStyle>,
-  id?: Maybe<Scalars['String']>,
-  marks?: Maybe<Array<Maybe<OlapLayerMark>>>,
-  stroke?: Maybe<OlapLayerShapeStyle>,
-}
-
-export interface OlapLayerPointInput {
-  barFill?: Maybe<OlapLayerBarFillStyleInput>,
-  barStroke?: Maybe<OlapLayerShapeStyleInput>,
-  fill?: Maybe<OlapLayerShapeStyleInput>,
-  id?: Maybe<Scalars['String']>,
-  marks?: Maybe<Array<Maybe<OlapLayerMarkInput>>>,
-  stroke?: Maybe<OlapLayerShapeStyleInput>,
-}
-
-export interface OlapLayerRanges {
-   __typename?: 'OlapLayerRanges',
-  color?: Maybe<Scalars['String']>,
-  end?: Maybe<Scalars['Float']>,
-  start?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerRangesInput {
-  color?: Maybe<Scalars['String']>,
-  end?: Maybe<Scalars['Float']>,
-  start?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerSeria {
-   __typename?: 'OlapLayerSeria',
-  id?: Maybe<Scalars['String']>,
-  lineStyle?: Maybe<OlapLayerLineStyle>,
-  marks?: Maybe<Array<Maybe<OlapLayerMark>>>,
-  pointStyle?: Maybe<OlapLayerPoint>,
-  showTrend?: Maybe<Scalars['Boolean']>,
-  smooth?: Maybe<Scalars['Boolean']>,
-  stack?: Maybe<Scalars['String']>,
-  trendLine?: Maybe<TrendLine>,
-  type?: Maybe<OlapSeriaType>,
-}
-
-export interface OlapLayerSeriaInput {
-  id?: Maybe<Scalars['String']>,
-  lineStyle?: Maybe<OlapLayerLineStyleInput>,
-  marks?: Maybe<Array<Maybe<OlapLayerMarkInput>>>,
-  pointStyle?: Maybe<OlapLayerPointInput>,
-  showTrend?: Maybe<Scalars['Boolean']>,
-  smooth?: Maybe<Scalars['Boolean']>,
-  stack?: Maybe<Scalars['String']>,
-  trendLine?: Maybe<TrendLineInput>,
-  type?: Maybe<OlapSeriaType>,
-}
-
-export interface OlapLayerShapeStyle {
-   __typename?: 'OlapLayerShapeStyle',
-  color?: Maybe<Scalars['String']>,
-  opacity?: Maybe<Scalars['Float']>,
-  size?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerShapeStyleInput {
-  color?: Maybe<Scalars['String']>,
-  opacity?: Maybe<Scalars['Float']>,
-  size?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerStyles {
-   __typename?: 'OlapLayerStyles',
-  aliases?: Maybe<Array<Maybe<OlapLayerAlias>>>,
-  axis?: Maybe<OlapLayerAxis>,
-  backgroundColor?: Maybe<Scalars['String']>,
-  grid?: Maybe<OlapLayerGrid>,
-  hGrid?: Maybe<OlapLayerVhGrid>,
-  legend?: Maybe<OlapLayerLegend>,
-  map?: Maybe<OlapLayerMap>,
-  markLines?: Maybe<Array<Maybe<OlapLayerMarkLine>>>,
-  points?: Maybe<Array<Maybe<OlapLayerPoint>>>,
-  series?: Maybe<Array<Maybe<OlapLayerSeria>>>,
-  table?: Maybe<OlapLayerTable>,
-  vGrid?: Maybe<OlapLayerVhGrid>,
-  valueRounding?: Maybe<Scalars['Int']>,
-  zooming?: Maybe<OlapLayerZooming>,
-}
-
-export interface OlapLayerStylesInput {
-  aliases?: Maybe<Array<Maybe<OlapLayerAliasInput>>>,
-  axis?: Maybe<OlapLayerAxisInput>,
-  backgroundColor?: Maybe<Scalars['String']>,
-  grid?: Maybe<OlapLayerGridInput>,
-  hGrid?: Maybe<OlapLayerVhGridInput>,
-  legend?: Maybe<OlapLayerLegendInput>,
-  map?: Maybe<OlapLayerMapInput>,
-  markLines?: Maybe<Array<Maybe<OlapLayerMarkLineInput>>>,
-  points?: Maybe<Array<Maybe<OlapLayerPointInput>>>,
-  series?: Maybe<Array<Maybe<OlapLayerSeriaInput>>>,
-  table?: Maybe<OlapLayerTableInput>,
-  vGrid?: Maybe<OlapLayerVhGridInput>,
-  valueRounding?: Maybe<Scalars['Int']>,
-  zooming?: Maybe<OlapLayerZoomingInput>,
-}
-
-export interface OlapLayerTable {
-   __typename?: 'OlapLayerTable',
-  horizontalPadding?: Maybe<Scalars['Int']>,
-  id?: Maybe<Scalars['String']>,
-  mergeCells?: Maybe<Scalars['Boolean']>,
-  stickyHeader?: Maybe<Scalars['Boolean']>,
-  stickySide?: Maybe<Scalars['Boolean']>,
-  verticalPadding?: Maybe<Scalars['Int']>,
-}
-
-export interface OlapLayerTableInput {
-  horizontalPadding?: Maybe<Scalars['Int']>,
-  id?: Maybe<Scalars['String']>,
-  mergeCells?: Maybe<Scalars['Boolean']>,
-  stickyHeader?: Maybe<Scalars['Boolean']>,
-  stickySide?: Maybe<Scalars['Boolean']>,
-  verticalPadding?: Maybe<Scalars['Int']>,
-}
-
-export interface OlapLayerTextStyle {
-   __typename?: 'OlapLayerTextStyle',
-  color?: Maybe<Scalars['String']>,
-  fontSize?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerTextStyleInput {
-  color?: Maybe<Scalars['String']>,
-  fontSize?: Maybe<Scalars['Float']>,
-}
-
-export enum OlapLayerType {
-  Chart = 'CHART',
-  Text = 'TEXT'
-}
-
-export interface OlapLayerVhGrid {
-   __typename?: 'OlapLayerVHGrid',
-  areas?: Maybe<Scalars['Int']>,
-  show?: Maybe<Scalars['Boolean']>,
-}
-
-export interface OlapLayerVhGridInput {
-  areas?: Maybe<Scalars['Int']>,
-  show?: Maybe<Scalars['Boolean']>,
-}
-
-export interface OlapLayerZooming {
-   __typename?: 'OlapLayerZooming',
-  horizontal?: Maybe<OlapLayerZoomingOpts>,
-  vertical?: Maybe<OlapLayerZoomingOpts>,
-}
-
-export interface OlapLayerZoomingInput {
-  horizontal?: Maybe<OlapLayerZoomingOptsInput>,
-  vertical?: Maybe<OlapLayerZoomingOptsInput>,
-}
-
-export interface OlapLayerZoomingOpts {
-   __typename?: 'OlapLayerZoomingOpts',
-  enabled?: Maybe<Scalars['Boolean']>,
-  end?: Maybe<Scalars['Float']>,
-  start?: Maybe<Scalars['Float']>,
-}
-
-export interface OlapLayerZoomingOptsInput {
-  enabled?: Maybe<Scalars['Boolean']>,
-  end?: Maybe<Scalars['Float']>,
-  start?: Maybe<Scalars['Float']>,
-}
-
-export enum OlapLineType {
-  Dashed = 'DASHED',
-  Dotted = 'DOTTED',
-  Solid = 'SOLID'
-}
-
-export enum OlapMarkLineType {
-  Horizontal = 'HORIZONTAL',
-  Vertical = 'VERTICAL'
-}
-
-export enum OlapRequestAgg {
-  ArgMax = 'ARG_MAX',
-  ArgMin = 'ARG_MIN',
-  Avg = 'AVG',
-  Calculated = 'CALCULATED',
-  Count = 'COUNT',
-  Kurtpop = 'KURTPOP',
-  Kurtsamp = 'KURTSAMP',
-  Max = 'MAX',
-  Median = 'MEDIAN',
-  Min = 'MIN',
-  None = 'NONE',
-  Quantile = 'QUANTILE',
-  Skewpop = 'SKEWPOP',
-  Skewsamp = 'SKEWSAMP',
-  Sum = 'SUM',
-  VarPop = 'VAR_POP',
-  VarSamp = 'VAR_SAMP'
-}
-
-export interface OlapRequestArg {
-   __typename?: 'OlapRequestArg',
-  columnId?: Maybe<Scalars['String']>,
-  cubeId?: Maybe<Scalars['String']>,
-  dataType?: Maybe<FieldDataType>,
-  dateFormat?: Maybe<Scalars['String']>,
-  label?: Maybe<Scalars['String']>,
-  type: OlapRequestArgType,
-  value?: Maybe<Scalars['String']>,
-}
-
-export interface OlapRequestArgInput {
-  columnId?: Maybe<Scalars['String']>,
-  cubeId?: Maybe<Scalars['String']>,
-  dataType?: Maybe<FieldDataType>,
-  dateFormat?: Maybe<Scalars['String']>,
-  label?: Maybe<Scalars['String']>,
-  type: OlapRequestArgType,
-  value?: Maybe<Scalars['String']>,
-}
-
-export enum OlapRequestArgType {
-  Column = 'COLUMN',
-  Float = 'FLOAT',
-  Integer = 'INTEGER',
-  String = 'STRING'
-}
-
-export interface OlapRequestConditionInput {
-  field: OlapRequestFieldInput,
-  value?: Maybe<Scalars['String']>,
-}
-
-export interface OlapRequestField {
-   __typename?: 'OlapRequestField',
-  agg: OlapRequestAgg,
-  args?: Maybe<Array<Maybe<OlapRequestArg>>>,
-  calculatedFormula?: Maybe<Array<Maybe<FormulaToken>>>,
-  hierarchyId?: Maybe<Scalars['String']>,
-  id: Scalars['String'],
   name?: Maybe<Scalars['String']>,
-}
-
-export interface OlapRequestFieldInput {
-  agg: OlapRequestAgg,
-  args?: Maybe<Array<Maybe<OlapRequestArgInput>>>,
-  calculatedFormula?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-  hierarchyId?: Maybe<Scalars['String']>,
-  id: Scalars['String'],
-  name?: Maybe<Scalars['String']>,
-}
-
-export interface OlapRequestInput {
-  conditions?: Maybe<Array<Maybe<OlapRequestConditionInput>>>,
-  cubeId?: Maybe<Scalars['String']>,
-  fields?: Maybe<Array<OlapRequestFieldInput>>,
-  format: OlapRequestType,
-  havingFilters?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-  limit?: Maybe<Scalars['Int']>,
-  offset?: Maybe<Scalars['Int']>,
-  scannerId?: Maybe<Scalars['String']>,
-  whereFilters?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-}
-
-export enum OlapRequestType {
-  Axis = 'AXIS',
-  Flat = 'FLAT'
-}
-
-export interface OlapResponse {
-   __typename?: 'OlapResponse',
-  data?: Maybe<Scalars['Json']>,
-}
-
-export enum OlapSeriaType {
-  Bar = 'BAR',
-  Line = 'LINE',
-  Scatter = 'SCATTER'
-}
-
-export enum OlapTextAlign {
-  Center = 'CENTER',
-  Justify = 'JUSTIFY',
-  Left = 'LEFT',
-  Right = 'RIGHT'
-}
-
-export enum OlapTextDecoration {
-  LineThrough = 'LINE_THROUGH',
-  None = 'NONE',
-  Underline = 'UNDERLINE'
-}
-
-export interface OlapTextLayer  extends OlapLayer {
-   __typename?: 'OlapTextLayer',
-  color?: Maybe<Scalars['String']>,
-  fontStyle?: Maybe<OlapFontStyle>,
-  fontWeight?: Maybe<OlapFontWeight>,
-  height?: Maybe<Scalars['Int']>,
-  id: Scalars['UUID'],
-  positionX?: Maybe<Scalars['Int']>,
-  positionY?: Maybe<Scalars['Int']>,
-  size?: Maybe<Scalars['Int']>,
-  text?: Maybe<Scalars['String']>,
-  textAlign?: Maybe<OlapTextAlign>,
-  textDecoration?: Maybe<OlapTextDecoration>,
-  type?: Maybe<OlapLayerType>,
-  width?: Maybe<Scalars['Int']>,
-}
-
-export interface Organisation {
-   __typename?: 'Organisation',
-  acl?: Maybe<Acl>,
-  description?: Maybe<Scalars['String']>,
-  email?: Maybe<Scalars['String']>,
-  id?: Maybe<Scalars['Int']>,
-  name?: Maybe<Scalars['String']>,
-  private?: Maybe<Scalars['Boolean']>,
   url?: Maybe<Scalars['String']>,
 }
 
-export interface OseAcl {
-   __typename?: 'OseAcl',
-  tablesEdit?: Maybe<Scalars['Boolean']>,
-  tablesRead?: Maybe<Scalars['Boolean']>,
+export interface Calendar {
+   __typename?: 'Calendar',
+  dates?: Maybe<Array<Maybe<CalendarDate>>>,
+  endDate?: Maybe<Scalars['Date']>,
+  friday?: Maybe<ExceptionType>,
+  id?: Maybe<Scalars['Int']>,
+  insertedAt?: Maybe<Scalars['Timestamp']>,
+  isActive?: Maybe<Scalars['Boolean']>,
+  monday?: Maybe<ExceptionType>,
+  saturday?: Maybe<ExceptionType>,
+  serviceName?: Maybe<Scalars['String']>,
+  startDate?: Maybe<Scalars['Date']>,
+  sunday?: Maybe<ExceptionType>,
+  thursday?: Maybe<ExceptionType>,
+  trips?: Maybe<Array<Maybe<Trip>>>,
+  tuesday?: Maybe<ExceptionType>,
+  wednesday?: Maybe<ExceptionType>,
 }
 
-export interface OutDbParams {
-   __typename?: 'OutDbParams',
-  db?: Maybe<Scalars['String']>,
-  dbType?: Maybe<DbType>,
-  exportToDb?: Maybe<Scalars['Boolean']>,
-  host?: Maybe<Scalars['String']>,
-  pass?: Maybe<Scalars['String']>,
-  port?: Maybe<Scalars['String']>,
-  tableName?: Maybe<Scalars['String']>,
-  title?: Maybe<Scalars['String']>,
-  user?: Maybe<Scalars['String']>,
+export interface CalendarCreateInput {
+  dates: Array<CalendarDateInput>,
+  endDate: Scalars['Date'],
+  friday: ExceptionType,
+  monday: ExceptionType,
+  saturday: ExceptionType,
+  serviceName?: Maybe<Scalars['String']>,
+  startDate: Scalars['Date'],
+  sunday: ExceptionType,
+  thursday: ExceptionType,
+  tuesday: ExceptionType,
+  wednesday: ExceptionType,
 }
 
-export interface OutDbParamsInput {
-  db?: Maybe<Scalars['String']>,
-  dbType?: Maybe<DbType>,
-  exportToDb?: Maybe<Scalars['Boolean']>,
-  host?: Maybe<Scalars['String']>,
-  pass?: Maybe<Scalars['String']>,
-  port?: Maybe<Scalars['String']>,
-  tableName?: Maybe<Scalars['String']>,
-  title?: Maybe<Scalars['String']>,
-  user?: Maybe<Scalars['String']>,
+export interface CalendarDate {
+   __typename?: 'CalendarDate',
+  date?: Maybe<Scalars['Date']>,
+  exceptionType?: Maybe<ExceptionType>,
+  id?: Maybe<Scalars['Int']>,
+  insertedAt?: Maybe<Scalars['Timestamp']>,
+  isActive?: Maybe<Scalars['Boolean']>,
 }
 
-export enum Periodicity {
-  Custom = 'CUSTOM',
-  Day = 'DAY',
-  Hour = 'HOUR',
-  Month = 'MONTH',
-  None = 'NONE',
-  Quarter = 'QUARTER',
-  Week = 'WEEK'
+export interface CalendarDateInput {
+  date?: Maybe<Scalars['Date']>,
+  exceptionType?: Maybe<ExceptionType>,
 }
 
-export enum PeriodicityType {
-  Days = 'DAYS',
-  Hours = 'HOURS',
-  Never = 'NEVER',
-  Once = 'ONCE'
+export interface CalendarUpdateInput {
+  dates?: Maybe<Array<CalendarDateInput>>,
+  endDate?: Maybe<Scalars['Date']>,
+  friday?: Maybe<ExceptionType>,
+  id: Scalars['Int'],
+  monday?: Maybe<ExceptionType>,
+  saturday?: Maybe<ExceptionType>,
+  serviceName?: Maybe<Scalars['String']>,
+  startDate?: Maybe<Scalars['Date']>,
+  sunday?: Maybe<ExceptionType>,
+  thursday?: Maybe<ExceptionType>,
+  tuesday?: Maybe<ExceptionType>,
+  wednesday?: Maybe<ExceptionType>,
 }
 
-export interface PositionInput {
-  value?: Maybe<Scalars['Int']>,
+export enum DataSource {
+  GtfsSpb = 'GTFS_SPB',
+  Native = 'NATIVE'
 }
 
-export interface Progress {
-   __typename?: 'Progress',
-  allCount?: Maybe<Scalars['Int']>,
-  doneCount?: Maybe<Scalars['Int']>,
-  label?: Maybe<Scalars['String']>,
+
+export interface Driver {
+   __typename?: 'Driver',
+  agency?: Maybe<Agency>,
+  agencyId?: Maybe<Scalars['UUID']>,
+  allowedVehiclesTypes?: Maybe<Array<Maybe<RouteType>>>,
+  avatar?: Maybe<Avatar>,
+  avatarId?: Maybe<Scalars['UUID']>,
+  drivingLicenseNumber?: Maybe<Scalars['String']>,
+  email?: Maybe<Scalars['String']>,
+  firstName?: Maybe<Scalars['String']>,
+  id?: Maybe<Scalars['Int']>,
+  lastName?: Maybe<Scalars['String']>,
+  middleName?: Maybe<Scalars['String']>,
+  phone?: Maybe<Scalars['String']>,
+  route?: Maybe<Route>,
+  trips?: Maybe<Array<Maybe<Trip>>>,
+  vehicle?: Maybe<Vehicle>,
 }
 
-export enum ProgressStatus {
-  Created = 'CREATED',
-  Done = 'DONE',
-  Failed = 'FAILED',
-  InProgress = 'IN_PROGRESS',
-  Stopped = 'STOPPED'
+export interface DriverInput {
+  allowedVehiclesTypes?: Maybe<Array<Maybe<RouteType>>>,
+  avatarId?: Maybe<Scalars['UUID']>,
+  drivingLicenseNumber?: Maybe<Scalars['String']>,
+  email?: Maybe<Scalars['String']>,
+  firstName?: Maybe<Scalars['String']>,
+  lastName?: Maybe<Scalars['String']>,
+  middleName?: Maybe<Scalars['String']>,
+  phone?: Maybe<Scalars['String']>,
 }
 
-export enum ResultType {
-  Date = 'DATE',
-  Number = 'NUMBER',
-  String = 'STRING'
+export interface DriverUpdateInput {
+  allowedVehiclesTypes?: Maybe<Array<Maybe<RouteType>>>,
+  avatarId?: Maybe<Scalars['UUID']>,
+  drivingLicenseNumber?: Maybe<Scalars['String']>,
+  email?: Maybe<Scalars['String']>,
+  firstName?: Maybe<Scalars['String']>,
+  id: Scalars['Int'],
+  lastName?: Maybe<Scalars['String']>,
+  middleName?: Maybe<Scalars['String']>,
+  phone?: Maybe<Scalars['String']>,
+}
+
+export enum ExceptionType {
+  Avaliable = 'AVALIABLE',
+  Unavaliable = 'UNAVALIABLE'
+}
+
+export enum InstructionType {
+  Await = 'AWAIT',
+  SlowDown = 'SLOW_DOWN',
+  SpeedUp = 'SPEED_UP'
+}
+
+
+export enum LocationType {
+  BoardingArea = 'BOARDING_AREA',
+  Entrance = 'ENTRANCE',
+  Node = 'NODE',
+  RailwayStation = 'RAILWAY_STATION',
+  Station = 'STATION',
+  Stop = 'STOP'
+}
+
+export interface NetworkVersion {
+   __typename?: 'NetworkVersion',
+  id?: Maybe<Scalars['Int']>,
+  isActive?: Maybe<Scalars['Boolean']>,
+  name?: Maybe<Scalars['String']>,
+  parentVersion?: Maybe<NetworkVersion>,
+}
+
+export interface NetworkVersionCreateInput {
+  name?: Maybe<Scalars['String']>,
+  parentId?: Maybe<Scalars['Int']>,
+}
+
+export interface NetworkVersionUpdateInput {
+  id: Scalars['Int'],
+  name?: Maybe<Scalars['String']>,
+}
+
+export enum OrderDirection {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
+
+export interface Road {
+   __typename?: 'Road',
+  access?: Maybe<RoadAccess>,
+  bridge?: Maybe<Scalars['Boolean']>,
+  class?: Maybe<RoadClass>,
+  geometry?: Maybe<Array<Maybe<Array<Maybe<Scalars['Float']>>>>>,
+  id?: Maybe<Scalars['Int']>,
+  lanes?: Maybe<Scalars['Int']>,
+  name?: Maybe<Scalars['String']>,
+  oneway?: Maybe<RoadDirection>,
+  osmId?: Maybe<Scalars['Int']>,
+  ref?: Maybe<Scalars['String']>,
+  service?: Maybe<Scalars['String']>,
+  tunnel?: Maybe<Scalars['Boolean']>,
+  type?: Maybe<RoadType>,
+  zOrder?: Maybe<Scalars['Int']>,
+}
+
+export enum RoadAccess {
+  Agricultural = 'AGRICULTURAL',
+  Commercial = 'COMMERCIAL',
+  Customers = 'CUSTOMERS',
+  Delivery = 'DELIVERY',
+  Designated = 'DESIGNATED',
+  Destination = 'DESTINATION',
+  Foot = 'FOOT',
+  Forestry = 'FORESTRY',
+  Illegal = 'ILLEGAL',
+  No = 'NO',
+  Official = 'OFFICIAL',
+  Permissive = 'PERMISSIVE',
+  Permit = 'PERMIT',
+  Private = 'PRIVATE',
+  Restricted = 'RESTRICTED',
+  Undefined = 'UNDEFINED',
+  Unknown = 'UNKNOWN',
+  Yes = 'YES'
+}
+
+export enum RoadClass {
+  Highway = 'HIGHWAY',
+  ManMade = 'MAN_MADE',
+  Railway = 'RAILWAY'
+}
+
+export enum RoadDirection {
+  Both = 'BOTH',
+  Forward = 'FORWARD',
+  Reverse = 'REVERSE'
+}
+
+export enum RoadType {
+  Bridleway = 'BRIDLEWAY',
+  Cycleway = 'CYCLEWAY',
+  Disused = 'DISUSED',
+  Footway = 'FOOTWAY',
+  Groyne = 'GROYNE',
+  LivingStreet = 'LIVING_STREET',
+  Monorail = 'MONORAIL',
+  Motorway = 'MOTORWAY',
+  MotorwayLink = 'MOTORWAY_LINK',
+  NarrowGauge = 'NARROW_GAUGE',
+  Path = 'PATH',
+  Pedestrian = 'PEDESTRIAN',
+  Pier = 'PIER',
+  Preserved = 'PRESERVED',
+  Primary = 'PRIMARY',
+  PrimaryLink = 'PRIMARY_LINK',
+  Raceway = 'RACEWAY',
+  Rail = 'RAIL',
+  Residential = 'RESIDENTIAL',
+  Road = 'ROAD',
+  Secondary = 'SECONDARY',
+  SecondaryLink = 'SECONDARY_LINK',
+  Service = 'SERVICE',
+  Steps = 'STEPS',
+  Subway = 'SUBWAY',
+  Tertiary = 'TERTIARY',
+  TertiaryLink = 'TERTIARY_LINK',
+  Track = 'TRACK',
+  Tram = 'TRAM',
+  Trunk = 'TRUNK',
+  TrunkLink = 'TRUNK_LINK',
+  Unclassified = 'UNCLASSIFIED'
+}
+
+export interface Role {
+   __typename?: 'Role',
+  abilities?: Maybe<Array<Maybe<Abilities>>>,
+  id?: Maybe<Scalars['Int']>,
+  name?: Maybe<Scalars['String']>,
+  users?: Maybe<Array<Maybe<User>>>,
+}
+
+export interface RoleInput {
+  abilities: Array<Maybe<Abilities>>,
+  name: Scalars['String'],
+}
+
+export interface RoleUpdateInput {
+  abilities?: Maybe<Array<Maybe<Abilities>>>,
+  id: Scalars['String'],
+  name?: Maybe<Scalars['String']>,
 }
 
 export interface RootMutationType {
    __typename?: 'RootMutationType',
-  /** Unshare folder */
-  unshareFolder?: Maybe<Scalars['String']>,
-  /** Update datasource */
-  updateDatasource?: Maybe<Datasource>,
-  /** Delete dashboard */
-  olapDashboardDelete?: Maybe<Scalars['Boolean']>,
-  /** Delete step */
-  deleteStep?: Maybe<Scalars['String']>,
-  /** Create OSE table */
-  createOseTable?: Maybe<Scalars['String']>,
-  /** Update hierarchy */
-  updateHierarchy?: Maybe<Hierarchy>,
-  /** Create step */
-  createStep?: Maybe<Step>,
-  /** Close folder */
-  closeFolder?: Maybe<Scalars['String']>,
-  /** Close all folders */
-  closeAllFolders?: Maybe<Scalars['String']>,
-  /** Set where filter */
-  setWhereFilter?: Maybe<Step>,
-  /** Create dashboard */
-  olapDashboardCreate?: Maybe<OlapDashboard>,
-  /** Calculate join */
-  calculateJoin?: Maybe<Step>,
-  /** Delete datasources */
-  deleteDatasource?: Maybe<Scalars['String']>,
-  /** Create hierarchy */
-  createHierarchy?: Maybe<Hierarchy>,
-  /** Delete change */
-  deleteChange?: Maybe<Array<Maybe<Column>>>,
-  /** Set join steps */
-  setJoinSteps?: Maybe<Step>,
-  /** Delete connection */
-  deleteConnection?: Maybe<Scalars['String']>,
-  /** Refresh session */
-  sessionUpdate?: Maybe<Session>,
-  /** Update connection */
-  updateConnection?: Maybe<Connection>,
-  /** Delete indicator */
-  deleteIndicator?: Maybe<Scalars['String']>,
-  /** Delete folder */
-  deleteFolder?: Maybe<Scalars['String']>,
-  /** Export Step */
-  exportStep?: Maybe<Scalars['String']>,
-  /** import file */
-  importFile?: Maybe<Array<Maybe<Step>>>,
-  /** Create column */
-  createColumn?: Maybe<Column>,
-  /** Update flow */
-  updateFlow?: Maybe<Flow>,
-  /** Run step */
-  runStep?: Maybe<Scalars['String']>,
-  /** Create folder */
-  createFolder?: Maybe<Folder>,
-  /** load table to memory */
-  loadToMemory?: Maybe<Table>,
-  /** Create change */
-  createChange?: Maybe<Change>,
-  /** Update organisation */
-  organisationsUpdate?: Maybe<Organisation>,
-  /** Share folder */
-  shareFolder?: Maybe<Scalars['String']>,
-  /** Pin folder */
-  pinFolder?: Maybe<Folder>,
-  /** Get csv export link */
-  getCsvExportLink?: Maybe<Scalars['String']>,
-  /** remove table from memory */
-  removeFromMemory?: Maybe<Table>,
-  /** Unpin folder */
-  unpinFolder?: Maybe<Scalars['String']>,
-  /** Delete hierarchy */
-  deleteHierarchy?: Maybe<Scalars['String']>,
-  /** Sign in */
-  sessionCreate?: Maybe<Session>,
-  /** Update object */
-  updateObject?: Maybe<Object>,
-  /** Add steps to union */
-  addStepsToUnion?: Maybe<Step>,
-  /** Update step */
-  updateStep?: Maybe<Step>,
-  /** Update indicator */
-  updateIndicator?: Maybe<Indicator>,
-  /** Create datasource */
-  createDatasource?: Maybe<Datasource>,
-  /** stop datasource import */
-  stopImport?: Maybe<Datasource>,
+  agencyCreate?: Maybe<Agency>,
+  agencyDelete?: Maybe<Agency>,
+  agencyUpdate?: Maybe<Agency>,
   /** Create attachment */
   attachmentCreate?: Maybe<Attachment>,
-  /** Unpin object */
-  unpinObject?: Maybe<Scalars['String']>,
-  /** Export Step to MADD */
-  exportStepToMadd?: Maybe<Scalars['String']>,
-  /** Update folder */
-  updateFolder?: Maybe<Folder>,
-  /** Add step to union */
-  addStepToUnion?: Maybe<Step>,
-  /** Update field */
-  updateField?: Maybe<Field>,
-  /** Create indicator */
-  createIndicator?: Maybe<Indicator>,
-  /** Create flow */
-  createFlow?: Maybe<Flow>,
-  /** Get duplicates */
-  getDuplicates?: Maybe<Array<Maybe<Array<Maybe<Scalars['Int']>>>>>,
-  /** Update dashboard */
-  olapDashboardUpdate?: Maybe<OlapDashboard>,
-  /** Open folder */
-  openFolder?: Maybe<Folder>,
-  /** Get total column stats */
-  getTotalColumnStats?: Maybe<Array<Maybe<ColumnStat>>>,
   /** Delete attachment */
   attachmentDelete?: Maybe<Scalars['String']>,
-  /** Delete steps */
-  deleteSteps?: Maybe<Scalars['String']>,
-  /** Pin object */
-  pinObject?: Maybe<Scalars['String']>,
-  /** Delete organisation */
-  organisationsDelete?: Maybe<Scalars['Boolean']>,
-  /** Update table */
-  updateTable?: Maybe<Table>,
-  /** Sign out */
-  sessionDelete?: Maybe<Scalars['Boolean']>,
-  /** Create connection */
-  createConnection?: Maybe<Connection>,
-  /** Create organisation */
-  organisationsCreate?: Maybe<Organisation>,
-  /** Delete flow */
-  deleteFlow?: Maybe<Scalars['String']>,
-  /** remove step from union */
-  removeStepFromUnion?: Maybe<Step>,
-  /** init datasource import */
-  initImport?: Maybe<Datasource>,
+  /** Create avatar */
+  avatarCreate?: Maybe<Avatar>,
+  /** Delete avatar */
+  avatarDelete?: Maybe<Scalars['String']>,
+  brandCreate?: Maybe<VehicleBrand>,
+  brandDelete?: Maybe<VehicleBrand>,
+  brandUpdate?: Maybe<VehicleBrand>,
+  calendarCreate?: Maybe<Calendar>,
+  calendarDelete?: Maybe<Calendar>,
+  calendarUpdate?: Maybe<Calendar>,
+  driverAuthCodeReset?: Maybe<Scalars['String']>,
+  driverCreate?: Maybe<Driver>,
+  driverDelete?: Maybe<Driver>,
+  driverUpdate?: Maybe<Driver>,
+  instructionSend?: Maybe<Scalars['String']>,
+  modelCreate?: Maybe<VehicleModel>,
+  modelDelete?: Maybe<VehicleModel>,
+  modelUpdate?: Maybe<VehicleModel>,
+  networkVersionDelete?: Maybe<NetworkVersion>,
+  networkVersionSwitch?: Maybe<NetworkVersion>,
+  networkVersionUpdate?: Maybe<NetworkVersion>,
+  networkVersionsCreate?: Maybe<NetworkVersion>,
+  roleCreate?: Maybe<Role>,
+  roleUpdate?: Maybe<Role>,
+  routeCreate?: Maybe<Route>,
+  routeDelete?: Maybe<Route>,
+  routeUpdate?: Maybe<Route>,
+  sessionCreate?: Maybe<UserSession>,
+  sessionDelete?: Maybe<Scalars['String']>,
+  sessionRefresh?: Maybe<UserSession>,
+  stopCreate?: Maybe<Stop>,
+  stopDelete?: Maybe<Stop>,
+  stopUpdate?: Maybe<Stop>,
+  tripCreate?: Maybe<Trip>,
+  tripDelete?: Maybe<Trip>,
+  tripUpdate?: Maybe<Trip>,
+  userCreate?: Maybe<User>,
+  /** DEV */
+  userDelete?: Maybe<User>,
+  userSelfUpdate?: Maybe<User>,
+  userUpdate?: Maybe<User>,
+  vehicleCreate?: Maybe<Vehicle>,
+  vehicleDelete?: Maybe<Vehicle>,
+  vehicleUpdate?: Maybe<Vehicle>,
 }
 
 
-export interface RootMutationTypeUnshareFolderArgs {
-  id: Scalars['Int']
+export interface RootMutationTypeAgencyCreateArgs {
+  agency: AgencyCreateInput
 }
 
 
-export interface RootMutationTypeUpdateDatasourceArgs {
-  dbParams?: Maybe<DbParamsInp>,
-  eisParams?: Maybe<EisParamsInp>,
-  id?: Maybe<Scalars['Int']>,
-  periodicityType?: Maybe<PeriodicityType>,
-  periodicityValue?: Maybe<Scalars['Float']>,
-  title?: Maybe<Scalars['String']>
+export interface RootMutationTypeAgencyDeleteArgs {
+  agencyId: Scalars['UUID']
 }
 
 
-export interface RootMutationTypeOlapDashboardDeleteArgs {
+export interface RootMutationTypeAgencyUpdateArgs {
+  agency: AgencyUpdateInput
+}
+
+
+export interface RootMutationTypeAttachmentCreateArgs {
+  file: Scalars['Upload']
+}
+
+
+export interface RootMutationTypeAttachmentDeleteArgs {
   id: Scalars['UUID']
 }
 
 
-export interface RootMutationTypeDeleteStepArgs {
+export interface RootMutationTypeAvatarCreateArgs {
+  file: Scalars['Upload']
+}
+
+
+export interface RootMutationTypeAvatarDeleteArgs {
+  id: Scalars['UUID']
+}
+
+
+export interface RootMutationTypeBrandCreateArgs {
+  name: Scalars['String']
+}
+
+
+export interface RootMutationTypeBrandDeleteArgs {
   id: Scalars['Int']
 }
 
 
-export interface RootMutationTypeCreateOseTableArgs {
-  indicatorId: Scalars['Int']
-}
-
-
-export interface RootMutationTypeUpdateHierarchyArgs {
-  description?: Maybe<Scalars['String']>,
-  dims?: Maybe<Array<Maybe<HierarchyDimInput>>>,
+export interface RootMutationTypeBrandUpdateArgs {
   id: Scalars['Int'],
-  isInvisible?: Maybe<Scalars['Boolean']>,
-  isOpened?: Maybe<Scalars['Boolean']>,
-  position?: Maybe<Scalars['Int']>,
-  title?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
 }
 
 
-export interface RootMutationTypeCreateStepArgs {
-  flowId: Scalars['Int'],
-  joinType?: Maybe<JoinType>,
-  positionX?: Maybe<Scalars['Int']>,
-  positionY?: Maybe<Scalars['Int']>,
-  sourceStepId?: Maybe<Scalars['Int']>,
-  sourceStepIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
-  stepType: StepType,
-  title?: Maybe<Scalars['String']>
+export interface RootMutationTypeCalendarCreateArgs {
+  obj: CalendarCreateInput
 }
 
 
-export interface RootMutationTypeCloseFolderArgs {
-  id: Scalars['Int'],
-  pinnedFolderId?: Maybe<Scalars['Int']>
+export interface RootMutationTypeCalendarDeleteArgs {
+  calendarId?: Maybe<Scalars['Int']>
 }
 
 
-export interface RootMutationTypeCloseAllFoldersArgs {
-  exceptIds?: Maybe<Array<Maybe<Scalars['Int']>>>
+export interface RootMutationTypeCalendarUpdateArgs {
+  obj: CalendarUpdateInput
 }
 
 
-export interface RootMutationTypeSetWhereFilterArgs {
-  stepId: Scalars['Int'],
-  whereCond?: Maybe<Array<Maybe<FormulaTokenInput>>>
+export interface RootMutationTypeDriverAuthCodeResetArgs {
+  driverId: Scalars['Int']
 }
 
 
-export interface RootMutationTypeOlapDashboardCreateArgs {
-  dashboard: OlapDashboardInput,
-  folderId?: Maybe<Scalars['Int']>
+export interface RootMutationTypeDriverCreateArgs {
+  driver: DriverInput
 }
 
 
-export interface RootMutationTypeCalculateJoinArgs {
-  joinId: Scalars['Int'],
-  joinType: JoinType,
-  leftStepColumnId: Scalars['Int'],
-  leftStepId: Scalars['Int'],
-  rightStepColumnId: Scalars['Int'],
-  rightStepId: Scalars['Int']
+export interface RootMutationTypeDriverDeleteArgs {
+  driverId: Scalars['Int']
 }
 
 
-export interface RootMutationTypeDeleteDatasourceArgs {
-  id: Scalars['Int']
+export interface RootMutationTypeDriverUpdateArgs {
+  driver: DriverUpdateInput
 }
 
 
-export interface RootMutationTypeCreateHierarchyArgs {
-  tableId: Scalars['Int'],
-  title: Scalars['String']
+export interface RootMutationTypeInstructionSendArgs {
+  instructionType: InstructionType,
+  interval?: Maybe<Scalars['Int']>,
+  stopId?: Maybe<Scalars['Int']>,
+  vehicleId: Scalars['Int']
 }
 
 
-export interface RootMutationTypeDeleteChangeArgs {
-  id: Scalars['Int']
+export interface RootMutationTypeModelCreateArgs {
+  brandId: Scalars['Int'],
+  name: Scalars['String']
 }
 
 
-export interface RootMutationTypeSetJoinStepsArgs {
-  joinId: Scalars['Int'],
-  leftStepId?: Maybe<Scalars['Int']>,
-  rightStepId?: Maybe<Scalars['Int']>
-}
-
-
-export interface RootMutationTypeDeleteConnectionArgs {
+export interface RootMutationTypeModelDeleteArgs {
   id?: Maybe<Scalars['Int']>
 }
 
 
-export interface RootMutationTypeSessionUpdateArgs {
-  refreshToken: Scalars['UUID']
-}
-
-
-export interface RootMutationTypeUpdateConnectionArgs {
-  id?: Maybe<Scalars['Int']>,
-  joinType?: Maybe<JoinType>,
-  leftTableFieldId?: Maybe<Scalars['String']>,
-  leftTableId?: Maybe<Scalars['Int']>,
-  rightTableFieldId?: Maybe<Scalars['String']>,
-  rightTableId?: Maybe<Scalars['Int']>
-}
-
-
-export interface RootMutationTypeDeleteIndicatorArgs {
-  id: Scalars['Int']
-}
-
-
-export interface RootMutationTypeDeleteFolderArgs {
-  id: Scalars['Int']
-}
-
-
-export interface RootMutationTypeExportStepArgs {
-  db?: Maybe<Scalars['String']>,
-  dbType?: Maybe<DbType>,
-  host?: Maybe<Scalars['String']>,
+export interface RootMutationTypeModelUpdateArgs {
+  brandId?: Maybe<Scalars['Int']>,
   id: Scalars['Int'],
-  pass?: Maybe<Scalars['String']>,
-  port?: Maybe<Scalars['String']>,
-  tableName?: Maybe<Scalars['String']>,
-  user?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']>
 }
 
 
-export interface RootMutationTypeImportFileArgs {
-  file?: Maybe<Scalars['Upload']>,
-  flowId: Scalars['Int'],
-  positionX?: Maybe<Scalars['Int']>,
-  positionY?: Maybe<Scalars['Int']>
+export interface RootMutationTypeNetworkVersionDeleteArgs {
+  networkVersionId?: Maybe<Scalars['Int']>
 }
 
 
-export interface RootMutationTypeCreateColumnArgs {
-  formula: Array<Maybe<FormulaTokenInput>>,
-  stepId: Scalars['Int'],
-  title: Scalars['String']
+export interface RootMutationTypeNetworkVersionSwitchArgs {
+  networkVersionId?: Maybe<Scalars['Int']>
 }
 
 
-export interface RootMutationTypeUpdateFlowArgs {
-  id: Scalars['Int'],
-  title?: Maybe<Scalars['String']>
+export interface RootMutationTypeNetworkVersionUpdateArgs {
+  obj: NetworkVersionUpdateInput
 }
 
 
-export interface RootMutationTypeRunStepArgs {
-  stepId: Scalars['Int']
+export interface RootMutationTypeNetworkVersionsCreateArgs {
+  obj: NetworkVersionCreateInput
 }
 
 
-export interface RootMutationTypeCreateFolderArgs {
-  folderId?: Maybe<Scalars['Int']>,
-  title: Scalars['String']
+export interface RootMutationTypeRoleCreateArgs {
+  role: RoleInput
 }
 
 
-export interface RootMutationTypeLoadToMemoryArgs {
-  id: Scalars['Int']
+export interface RootMutationTypeRoleUpdateArgs {
+  role: RoleUpdateInput
 }
 
 
-export interface RootMutationTypeCreateChangeArgs {
-  changeCaseTypeInput?: Maybe<ChangeCaseTypeInput>,
-  changeType?: Maybe<ChangeType>,
-  codecInput?: Maybe<CodecInput>,
-  columnId?: Maybe<Scalars['Int']>,
-  columnIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
-  dataTypeInput?: Maybe<DataTypeInput>,
-  includeInput?: Maybe<IncludeInput>,
-  positionInput?: Maybe<PositionInput>,
-  stepId: Scalars['Int'],
-  titleInput?: Maybe<TitleInput>,
-  unionColumnsInput?: Maybe<UnionColumnsInput>,
-  widthInput?: Maybe<WidthInput>
+export interface RootMutationTypeRouteCreateArgs {
+  obj: RouteCreateInput
 }
 
 
-export interface RootMutationTypeOrganisationsUpdateArgs {
-  description?: Maybe<Scalars['String']>,
-  email?: Maybe<Scalars['String']>,
-  id: Scalars['Int'],
-  name: Scalars['String'],
-  private?: Maybe<Scalars['Boolean']>,
-  url: Scalars['String']
+export interface RootMutationTypeRouteDeleteArgs {
+  id: Scalars['UUID']
 }
 
 
-export interface RootMutationTypeShareFolderArgs {
-  id: Scalars['Int']
-}
-
-
-export interface RootMutationTypePinFolderArgs {
-  folderId: Scalars['Int']
-}
-
-
-export interface RootMutationTypeGetCsvExportLinkArgs {
-  stepId: Scalars['Int']
-}
-
-
-export interface RootMutationTypeRemoveFromMemoryArgs {
-  id: Scalars['Int']
-}
-
-
-export interface RootMutationTypeUnpinFolderArgs {
-  folderId: Scalars['Int']
-}
-
-
-export interface RootMutationTypeDeleteHierarchyArgs {
-  id: Scalars['Int']
+export interface RootMutationTypeRouteUpdateArgs {
+  obj: RouteUpdateInput
 }
 
 
@@ -1714,631 +547,513 @@ export interface RootMutationTypeSessionCreateArgs {
 }
 
 
-export interface RootMutationTypeUpdateObjectArgs {
-  attachmentId?: Maybe<Scalars['String']>,
-  folderId?: Maybe<Scalars['Int']>,
-  id: Scalars['String'],
-  title?: Maybe<Scalars['String']>
+export interface RootMutationTypeSessionRefreshArgs {
+  refreshToken: Scalars['String']
 }
 
 
-export interface RootMutationTypeAddStepsToUnionArgs {
-  stepIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
-  unionId: Scalars['Int']
+export interface RootMutationTypeStopCreateArgs {
+  obj: StopCreateInput
 }
 
 
-export interface RootMutationTypeUpdateStepArgs {
-  dateColumn?: Maybe<Scalars['String']>,
-  exportToMadd?: Maybe<Scalars['Boolean']>,
-  fullUpdate?: Maybe<Scalars['Boolean']>,
-  id: Scalars['Int'],
-  outDbParams?: Maybe<Array<Maybe<OutDbParamsInput>>>,
-  periodicity?: Maybe<Scalars['Int']>,
-  positionX?: Maybe<Scalars['Int']>,
-  positionY?: Maybe<Scalars['Int']>,
-  title?: Maybe<Scalars['String']>
-}
-
-
-export interface RootMutationTypeUpdateIndicatorArgs {
-  displayColumnIds?: Maybe<Array<Maybe<Scalars['String']>>>,
-  displayFKeyId?: Maybe<Scalars['String']>,
-  displayTableId?: Maybe<Scalars['Int']>,
-  formula?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-  id: Scalars['Int'],
-  periodicity?: Maybe<Periodicity>,
-  periodicityDays?: Maybe<Scalars['Int']>,
-  showCountedFormula?: Maybe<Scalars['Boolean']>,
-  sortType?: Maybe<SortType>,
-  sortValue?: Maybe<Scalars['Float']>,
-  sortValueType?: Maybe<SortValueType>,
-  title: Scalars['String']
-}
-
-
-export interface RootMutationTypeCreateDatasourceArgs {
-  dbParams?: Maybe<DbParamsInp>,
-  eisParams?: Maybe<EisParamsInp>,
-  folderId?: Maybe<Scalars['Int']>,
-  periodicityType?: Maybe<PeriodicityType>,
-  periodicityValue?: Maybe<Scalars['Float']>,
-  sourceType?: Maybe<SourceType>,
-  title?: Maybe<Scalars['String']>
-}
-
-
-export interface RootMutationTypeStopImportArgs {
-  datasourceId?: Maybe<Scalars['Int']>
-}
-
-
-export interface RootMutationTypeAttachmentCreateArgs {
-  file?: Maybe<Scalars['Upload']>
-}
-
-
-export interface RootMutationTypeUnpinObjectArgs {
-  id: Scalars['String']
-}
-
-
-export interface RootMutationTypeExportStepToMaddArgs {
+export interface RootMutationTypeStopDeleteArgs {
   id: Scalars['Int']
 }
 
 
-export interface RootMutationTypeUpdateFolderArgs {
-  folderId?: Maybe<Scalars['Int']>,
-  id: Scalars['Int'],
-  title?: Maybe<Scalars['String']>
+export interface RootMutationTypeStopUpdateArgs {
+  obj: StopUpdateInput
 }
 
 
-export interface RootMutationTypeAddStepToUnionArgs {
-  stepId: Scalars['Int'],
-  unionId: Scalars['Int']
+export interface RootMutationTypeTripCreateArgs {
+  obj: TripCreateInput
 }
 
 
-export interface RootMutationTypeUpdateFieldArgs {
-  description?: Maybe<Scalars['String']>,
-  fieldType?: Maybe<FieldType>,
-  id: Scalars['String'],
-  isFKey?: Maybe<Scalars['Boolean']>,
-  isInvisible?: Maybe<Scalars['Boolean']>,
-  position?: Maybe<Scalars['Int']>,
-  postfix?: Maybe<Scalars['String']>,
-  title?: Maybe<Scalars['String']>
-}
-
-
-export interface RootMutationTypeCreateIndicatorArgs {
-  displayColumnIds?: Maybe<Array<Maybe<Scalars['String']>>>,
-  displayFKeyId?: Maybe<Scalars['String']>,
-  displayTableId?: Maybe<Scalars['Int']>,
-  folderId?: Maybe<Scalars['Int']>,
-  formula?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-  periodicity?: Maybe<Periodicity>,
-  periodicityDays?: Maybe<Scalars['Int']>,
-  showCountedFormula?: Maybe<Scalars['Boolean']>,
-  sortType?: Maybe<SortType>,
-  sortValue?: Maybe<Scalars['Float']>,
-  sortValueType?: Maybe<SortValueType>,
-  title: Scalars['String']
-}
-
-
-export interface RootMutationTypeCreateFlowArgs {
-  folderId?: Maybe<Scalars['Int']>,
-  title: Scalars['String']
-}
-
-
-export interface RootMutationTypeGetDuplicatesArgs {
-  stepId: Scalars['Int']
-}
-
-
-export interface RootMutationTypeOlapDashboardUpdateArgs {
-  dashboard: OlapDashboardInput,
-  id: Scalars['UUID']
-}
-
-
-export interface RootMutationTypeOpenFolderArgs {
-  id: Scalars['Int'],
-  pinnedFolderId?: Maybe<Scalars['Int']>
-}
-
-
-export interface RootMutationTypeGetTotalColumnStatsArgs {
-  columnIds?: Maybe<Array<Maybe<Scalars['Int']>>>
-}
-
-
-export interface RootMutationTypeAttachmentDeleteArgs {
-  id?: Maybe<Scalars['UUID']>
-}
-
-
-export interface RootMutationTypeDeleteStepsArgs {
-  ids?: Maybe<Array<Maybe<Scalars['Int']>>>
-}
-
-
-export interface RootMutationTypePinObjectArgs {
-  id: Scalars['String']
-}
-
-
-export interface RootMutationTypeOrganisationsDeleteArgs {
+export interface RootMutationTypeTripDeleteArgs {
   id: Scalars['Int']
 }
 
 
-export interface RootMutationTypeUpdateTableArgs {
-  cubeDescription?: Maybe<Scalars['String']>,
-  cubeTitle?: Maybe<Scalars['String']>,
-  description?: Maybe<Scalars['String']>,
-  id: Scalars['Int'],
-  isInvisible?: Maybe<Scalars['Boolean']>,
-  isOpened?: Maybe<Scalars['Boolean']>,
-  positionX?: Maybe<Scalars['Int']>,
-  positionY?: Maybe<Scalars['Int']>,
-  tableType?: Maybe<TableType>,
-  title?: Maybe<Scalars['String']>
+export interface RootMutationTypeTripUpdateArgs {
+  obj: TripUpdateInput
 }
 
 
-export interface RootMutationTypeCreateConnectionArgs {
-  joinType?: Maybe<JoinType>,
-  leftTableFieldId?: Maybe<Scalars['String']>,
-  leftTableId?: Maybe<Scalars['Int']>,
-  rightTableFieldId?: Maybe<Scalars['String']>,
-  rightTableId?: Maybe<Scalars['Int']>
+export interface RootMutationTypeUserCreateArgs {
+  user: UserInput
 }
 
 
-export interface RootMutationTypeOrganisationsCreateArgs {
-  description?: Maybe<Scalars['String']>,
-  email?: Maybe<Scalars['String']>,
-  name: Scalars['String'],
-  private?: Maybe<Scalars['Boolean']>,
-  url: Scalars['String']
+export interface RootMutationTypeUserDeleteArgs {
+  userId: Scalars['UUID']
 }
 
 
-export interface RootMutationTypeDeleteFlowArgs {
+export interface RootMutationTypeUserSelfUpdateArgs {
+  user: UserSelfUpdateInput
+}
+
+
+export interface RootMutationTypeUserUpdateArgs {
+  user: UserUpdateInput
+}
+
+
+export interface RootMutationTypeVehicleCreateArgs {
+  vehicle: VehicleCreateInput
+}
+
+
+export interface RootMutationTypeVehicleDeleteArgs {
   id: Scalars['Int']
 }
 
 
-export interface RootMutationTypeRemoveStepFromUnionArgs {
-  stepId: Scalars['Int'],
-  unionId: Scalars['Int']
-}
-
-
-export interface RootMutationTypeInitImportArgs {
-  datasourceId?: Maybe<Scalars['Int']>
+export interface RootMutationTypeVehicleUpdateArgs {
+  vehicle: VehicleUpdateInput
 }
 
 export interface RootQueryType {
    __typename?: 'RootQueryType',
-  /** chech_indicator_formula */
-  chechIndicatorFormula?: Maybe<Scalars['String']>,
-  /** check_where_formula */
-  checkWhereFormula?: Maybe<Scalars['String']>,
-  /** Get column stats by formula */
-  getColumnStatsByFormula?: Maybe<Array<Maybe<ColumnStat>>>,
-  /** Get column values */
-  getColumnValues?: Maybe<Array<Maybe<Scalars['String']>>>,
-  /** Get columns */
-  getColumns?: Maybe<Array<Maybe<Column>>>,
-  /** Get datasources */
-  getDatasources?: Maybe<Array<Maybe<Datasource>>>,
-  /** get db tables */
-  getDbTables?: Maybe<Array<Maybe<DbTable>>>,
-  /** Get autocomplete */
-  getEtlStepAutocomplete?: Maybe<Array<Maybe<Autocomplete>>>,
-  /** Get flows */
-  getFlows?: Maybe<Array<Maybe<Flow>>>,
-  /** Get folder trees */
-  getFolderTree?: Maybe<Trees>,
-  /** Get folders */
-  getFolders?: Maybe<Array<Maybe<Folder>>>,
-  /** Get functions list */
-  getFunctions?: Maybe<Array<Maybe<Function>>>,
-  /** Get hierarchies */
-  getHierarchies?: Maybe<Array<Maybe<Hierarchy>>>,
-  /** Get indicator base rating */
-  getIndicatorBaseRating?: Maybe<Array<Maybe<Array<Maybe<Scalars['String']>>>>>,
-  /** Get indicators */
-  getIndicators?: Maybe<Array<Maybe<Indicator>>>,
-  /** Get indicators autocomplete */
-  getIndicatorsAutocomplete?: Maybe<Array<Maybe<IndicatorsAutocomplete>>>,
-  /** Get objects */
-  getObjects?: Maybe<Array<Maybe<Object>>>,
-  /** for socket_message to appear in schema */
-  getSocketMessage?: Maybe<SocketMessage>,
-  /** Get steps */
-  getSteps?: Maybe<Array<Maybe<Step>>>,
-  /** Get tables */
-  getTables?: Maybe<Array<Maybe<Table>>>,
-  /** ls ftp dir */
-  lsFtpDir?: Maybe<Array<Maybe<FtpEnity>>>,
-  /** Get dashboards */
-  olapDashboardGet?: Maybe<Array<Maybe<OlapDashboard>>>,
-  /** OLAP request */
-  olapRequest?: Maybe<OlapResponse>,
-  /** Get current user organisations */
-  organisationsMyGet?: Maybe<Array<Maybe<Organisation>>>,
-  /** Get profile */
-  profileGet?: Maybe<User>,
-  /** Scanner drill */
-  scannerDrill?: Maybe<Array<Maybe<Array<Maybe<Scalars['String']>>>>>,
+  agenciesGet?: Maybe<Array<Maybe<Agency>>>,
+  brandsGet?: Maybe<Array<Maybe<VehicleBrand>>>,
+  calendarGet?: Maybe<Array<Maybe<Calendar>>>,
+  driverGetByAuthCode?: Maybe<Driver>,
+  driversGet?: Maybe<Array<Maybe<Driver>>>,
+  modelsGet?: Maybe<Array<Maybe<VehicleModel>>>,
+  networkVersionsGet?: Maybe<Array<Maybe<NetworkVersion>>>,
+  roadsGet?: Maybe<Array<Maybe<Road>>>,
+  rolesGet?: Maybe<Array<Maybe<Role>>>,
+  routesGet?: Maybe<Array<Maybe<Route>>>,
+  stopsGet?: Maybe<Array<Maybe<Stop>>>,
+  tripsGet?: Maybe<Array<Maybe<Trip>>>,
+  usersGet?: Maybe<Array<Maybe<User>>>,
+  vehiclesGet?: Maybe<Array<Maybe<Vehicle>>>,
 }
 
 
-export interface RootQueryTypeChechIndicatorFormulaArgs {
-  formula?: Maybe<Array<Maybe<FormulaTokenInput>>>
-}
-
-
-export interface RootQueryTypeCheckWhereFormulaArgs {
-  whereCond: Array<Maybe<FormulaTokenInput>>
-}
-
-
-export interface RootQueryTypeGetColumnStatsByFormulaArgs {
-  formula: Array<Maybe<FormulaTokenInput>>,
-  stepId: Scalars['Int']
-}
-
-
-export interface RootQueryTypeGetColumnValuesArgs {
-  columnId: Scalars['Int'],
+export interface RootQueryTypeAgenciesGetArgs {
+  agenciesNames?: Maybe<Array<Maybe<Scalars['String']>>>,
+  ids?: Maybe<Array<Maybe<Scalars['UUID']>>>,
   limit?: Maybe<Scalars['Int']>,
   offset?: Maybe<Scalars['Int']>,
+  orderBy?: Maybe<Scalars['String']>,
+  orderDirection?: Maybe<OrderDirection>,
   search?: Maybe<Scalars['String']>
 }
 
 
-export interface RootQueryTypeGetColumnsArgs {
-  ids?: Maybe<Array<Scalars['Int']>>,
+export interface RootQueryTypeBrandsGetArgs {
+  ids?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  name?: Maybe<Scalars['String']>,
+  names?: Maybe<Array<Maybe<Scalars['String']>>>
+}
+
+
+export interface RootQueryTypeDriverGetByAuthCodeArgs {
+  authCode?: Maybe<Scalars['String']>
+}
+
+
+export interface RootQueryTypeDriversGetArgs {
+  emails?: Maybe<Array<Maybe<Scalars['String']>>>,
+  ids?: Maybe<Array<Maybe<Scalars['Int']>>>,
   limit?: Maybe<Scalars['Int']>,
   offset?: Maybe<Scalars['Int']>,
   orderBy?: Maybe<Scalars['String']>,
-  search?: Maybe<Scalars['String']>,
-  stepId?: Maybe<Scalars['Int']>
-}
-
-
-export interface RootQueryTypeGetDatasourcesArgs {
-  ids?: Maybe<Array<Maybe<Scalars['Int']>>>
-}
-
-
-export interface RootQueryTypeGetDbTablesArgs {
-  db: Scalars['String'],
-  dbType: DbType,
-  host: Scalars['String'],
-  limit?: Maybe<Scalars['Int']>,
-  offset?: Maybe<Scalars['Int']>,
-  pass: Scalars['String'],
-  port: Scalars['String'],
-  search?: Maybe<Scalars['String']>,
-  user: Scalars['String']
-}
-
-
-export interface RootQueryTypeGetEtlStepAutocompleteArgs {
-  search: Scalars['String'],
-  stepId: Scalars['Int'],
-  types?: Maybe<Array<Maybe<AutocompleteType>>>
-}
-
-
-export interface RootQueryTypeGetFlowsArgs {
-  ids?: Maybe<Array<Scalars['Int']>>,
-  limit?: Maybe<Scalars['Int']>,
-  offset?: Maybe<Scalars['Int']>,
-  orderBy?: Maybe<Scalars['String']>,
+  orderDirection?: Maybe<OrderDirection>,
+  phones?: Maybe<Array<Maybe<Scalars['Int']>>>,
   search?: Maybe<Scalars['String']>
 }
 
 
-export interface RootQueryTypeGetFolderTreeArgs {
-  id?: Maybe<Scalars['Int']>
+export interface RootQueryTypeModelsGetArgs {
+  brandsIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  ids?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  name?: Maybe<Scalars['String']>,
+  names?: Maybe<Array<Maybe<Scalars['String']>>>
 }
 
 
-export interface RootQueryTypeGetFoldersArgs {
-  id?: Maybe<Scalars['Int']>
-}
-
-
-export interface RootQueryTypeGetHierarchiesArgs {
-  ids?: Maybe<Array<Maybe<Scalars['Int']>>>
-}
-
-
-export interface RootQueryTypeGetIndicatorBaseRatingArgs {
-  displayColumnIds?: Maybe<Array<Maybe<Scalars['String']>>>,
-  displayFKeyId?: Maybe<Scalars['String']>,
-  displayTableId?: Maybe<Scalars['Int']>,
-  formula?: Maybe<Array<Maybe<FormulaTokenInput>>>,
-  showCountedFormula?: Maybe<Scalars['Boolean']>,
-  sortType?: Maybe<SortType>,
-  sortValue?: Maybe<Scalars['Float']>,
-  sortValueType?: Maybe<SortValueType>
-}
-
-
-export interface RootQueryTypeGetIndicatorsArgs {
-  ids?: Maybe<Array<Maybe<Scalars['Int']>>>
-}
-
-
-export interface RootQueryTypeGetIndicatorsAutocompleteArgs {
-  search: Scalars['String'],
-  tableId?: Maybe<Scalars['Int']>,
-  types?: Maybe<Array<Maybe<IndicatorsAutocompleteType>>>
-}
-
-
-export interface RootQueryTypeGetObjectsArgs {
-  limit?: Maybe<Scalars['Int']>,
-  offset?: Maybe<Scalars['Int']>,
-  search?: Maybe<Scalars['String']>,
-  types?: Maybe<Array<Maybe<ObjectType>>>
-}
-
-
-export interface RootQueryTypeGetStepsArgs {
-  datasourceId?: Maybe<Scalars['Int']>,
-  flowId?: Maybe<Scalars['Int']>,
+export interface RootQueryTypeNetworkVersionsGetArgs {
   ids?: Maybe<Array<Scalars['Int']>>,
+  isActive?: Maybe<Scalars['Boolean']>,
   limit?: Maybe<Scalars['Int']>,
+  name?: Maybe<Scalars['String']>,
   offset?: Maybe<Scalars['Int']>
 }
 
 
-export interface RootQueryTypeGetTablesArgs {
-  ids?: Maybe<Array<Maybe<Scalars['Int']>>>
+export interface RootQueryTypeRoadsGetArgs {
+  access?: Maybe<Array<Maybe<RoadAccess>>>,
+  bbox?: Maybe<Array<Maybe<Array<Maybe<Scalars['Float']>>>>>,
+  bridge?: Maybe<Array<Maybe<Scalars['Boolean']>>>,
+  class?: Maybe<Array<Maybe<RoadClass>>>,
+  ids?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  lanes?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  limit?: Maybe<Scalars['Int']>,
+  name?: Maybe<Scalars['String']>,
+  offset?: Maybe<Scalars['Int']>,
+  oneway?: Maybe<Array<Maybe<RoadDirection>>>,
+  osmIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  tunnel?: Maybe<Array<Maybe<Scalars['Boolean']>>>,
+  types?: Maybe<Array<Maybe<RoadType>>>
 }
 
 
-export interface RootQueryTypeLsFtpDirArgs {
-  host?: Maybe<Scalars['String']>,
+export interface RootQueryTypeRolesGetArgs {
+  ids?: Maybe<Array<Maybe<Scalars['Int']>>>,
   limit?: Maybe<Scalars['Int']>,
+  names?: Maybe<Array<Maybe<Scalars['String']>>>,
   offset?: Maybe<Scalars['Int']>,
-  pass?: Maybe<Scalars['String']>,
-  path?: Maybe<Scalars['String']>,
-  port?: Maybe<Scalars['String']>,
-  regexp?: Maybe<Scalars['String']>,
-  user?: Maybe<Scalars['String']>
+  orderBy?: Maybe<Scalars['String']>,
+  orderDirection?: Maybe<OrderDirection>
 }
 
 
-export interface RootQueryTypeOlapDashboardGetArgs {
-  ids?: Maybe<Array<Maybe<Scalars['UUID']>>>,
-  limit?: Maybe<Scalars['Int']>,
-  offset?: Maybe<Scalars['Int']>,
+export interface RootQueryTypeRoutesGetArgs {
+  agencyIds?: Maybe<Array<Maybe<Scalars['UUID']>>>,
+  ids?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  isActive?: Maybe<Scalars['Boolean']>,
+  routeTypes?: Maybe<Array<Maybe<RouteType>>>,
   search?: Maybe<Scalars['String']>
 }
 
 
-export interface RootQueryTypeOlapRequestArgs {
-  request: OlapRequestInput
+export interface RootQueryTypeStopsGetArgs {
+  bbox?: Maybe<Array<Maybe<Array<Maybe<Scalars['Float']>>>>>,
+  ids?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  isService?: Maybe<Scalars['Boolean']>,
+  limit?: Maybe<Scalars['Int']>,
+  locationTypes?: Maybe<Array<Maybe<LocationType>>>,
+  names?: Maybe<Array<Maybe<Scalars['String']>>>,
+  offset?: Maybe<Scalars['Int']>,
+  orderBy?: Maybe<Scalars['String']>,
+  orderDirection?: Maybe<OrderDirection>,
+  search?: Maybe<Scalars['String']>,
+  version?: Maybe<Scalars['Float']>
 }
 
 
-export interface RootQueryTypeScannerDrillArgs {
-  cubeId: Scalars['String'],
+export interface RootQueryTypeTripsGetArgs {
+  directions?: Maybe<Array<Maybe<TripDirection>>>,
+  fromTime?: Maybe<Scalars['Int']>,
+  hasFrequencies?: Maybe<Scalars['Boolean']>,
+  ids?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  isActive?: Maybe<Scalars['Boolean']>,
+  routeIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  toTime?: Maybe<Scalars['Int']>
+}
+
+
+export interface RootQueryTypeUsersGetArgs {
+  emails?: Maybe<Array<Maybe<Scalars['String']>>>,
+  ids?: Maybe<Array<Maybe<Scalars['UUID']>>>,
   limit?: Maybe<Scalars['Int']>,
   offset?: Maybe<Scalars['Int']>,
-  scanDate: Scalars['String'],
-  scannerId: Scalars['String']
+  orderBy?: Maybe<Scalars['String']>,
+  orderDirection?: Maybe<OrderDirection>,
+  phones?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  rolesIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  search?: Maybe<Scalars['String']>
 }
 
-export interface Session {
-   __typename?: 'Session',
-  expireAt?: Maybe<Scalars['Timestamp']>,
-  refreshToken?: Maybe<Scalars['UUID']>,
-  token?: Maybe<Scalars['UUID']>,
-  user?: Maybe<User>,
+
+export interface RootQueryTypeVehiclesGetArgs {
+  agenciesIds?: Maybe<Array<Maybe<Scalars['UUID']>>>,
+  boardNumbers?: Maybe<Array<Maybe<Scalars['String']>>>,
+  driversIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  ids?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  limit?: Maybe<Scalars['Int']>,
+  modelsIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  offset?: Maybe<Scalars['Int']>,
+  orderBy?: Maybe<Scalars['String']>,
+  orderDirection?: Maybe<OrderDirection>,
+  originIds?: Maybe<Array<Maybe<Scalars['String']>>>,
+  originSources?: Maybe<Array<Maybe<DataSource>>>,
+  registrationNumbers?: Maybe<Array<Maybe<Scalars['String']>>>,
+  search?: Maybe<Scalars['String']>
 }
 
-export interface SharedAcl {
-   __typename?: 'SharedAcl',
-  foldersEdit?: Maybe<Scalars['Boolean']>,
-  foldersRead?: Maybe<Scalars['Boolean']>,
-  objectsEdit?: Maybe<Scalars['Boolean']>,
-  objectsRead?: Maybe<Scalars['Boolean']>,
-  organisationCreate?: Maybe<Scalars['Boolean']>,
-}
-
-export type SocketMessage = StepProgress | DatasourceState | DatasourceProgress | ChatOnline | ChatUser | ChatMessage | ChatRoom;
-
-export enum SortType {
-  Asc = 'ASC',
-  Desc = 'DESC'
-}
-
-export enum SortValueType {
-  Reference = 'REFERENCE',
-  ReferenceAvg = 'REFERENCE_AVG',
-  Value = 'VALUE'
-}
-
-export enum SourceType {
-  Clickhouse = 'CLICKHOUSE',
-  Db = 'DB',
-  Eis = 'EIS',
-  Ftp = 'FTP'
-}
-
-export interface Step {
-   __typename?: 'Step',
-  columnsCount?: Maybe<Scalars['Int']>,
-  dupColumnsCount?: Maybe<Scalars['Int']>,
-  positionY?: Maybe<Scalars['Int']>,
+export interface Route {
+   __typename?: 'Route',
+  agency?: Maybe<Agency>,
+  directionName?: Maybe<Scalars['String']>,
   id?: Maybe<Scalars['Int']>,
-  leftNotInRecords?: Maybe<Scalars['Int']>,
-  rightInKeys?: Maybe<Scalars['Int']>,
-  updatedAt?: Maybe<Scalars['Timestamp']>,
-  leftColumns?: Maybe<Array<Maybe<Column>>>,
-  originalSchemaTitle?: Maybe<Scalars['String']>,
-  rightStepColumnId?: Maybe<Scalars['Int']>,
-  title?: Maybe<Scalars['String']>,
-  periodicity?: Maybe<Scalars['Int']>,
-  stepIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
-  exportToMadd?: Maybe<Scalars['Boolean']>,
-  insertedAt?: Maybe<Scalars['Timestamp']>,
-  flow?: Maybe<Flow>,
-  leftStepColumnId?: Maybe<Scalars['Int']>,
-  positionX?: Maybe<Scalars['Int']>,
-  outDbParams?: Maybe<Array<Maybe<OutDbParams>>>,
-  leftInRecords?: Maybe<Scalars['Int']>,
-  fullUpdate?: Maybe<Scalars['Boolean']>,
-  leftStepId?: Maybe<Scalars['Int']>,
-  whereCond?: Maybe<Array<Maybe<FormulaToken>>>,
-  matchedKeys?: Maybe<Array<Maybe<Scalars['String']>>>,
-  rightStepId?: Maybe<Scalars['Int']>,
-  tableName?: Maybe<Scalars['String']>,
-  rightUnmatchedKeys?: Maybe<Array<Maybe<Scalars['String']>>>,
-  changes?: Maybe<Array<Maybe<Change>>>,
-  datasource?: Maybe<Datasource>,
-  leftUnmatchedKeys?: Maybe<Array<Maybe<Scalars['String']>>>,
-  dateColumn?: Maybe<Scalars['String']>,
-  leftInKeys?: Maybe<Scalars['Int']>,
-  leftNotInKeys?: Maybe<Scalars['Int']>,
-  rightInRecords?: Maybe<Scalars['Int']>,
-  rightNotInKeys?: Maybe<Scalars['Int']>,
-  joinType?: Maybe<JoinType>,
-  originalTitle?: Maybe<Scalars['String']>,
-  rightColumns?: Maybe<Array<Maybe<Column>>>,
-  rightNotInRecords?: Maybe<Scalars['Int']>,
-  dupGroupsCount?: Maybe<Scalars['Int']>,
-  stepType?: Maybe<StepType>,
+  isActive?: Maybe<Scalars['Boolean']>,
+  routeColor?: Maybe<Scalars['String']>,
+  routeDesc?: Maybe<Scalars['String']>,
+  routeLongName?: Maybe<Scalars['String']>,
+  routeShortName?: Maybe<Scalars['String']>,
+  routeTextColor?: Maybe<Scalars['String']>,
+  routeType?: Maybe<RouteType>,
+  routeUrl?: Maybe<Scalars['String']>,
+  trips?: Maybe<Array<Maybe<Trip>>>,
 }
 
-export interface StepProgress {
-   __typename?: 'StepProgress',
-  processes?: Maybe<Array<Maybe<Progress>>>,
-  status?: Maybe<ProgressStatus>,
-  stepId?: Maybe<Scalars['Int']>,
+export interface RouteCreateInput {
+  /** Should be ignored if user doesn't have proper access abilities */
+  agencyId?: Maybe<Scalars['UUID']>,
+  directionName?: Maybe<Scalars['String']>,
+  isActive?: Maybe<Scalars['Boolean']>,
+  routeColor?: Maybe<Scalars['String']>,
+  routeDesc?: Maybe<Scalars['String']>,
+  routeLongName: Scalars['String'],
+  routeShortName: Scalars['String'],
+  routeTextColor?: Maybe<Scalars['String']>,
+  routeType: RouteType,
+  routeUrl?: Maybe<Scalars['String']>,
 }
 
-export enum StepType {
-  Agg = 'AGG',
-  Join = 'JOIN',
-  Out = 'OUT',
-  Pivot = 'PIVOT',
-  Source = 'SOURCE',
-  Transform = 'TRANSFORM',
-  Union = 'UNION'
+export enum RouteType {
+  Bus = 'BUS',
+  CableCar = 'CABLE_CAR',
+  Ferry = 'FERRY',
+  Funicular = 'FUNICULAR',
+  Gondola = 'GONDOLA',
+  Metro = 'METRO',
+  Rail = 'RAIL',
+  Tram = 'TRAM',
+  Trolley = 'TROLLEY'
 }
 
-export interface Table {
-   __typename?: 'Table',
-  connections?: Maybe<Array<Maybe<Connection>>>,
-  cubeDescription?: Maybe<Scalars['String']>,
-  cubeTitle?: Maybe<Scalars['String']>,
-  description?: Maybe<Scalars['String']>,
-  fields?: Maybe<Array<Maybe<Field>>>,
-  hierarchies?: Maybe<Array<Maybe<Hierarchy>>>,
+export interface RouteUpdateInput {
+  /** Should be ignored if user doesn't have proper access abilities */
+  agencyId?: Maybe<Scalars['UUID']>,
+  directionName?: Maybe<Scalars['String']>,
+  id: Scalars['Int'],
+  isActive?: Maybe<Scalars['Boolean']>,
+  routeColor?: Maybe<Scalars['String']>,
+  routeDesc?: Maybe<Scalars['String']>,
+  routeLongName?: Maybe<Scalars['String']>,
+  routeShortName?: Maybe<Scalars['String']>,
+  routeTextColor?: Maybe<Scalars['String']>,
+  routeType?: Maybe<RouteType>,
+  routeUrl?: Maybe<Scalars['String']>,
+}
+
+export interface Shape {
+   __typename?: 'Shape',
+  dist?: Maybe<Scalars['Float']>,
   id?: Maybe<Scalars['Int']>,
-  inMemory?: Maybe<Scalars['Boolean']>,
-  insertedAt?: Maybe<Scalars['Timestamp']>,
-  isInvisible?: Maybe<Scalars['Boolean']>,
-  isOpened?: Maybe<Scalars['Boolean']>,
-  object?: Maybe<Object>,
-  positionX?: Maybe<Scalars['Int']>,
-  positionY?: Maybe<Scalars['Int']>,
-  tableType?: Maybe<TableType>,
-  title?: Maybe<Scalars['String']>,
-  updatedAt?: Maybe<Scalars['Timestamp']>,
+  path?: Maybe<Array<Maybe<Array<Maybe<Scalars['Float']>>>>>,
 }
 
-export enum TableType {
-  Dimension = 'DIMENSION',
-  Fact = 'FACT'
+export interface Stop {
+   __typename?: 'Stop',
+  agency?: Maybe<Agency>,
+  agencyId?: Maybe<Scalars['UUID']>,
+  coords?: Maybe<Array<Maybe<Scalars['Float']>>>,
+  id?: Maybe<Scalars['Int']>,
+  isService?: Maybe<Scalars['Boolean']>,
+  locationType?: Maybe<LocationType>,
+  stopName?: Maybe<Scalars['String']>,
+  version?: Maybe<Scalars['Float']>,
+}
+
+export interface StopCreateInput {
+  /** Should be ignored if user doesn't have proper access abilities */
+  agencyId?: Maybe<Scalars['UUID']>,
+  coords: Array<Maybe<Scalars['Float']>>,
+  isService?: Maybe<Scalars['Boolean']>,
+  locationType?: Maybe<LocationType>,
+  stopName: Scalars['String'],
+}
+
+export interface StopTime {
+   __typename?: 'StopTime',
+  arrivalTime?: Maybe<Scalars['Int']>,
+  departureTime?: Maybe<Scalars['Int']>,
+  distTraveled?: Maybe<Scalars['Float']>,
+  shapeId?: Maybe<Scalars['Int']>,
+  stopId?: Maybe<Scalars['Int']>,
+}
+
+export interface StopUpdateInput {
+  /** Should be ignored if user doesn't have proper access abilities */
+  agencyId?: Maybe<Scalars['UUID']>,
+  coords?: Maybe<Array<Maybe<Scalars['Float']>>>,
+  id: Scalars['Int'],
+  isService?: Maybe<Scalars['Boolean']>,
+  locationType?: Maybe<LocationType>,
+  stopName?: Maybe<Scalars['String']>,
 }
 
 
-export interface TitleInput {
-  value: Scalars['String'],
+export interface TrajectoryInput {
+  arrivalTime?: Maybe<Scalars['Int']>,
+  coords?: Maybe<Array<Maybe<Scalars['Float']>>>,
+  departureTime?: Maybe<Scalars['Int']>,
+  stopId?: Maybe<Scalars['Int']>,
+  /** if type == POINT -> only fill type and coords fields. if type == STOP -> fill type, stop_id, arr and dep times */
+  type: TrajectoryPointType,
 }
 
-export enum TokenType {
-  Bracket = 'BRACKET',
-  Data = 'DATA',
-  EqOperator = 'EQ_OPERATOR',
-  Func = 'FUNC',
-  InOperator = 'IN_OPERATOR',
-  List = 'LIST',
-  LogicOperator = 'LOGIC_OPERATOR',
-  Number = 'NUMBER',
-  Operator = 'OPERATOR',
-  Space = 'SPACE',
-  String = 'STRING'
+export enum TrajectoryPointType {
+  Point = 'POINT',
+  Stop = 'STOP'
 }
 
-export interface Tree {
-   __typename?: 'Tree',
-  folders?: Maybe<Array<Maybe<Folder>>>,
-  objects?: Maybe<Array<Maybe<Object>>>,
+export interface Trip {
+   __typename?: 'Trip',
+  calendar?: Maybe<Calendar>,
+  calendarDates?: Maybe<Array<Maybe<CalendarDate>>>,
+  direction?: Maybe<TripDirection>,
+  endTime?: Maybe<Scalars['Int']>,
+  hasFrequencies?: Maybe<Scalars['Boolean']>,
+  headwaySecs?: Maybe<Scalars['Int']>,
+  id?: Maybe<Scalars['Int']>,
+  isActive?: Maybe<Scalars['Boolean']>,
+  route?: Maybe<Route>,
+  serviceId?: Maybe<Scalars['Int']>,
+  shape?: Maybe<Shape>,
+  startTime?: Maybe<Scalars['Int']>,
+  stoptimes?: Maybe<Array<Maybe<StopTime>>>,
 }
 
-export interface Trees {
-   __typename?: 'Trees',
-  pinnedTree?: Maybe<Tree>,
-  tree?: Maybe<Tree>,
+export interface TripCreateInput {
+  direction: TripDirection,
+  endTime?: Maybe<Scalars['Int']>,
+  hasFrequencies?: Maybe<Scalars['Boolean']>,
+  headwaySecs?: Maybe<Scalars['Int']>,
+  isActive?: Maybe<Scalars['Boolean']>,
+  routeId: Scalars['Int'],
+  serviceId?: Maybe<Scalars['Int']>,
+  startTime?: Maybe<Scalars['Int']>,
+  trajectory?: Maybe<Array<Maybe<TrajectoryInput>>>,
 }
 
-export interface TrendLine {
-   __typename?: 'TrendLine',
-  color?: Maybe<Scalars['String']>,
-  opacity?: Maybe<Scalars['Float']>,
+export enum TripDirection {
+  Back = 'BACK',
+  Forward = 'FORWARD'
 }
 
-export interface TrendLineInput {
-  color?: Maybe<Scalars['String']>,
-  opacity?: Maybe<Scalars['Float']>,
-}
-
-export interface UnionColumnsInput {
-  value?: Maybe<Array<Maybe<Scalars['Int']>>>,
+export interface TripUpdateInput {
+  direction?: Maybe<TripDirection>,
+  endTime?: Maybe<Scalars['Int']>,
+  hasFrequencies?: Maybe<Scalars['Boolean']>,
+  headwaySecs?: Maybe<Scalars['Int']>,
+  id: Scalars['Int'],
+  isActive?: Maybe<Scalars['Boolean']>,
+  routeId?: Maybe<Scalars['Int']>,
+  serviceId?: Maybe<Scalars['Int']>,
+  startTime?: Maybe<Scalars['Int']>,
+  trajectory?: Maybe<Array<Maybe<TrajectoryInput>>>,
 }
 
 
 export interface User {
    __typename?: 'User',
-  acl?: Maybe<Acl>,
-  avatar?: Maybe<Scalars['String']>,
+  agency?: Maybe<Agency>,
+  agencyId?: Maybe<Scalars['UUID']>,
+  desktopSettings?: Maybe<Scalars['JSON']>,
+  desktopWallpaper?: Maybe<Attachment>,
   email?: Maybe<Scalars['String']>,
   firstName?: Maybe<Scalars['String']>,
-  id?: Maybe<Scalars['Int']>,
+  id?: Maybe<Scalars['UUID']>,
   lastName?: Maybe<Scalars['String']>,
-  name?: Maybe<Scalars['String']>,
+  middleName?: Maybe<Scalars['String']>,
+  phone?: Maybe<Scalars['Int']>,
+  role?: Maybe<Role>,
+  roleId?: Maybe<Scalars['Int']>,
+}
+
+export interface UserInput {
+  desktopSettings?: Maybe<Scalars['JSON']>,
+  desktopWallpaperId?: Maybe<Scalars['UUID']>,
+  email: Scalars['String'],
+  firstName: Scalars['String'],
+  lastName: Scalars['String'],
+  middleName?: Maybe<Scalars['String']>,
+  password: Scalars['String'],
+  phone?: Maybe<Scalars['Int']>,
+  roleId: Scalars['Int'],
+}
+
+export interface UserSelfUpdateInput {
+  desktopSettings?: Maybe<Scalars['JSON']>,
+  desktopWallpaperId?: Maybe<Scalars['UUID']>,
+}
+
+export interface UserSession {
+   __typename?: 'UserSession',
+  expireAt?: Maybe<Scalars['Timestamp']>,
+  refreshToken?: Maybe<Scalars['String']>,
+  token?: Maybe<Scalars['String']>,
+  user?: Maybe<User>,
+}
+
+export interface UserUpdateInput {
+  desktopSettings?: Maybe<Scalars['JSON']>,
+  desktopWallpaperId?: Maybe<Scalars['UUID']>,
+  email?: Maybe<Scalars['String']>,
+  firstName?: Maybe<Scalars['String']>,
+  id: Scalars['UUID'],
+  lastName?: Maybe<Scalars['String']>,
+  middleName?: Maybe<Scalars['String']>,
+  password?: Maybe<Scalars['String']>,
+  phone?: Maybe<Scalars['Int']>,
+  roleId?: Maybe<Scalars['Int']>,
 }
 
 
-export interface WidthInput {
-  value?: Maybe<Scalars['Int']>,
+export interface Vehicle {
+   __typename?: 'Vehicle',
+  agency?: Maybe<Agency>,
+  boardNumber?: Maybe<Scalars['String']>,
+  brand?: Maybe<VehicleBrand>,
+  driver?: Maybe<Driver>,
+  id?: Maybe<Scalars['Int']>,
+  model?: Maybe<VehicleModel>,
+  originId?: Maybe<Scalars['String']>,
+  originSource?: Maybe<DataSource>,
+  registrationNumber?: Maybe<Scalars['String']>,
+}
+
+export interface VehicleBrand {
+   __typename?: 'VehicleBrand',
+  id?: Maybe<Scalars['Int']>,
+  models?: Maybe<Array<Maybe<VehicleModel>>>,
+  name?: Maybe<Scalars['String']>,
+  vehicles?: Maybe<Array<Maybe<Vehicle>>>,
+}
+
+export interface VehicleCreateInput {
+  /** Should be ignored for any role except SUPERADMIN */
+  agencyId?: Maybe<Scalars['UUID']>,
+  boardNumber: Scalars['String'],
+  driverId?: Maybe<Scalars['Int']>,
+  modelId: Scalars['Int'],
+  registrationNumber: Scalars['String'],
+}
+
+export interface VehicleModel {
+   __typename?: 'VehicleModel',
+  brand?: Maybe<VehicleBrand>,
+  id?: Maybe<Scalars['Int']>,
+  name?: Maybe<Scalars['String']>,
+  vehicles?: Maybe<Array<Maybe<Vehicle>>>,
+}
+
+export interface VehicleUpdateInput {
+  agencyId?: Maybe<Scalars['UUID']>,
+  boardNumber?: Maybe<Scalars['String']>,
+  driverId?: Maybe<Scalars['Int']>,
+  id: Scalars['Int'],
+  modelId?: Maybe<Scalars['Int']>,
+  registrationNumber?: Maybe<Scalars['String']>,
 }
 
 export type SessionDataFragment = (
-  { __typename?: 'Session' }
-  & Pick<Session, 'token' | 'refreshToken' | 'expireAt'>
-);
-
-export type UserFragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'avatar' | 'email' | 'firstName' | 'id' | 'lastName' | 'name'>
+  { __typename?: 'UserSession' }
+  & Pick<UserSession, 'token' | 'refreshToken' | 'expireAt'>
+  & { user: Maybe<(
+    { __typename?: 'User' }
+    & UserFragment
+  )> }
 );
 
 export type SessionCreateMutationVariables = {
@@ -2350,20 +1065,20 @@ export type SessionCreateMutationVariables = {
 export type SessionCreateMutation = (
   { __typename?: 'RootMutationType' }
   & { sessionCreate: Maybe<(
-    { __typename?: 'Session' }
+    { __typename?: 'UserSession' }
     & SessionDataFragment
   )> }
 );
 
-export type SessionUpdateMutationVariables = {
-  refreshToken: Scalars['UUID']
+export type SessionRefreshMutationVariables = {
+  refreshToken: Scalars['String']
 };
 
 
-export type SessionUpdateMutation = (
+export type SessionRefreshMutation = (
   { __typename?: 'RootMutationType' }
-  & { sessionUpdate: Maybe<(
-    { __typename?: 'Session' }
+  & { sessionRefresh: Maybe<(
+    { __typename?: 'UserSession' }
     & SessionDataFragment
   )> }
 );
@@ -2376,34 +1091,91 @@ export type SessionDeleteMutation = (
   & Pick<RootMutationType, 'sessionDelete'>
 );
 
-export type ProfileGetQueryVariables = {};
+export type UserFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'email' | 'phone' | 'firstName' | 'middleName' | 'lastName' | 'agencyId' | 'roleId'>
+);
+
+export type UserCreateMutationVariables = {
+  user: UserInput
+};
 
 
-export type ProfileGetQuery = (
-  { __typename?: 'RootQueryType' }
-  & { profileGet: Maybe<(
+export type UserCreateMutation = (
+  { __typename?: 'RootMutationType' }
+  & { userCreate: Maybe<(
     { __typename?: 'User' }
     & UserFragment
   )> }
 );
 
+export type UserUpdateMutationVariables = {
+  user: UserUpdateInput
+};
+
+
+export type UserUpdateMutation = (
+  { __typename?: 'RootMutationType' }
+  & { userUpdate: Maybe<(
+    { __typename?: 'User' }
+    & UserFragment
+  )> }
+);
+
+export type UserDeleteMutationVariables = {
+  userId: Scalars['UUID']
+};
+
+
+export type UserDeleteMutation = (
+  { __typename?: 'RootMutationType' }
+  & { userDelete: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  )> }
+);
+
+export type UsersGetQueryVariables = {
+  emails?: Maybe<Array<Maybe<Scalars['String']>>>,
+  ids?: Maybe<Array<Maybe<Scalars['UUID']>>>,
+  phones?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  rolesIds?: Maybe<Array<Maybe<Scalars['Int']>>>,
+  search?: Maybe<Scalars['String']>,
+  orderBy?: Maybe<Scalars['String']>,
+  orderDirection?: Maybe<OrderDirection>
+};
+
+
+export type UsersGetQuery = (
+  { __typename?: 'RootQueryType' }
+  & { usersGet: Maybe<Array<Maybe<(
+    { __typename?: 'User' }
+    & UserFragment
+  )>>> }
+);
+
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  id
+  email
+  phone
+  firstName
+  middleName
+  lastName
+  agencyId
+  roleId
+}
+    `;
 export const SessionDataFragmentDoc = gql`
-    fragment SessionData on Session {
+    fragment SessionData on UserSession {
   token
   refreshToken
   expireAt
+  user {
+    ...User
+  }
 }
-    `;
-export const UserFragmentDoc = gql`
-    fragment User on User {
-  avatar
-  email
-  firstName
-  id
-  lastName
-  name
-}
-    `;
+    ${UserFragmentDoc}`;
 export const SessionCreateDocument = gql`
     mutation sessionCreate($email: String!, $password: String!) {
   sessionCreate(email: $email, password: $password) {
@@ -2437,38 +1209,38 @@ export function useSessionCreateMutation(baseOptions?: ApolloReactHooks.Mutation
 export type SessionCreateMutationHookResult = ReturnType<typeof useSessionCreateMutation>;
 export type SessionCreateMutationResult = ApolloReactCommon.MutationResult<SessionCreateMutation>;
 export type SessionCreateMutationOptions = ApolloReactCommon.BaseMutationOptions<SessionCreateMutation, SessionCreateMutationVariables>;
-export const SessionUpdateDocument = gql`
-    mutation sessionUpdate($refreshToken: UUID!) {
-  sessionUpdate(refreshToken: $refreshToken) {
+export const SessionRefreshDocument = gql`
+    mutation sessionRefresh($refreshToken: String!) {
+  sessionRefresh(refreshToken: $refreshToken) {
     ...SessionData
   }
 }
     ${SessionDataFragmentDoc}`;
-export type SessionUpdateMutationFn = ApolloReactCommon.MutationFunction<SessionUpdateMutation, SessionUpdateMutationVariables>;
+export type SessionRefreshMutationFn = ApolloReactCommon.MutationFunction<SessionRefreshMutation, SessionRefreshMutationVariables>;
 
 /**
- * __useSessionUpdateMutation__
+ * __useSessionRefreshMutation__
  *
- * To run a mutation, you first call `useSessionUpdateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSessionUpdateMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSessionRefreshMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSessionRefreshMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [sessionUpdateMutation, { data, loading, error }] = useSessionUpdateMutation({
+ * const [sessionRefreshMutation, { data, loading, error }] = useSessionRefreshMutation({
  *   variables: {
  *      refreshToken: // value for 'refreshToken'
  *   },
  * });
  */
-export function useSessionUpdateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SessionUpdateMutation, SessionUpdateMutationVariables>) {
-        return ApolloReactHooks.useMutation<SessionUpdateMutation, SessionUpdateMutationVariables>(SessionUpdateDocument, baseOptions);
+export function useSessionRefreshMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SessionRefreshMutation, SessionRefreshMutationVariables>) {
+        return ApolloReactHooks.useMutation<SessionRefreshMutation, SessionRefreshMutationVariables>(SessionRefreshDocument, baseOptions);
       }
-export type SessionUpdateMutationHookResult = ReturnType<typeof useSessionUpdateMutation>;
-export type SessionUpdateMutationResult = ApolloReactCommon.MutationResult<SessionUpdateMutation>;
-export type SessionUpdateMutationOptions = ApolloReactCommon.BaseMutationOptions<SessionUpdateMutation, SessionUpdateMutationVariables>;
+export type SessionRefreshMutationHookResult = ReturnType<typeof useSessionRefreshMutation>;
+export type SessionRefreshMutationResult = ApolloReactCommon.MutationResult<SessionRefreshMutation>;
+export type SessionRefreshMutationOptions = ApolloReactCommon.BaseMutationOptions<SessionRefreshMutation, SessionRefreshMutationVariables>;
 export const SessionDeleteDocument = gql`
     mutation sessionDelete {
   sessionDelete
@@ -2498,35 +1270,138 @@ export function useSessionDeleteMutation(baseOptions?: ApolloReactHooks.Mutation
 export type SessionDeleteMutationHookResult = ReturnType<typeof useSessionDeleteMutation>;
 export type SessionDeleteMutationResult = ApolloReactCommon.MutationResult<SessionDeleteMutation>;
 export type SessionDeleteMutationOptions = ApolloReactCommon.BaseMutationOptions<SessionDeleteMutation, SessionDeleteMutationVariables>;
-export const ProfileGetDocument = gql`
-    query profileGet {
-  profileGet {
+export const UserCreateDocument = gql`
+    mutation userCreate($user: UserInput!) {
+  userCreate(user: $user) {
+    ...User
+  }
+}
+    ${UserFragmentDoc}`;
+export type UserCreateMutationFn = ApolloReactCommon.MutationFunction<UserCreateMutation, UserCreateMutationVariables>;
+
+/**
+ * __useUserCreateMutation__
+ *
+ * To run a mutation, you first call `useUserCreateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUserCreateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [userCreateMutation, { data, loading, error }] = useUserCreateMutation({
+ *   variables: {
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useUserCreateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UserCreateMutation, UserCreateMutationVariables>) {
+        return ApolloReactHooks.useMutation<UserCreateMutation, UserCreateMutationVariables>(UserCreateDocument, baseOptions);
+      }
+export type UserCreateMutationHookResult = ReturnType<typeof useUserCreateMutation>;
+export type UserCreateMutationResult = ApolloReactCommon.MutationResult<UserCreateMutation>;
+export type UserCreateMutationOptions = ApolloReactCommon.BaseMutationOptions<UserCreateMutation, UserCreateMutationVariables>;
+export const UserUpdateDocument = gql`
+    mutation userUpdate($user: UserUpdateInput!) {
+  userUpdate(user: $user) {
+    ...User
+  }
+}
+    ${UserFragmentDoc}`;
+export type UserUpdateMutationFn = ApolloReactCommon.MutationFunction<UserUpdateMutation, UserUpdateMutationVariables>;
+
+/**
+ * __useUserUpdateMutation__
+ *
+ * To run a mutation, you first call `useUserUpdateMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUserUpdateMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [userUpdateMutation, { data, loading, error }] = useUserUpdateMutation({
+ *   variables: {
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useUserUpdateMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UserUpdateMutation, UserUpdateMutationVariables>) {
+        return ApolloReactHooks.useMutation<UserUpdateMutation, UserUpdateMutationVariables>(UserUpdateDocument, baseOptions);
+      }
+export type UserUpdateMutationHookResult = ReturnType<typeof useUserUpdateMutation>;
+export type UserUpdateMutationResult = ApolloReactCommon.MutationResult<UserUpdateMutation>;
+export type UserUpdateMutationOptions = ApolloReactCommon.BaseMutationOptions<UserUpdateMutation, UserUpdateMutationVariables>;
+export const UserDeleteDocument = gql`
+    mutation userDelete($userId: UUID!) {
+  userDelete(userId: $userId) {
+    id
+  }
+}
+    `;
+export type UserDeleteMutationFn = ApolloReactCommon.MutationFunction<UserDeleteMutation, UserDeleteMutationVariables>;
+
+/**
+ * __useUserDeleteMutation__
+ *
+ * To run a mutation, you first call `useUserDeleteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUserDeleteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [userDeleteMutation, { data, loading, error }] = useUserDeleteMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useUserDeleteMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UserDeleteMutation, UserDeleteMutationVariables>) {
+        return ApolloReactHooks.useMutation<UserDeleteMutation, UserDeleteMutationVariables>(UserDeleteDocument, baseOptions);
+      }
+export type UserDeleteMutationHookResult = ReturnType<typeof useUserDeleteMutation>;
+export type UserDeleteMutationResult = ApolloReactCommon.MutationResult<UserDeleteMutation>;
+export type UserDeleteMutationOptions = ApolloReactCommon.BaseMutationOptions<UserDeleteMutation, UserDeleteMutationVariables>;
+export const UsersGetDocument = gql`
+    query usersGet($emails: [String], $ids: [UUID], $phones: [Int], $rolesIds: [Int], $search: String, $orderBy: String, $orderDirection: OrderDirection) {
+  usersGet(emails: $emails, ids: $ids, phones: $phones, rolesIds: $rolesIds, search: $search, orderBy: $orderBy, orderDirection: $orderDirection) {
     ...User
   }
 }
     ${UserFragmentDoc}`;
 
 /**
- * __useProfileGetQuery__
+ * __useUsersGetQuery__
  *
- * To run a query within a React component, call `useProfileGetQuery` and pass it any options that fit your needs.
- * When your component renders, `useProfileGetQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * To run a query within a React component, call `useUsersGetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersGetQuery` returns an object from Apollo Client that contains loading, error, and data properties 
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useProfileGetQuery({
+ * const { data, loading, error } = useUsersGetQuery({
  *   variables: {
+ *      emails: // value for 'emails'
+ *      ids: // value for 'ids'
+ *      phones: // value for 'phones'
+ *      rolesIds: // value for 'rolesIds'
+ *      search: // value for 'search'
+ *      orderBy: // value for 'orderBy'
+ *      orderDirection: // value for 'orderDirection'
  *   },
  * });
  */
-export function useProfileGetQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ProfileGetQuery, ProfileGetQueryVariables>) {
-        return ApolloReactHooks.useQuery<ProfileGetQuery, ProfileGetQueryVariables>(ProfileGetDocument, baseOptions);
+export function useUsersGetQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UsersGetQuery, UsersGetQueryVariables>) {
+        return ApolloReactHooks.useQuery<UsersGetQuery, UsersGetQueryVariables>(UsersGetDocument, baseOptions);
       }
-export function useProfileGetLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ProfileGetQuery, ProfileGetQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<ProfileGetQuery, ProfileGetQueryVariables>(ProfileGetDocument, baseOptions);
+export function useUsersGetLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UsersGetQuery, UsersGetQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<UsersGetQuery, UsersGetQueryVariables>(UsersGetDocument, baseOptions);
         }
-export type ProfileGetQueryHookResult = ReturnType<typeof useProfileGetQuery>;
-export type ProfileGetLazyQueryHookResult = ReturnType<typeof useProfileGetLazyQuery>;
-export type ProfileGetQueryResult = ApolloReactCommon.QueryResult<ProfileGetQuery, ProfileGetQueryVariables>;
+export type UsersGetQueryHookResult = ReturnType<typeof useUsersGetQuery>;
+export type UsersGetLazyQueryHookResult = ReturnType<typeof useUsersGetLazyQuery>;
+export type UsersGetQueryResult = ApolloReactCommon.QueryResult<UsersGetQuery, UsersGetQueryVariables>;

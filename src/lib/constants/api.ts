@@ -1,3 +1,5 @@
+import { ENV } from './env'
+
 export enum STATE {
   IDLE = 'idle',
   LOADING = 'loading',
@@ -5,7 +7,9 @@ export enum STATE {
   FAILED = 'failed',
 }
 
-export const HOSTNAME_APP = process.env.HOSTNAME_APP
-export const HOSTNAME_API = process.env.HOSTNAME_API || window.location.origin
-export const HOSTNAME_CDN = process.env.HOSTNAME_CDN
+export const BASE_URL = ENV.BASE_URL
+export const HOSTNAME_APP = ENV.HOSTNAME_APP
+export const HOSTNAME_API = ENV.HOSTNAME_API || window.location.origin
+export const HOSTNAME_CDN = ENV.HOSTNAME_CDN
+
 export const GRAPHQL_API_URL = `${HOSTNAME_API}/api/graphql`

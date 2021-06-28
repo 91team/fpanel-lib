@@ -12,47 +12,7 @@
       }
       const result: IntrospectionResultData = {
   "__schema": {
-    "types": [
-      {
-        "kind": "UNION",
-        "name": "SocketMessage",
-        "possibleTypes": [
-          {
-            "name": "StepProgress"
-          },
-          {
-            "name": "DatasourceState"
-          },
-          {
-            "name": "DatasourceProgress"
-          },
-          {
-            "name": "ChatOnline"
-          },
-          {
-            "name": "ChatUser"
-          },
-          {
-            "name": "ChatMessage"
-          },
-          {
-            "name": "ChatRoom"
-          }
-        ]
-      },
-      {
-        "kind": "INTERFACE",
-        "name": "OlapLayer",
-        "possibleTypes": [
-          {
-            "name": "OlapChartLayer"
-          },
-          {
-            "name": "OlapTextLayer"
-          }
-        ]
-      }
-    ]
+    "types": []
   }
 };
       export default result;

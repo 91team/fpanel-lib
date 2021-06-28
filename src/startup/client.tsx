@@ -2,31 +2,20 @@ import React from 'react'
 
 import { render } from 'react-dom'
 
-import { ServicesManager } from 'lib/services'
+import { ServiceName } from 'lib/services/types/constants'
 
-import AppContainer from '../containers/App'
+import { getService, initGlobals } from 'lib/utils/global'
 
-export class ClientEntryFactory {
-  private servicesManager: ServicesManager
+import { App } from '../containers/App/App'
 
-  constructor() {
-    this.servicesManager = ServicesManager.build()
+initGlobals()
 
-    this.render()
-  }
+const routerService = getService(ServiceName.ROUTER)
+const router = routerService.getInstance()
+const initialPathname = window.location.pathname
 
-  render() {
-    const { servicesManager } = this
-    const { router: routerService } = servicesManager.getServices()
-    const router = routerService.getInstance()
-    const initialPathname = window.location.pathname
+router.start(initialPathname, (err, state) => {
+  console.log('Router5 is started')
 
-    router.start(initialPathname, (err, state) => {
-      console.log('Router5 is started')
-
-      render(<AppContainer servicesManager={servicesManager} />, document.getElementById('root'))
-    })
-  }
-}
-
-new ClientEntryFactory()
+  render(<App />, document.getElementById('root'))
+})

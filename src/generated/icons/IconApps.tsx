@@ -1,0 +1,16 @@
+import React, { FC } from 'react'
+
+const IconApps: FC<{ className?: string }> = ({ className }) => (
+  <div
+    className={className}
+    dangerouslySetInnerHTML={{
+      __html: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M2.66669 5.33329H5.33335V2.66663H2.66669V5.33329ZM6.66669 13.3333H9.33335V10.6666H6.66669V13.3333ZM2.66669 13.3333H5.33335V10.6666H2.66669V13.3333ZM2.66669 9.33329H5.33335V6.66663H2.66669V9.33329ZM6.66669 9.33329H9.33335V6.66663H6.66669V9.33329ZM10.6667 2.66663V5.33329H13.3334V2.66663H10.6667ZM6.66669 5.33329H9.33335V2.66663H6.66669V5.33329ZM10.6667 9.33329H13.3334V6.66663H10.6667V9.33329ZM10.6667 13.3333H13.3334V10.6666H10.6667V13.3333Z" fill="currentColor"/>
+</svg>
+`,
+    }}
+    style={{ display: 'flex' }}
+  />
+)
+
+export { IconApps }

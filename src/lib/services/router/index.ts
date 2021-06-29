@@ -18,9 +18,10 @@ export class RouterService {
   protected static instance: IRouter
 
   constructor() {
-    const formattedRoutes = RouterService.getFormattedRoutes(routes)
+    const formattedRoutes = RouterService.getFormattedRoutes(routes, { baseName: BASE_URL })
 
     RouterService.instance = createRouter(formattedRoutes, {
+      trailingSlashMode: 'never',
       allowNotFound: true,
     })
 
@@ -41,15 +42,27 @@ export class RouterService {
     return result
   }
 
-  public static getFormattedRoutes(routes: ICustomRoute[]): Route[] {
-    return routes.map(RouterService.getFormattedRoute)
+  public static getFormattedRoutes(
+    routes: ICustomRoute[],
+    options: {
+      baseName?: string
+    }
+  ): Route[] {
+    return routes.map((route) => RouterService.getFormattedRoute(route, options))
   }
 
-  public static getFormattedRoute({ children, component, ...route }: ICustomRoute): Route {
+  public static getFormattedRoute(
+    { children, component, ...route }: ICustomRoute,
+    { baseName }: { baseName?: string } = {}
+  ): Route {
+    if (baseName) {
+      route.path = baseName + route.path
+    }
+
     if (children) {
       return {
         ...route,
-        children: RouterService.getFormattedRoutes(children),
+        children: RouterService.getFormattedRoutes(children, {}),
       }
     }
 
@@ -65,9 +78,7 @@ export class RouterService {
   }
 
   public getBrowserPlugin(): PluginFactory {
-    return browserPlugin({
-      base: BASE_URL === '/' ? '' : BASE_URL,
-    })
+    return browserPlugin()
   }
 
   public getRouteConfig({

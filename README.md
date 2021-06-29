@@ -1,11 +1,10 @@
-# PANEL PRO
+# Клиентский бойлерплейт
 
 ## Старт
 
 - `yarn install`
 - создать необходимые `env`-файлы по примеру (`.env.example`):
   - `.env.development` - используется для `dev` сборки (проверить, что `WITH_HMR=false`)
-  - `.env.development:hot` - используется для `dev` сборки с `hmr` (проверить, что `WITH_HMR=true`)
   - `.env.production` - используется для `prod` сборки (проверить, что нет `WITH_HMR`, установлены `NODE_ENV` и `OUTPUT_PATH` для прод-ассетов)
 
 ## Скрипты

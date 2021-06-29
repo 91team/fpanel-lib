@@ -1,7 +1,9 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 
 import { observer } from 'mobx-react'
 
-const MainPage: FC<{}> = observer(() => <div>Main Page</div>)
+import styles from './styles.module.scss'
+
+const MainPage: FC<{}> = observer(() => <div className={styles.container}>Main Page</div>)
 
 export { MainPage }

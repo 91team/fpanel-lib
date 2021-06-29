@@ -1,6 +1,6 @@
 overwrite: true
 schema:
-  - 'http://host/api/graphql' #-boilerplate-
+  - 'https://not.madd.llc/api/graphql' #-boilerplate-
 generates:
   src/lib/gql/generated/introspection-result.tsx:
     documents:

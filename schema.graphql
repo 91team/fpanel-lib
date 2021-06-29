@@ -3,33 +3,58 @@ schema {
   mutation: RootMutationType
 }
 
-enum Abilities {
-  USERS_CONTROL
+type Acl {
+  etl: EtlAcl
+  olap: OlapAcl
+  ose: OseAcl
+  shared: SharedAcl
 }
 
-type Agency {
-  agencyName: String
-  agencyPhone: Int
-  agencyTimezone: String
-  agencyUrl: String
-  id: UUID
-  originAgencyId: String
-  originSource: DataSource
+type AdditionalCalc {
+  cumulativeTotal: Boolean
+  groupBy: String
+  growth: Boolean
+  growthRate: Boolean
+  linkedFieldId: String
+  percentOfTotal: Boolean
 }
 
-input AgencyCreateInput {
-  agencyName: String
-  agencyPhone: Int
-  agencyTimezone: String
-  agencyUrl: String
+input AdditionalCalcInput {
+  cumulativeTotal: Boolean
+  groupBy: String
+  growth: Boolean
+  growthRate: Boolean
+  linkedFieldId: String
+  percentOfTotal: Boolean
 }
 
-input AgencyUpdateInput {
-  agencyName: String
-  agencyPhone: Int
-  agencyTimezone: String
-  agencyUrl: String
-  id: UUID!
+enum Agg {
+  AVG
+  COUNT
+  MAX
+  MEDIAN
+  MIN
+  SUM
+}
+
+type Analysis {
+  regression: Regression
+}
+
+input AnalysisInput {
+  regression: RegressionInput
+}
+
+enum ArgType {
+  ANY_DATE
+  ANY_NUMBER
+  ANY_STRING
+  COL_DATE
+  COL_NUMBER
+  COL_STRING
+  DATE
+  NUMBER
+  STRING
 }
 
 type Attachment {
@@ -40,634 +65,2251 @@ type Attachment {
   url: String
 }
 
-type Avatar {
-  aspectRatio: Float
-  contentType: String
-  id: UUID
+type Autocomplete {
+  column: Column
+  function: Function
   name: String
+  type: AutocompleteType
+}
+
+enum AutocompleteType {
+  COLUMN
+  FUNCTION
+  KEYWORD
+}
+
+enum CaseType {
+  CAPITALIZE
+  LOWER
+  NONE
+  UPPER
+}
+
+type Change {
+  after: String
+  before: String
+  changeType: ChangeType
+  column: Column
+  id: Int
+  insertedAt: Timestamp
+}
+
+input ChangeCaseTypeInput {
+  value: CaseType
+}
+
+enum ChangeType {
+  CHANGE_CASE_TYPE
+  CHANGE_CODECS
+  CHANGE_DATA_TYPE
+  CHANGE_INCLUDE
+  CHANGE_POSITION
+  CHANGE_TITLE
+  CHANGE_WIDTH
+  DELETE_COLUMN
+  DELETE_COLUMNS
+  REMOVE_LETTERS
+  REMOVE_NUMBERS
+  REMOVE_PUNCTUATION
+  TRIM_SPACES
+  UNION_COLUMNS
+}
+
+type ChatAvatar {
+  large: String
+  small: String
+}
+
+type ChatMessage {
+  embed: Json
+  messageId: String
+  reply: ChatMessage
+  replyId: String
+  roomId: String
+  text: String
+  user: ChatUser
+  userId: String
+}
+
+type ChatOnline {
+  id: String
+  meta: ChatOnlineMeta
+}
+
+type ChatOnlineMeta {
+  onlineAt: Int
+}
+
+type ChatRoom {
+  dialog: Boolean
+  lastMessage: ChatMessage
+  messageId: String
+  metadata: Json
+  name: String
+  roomId: String
+  updatedAt: Int
+  user: ChatUser
+}
+
+type ChatUser {
+  avatar: ChatAvatar
+  id: String
+  name: String
+}
+
+type Codec {
+  level: Int
+  type: CodecType
+}
+
+input CodecInp {
+  level: Int
+  type: CodecType
+}
+
+input CodecInput {
+  value: [CodecInp]
+}
+
+enum CodecType {
+  DELTA
+  DOUBLE_DELTA
+  GORILLA
+  LZ4
+  LZ4HC
+  NONE
+  T64
+  ZSTD
+}
+
+type Column {
+  caseType: CaseType
+  changes: [Change]
+  codecs: [Codec]
+  columnIds: [Int]
+  columnName: String
+  columnStats: [ColumnStat]
+  compressedBytes: Int
+  dataType: DataType
+  defaultExpr: String
+  id: Int
+  include: Boolean
+  insertedAt: Timestamp
+  nullable: Boolean
+  originalTitle: String
+  position: Int
+  removeLetters: Boolean
+  removeNumbers: Boolean
+  removePunctuation: Boolean
+  sourceStepId: Int
+  step: Step
+  stepIds: [Int]
+  title: String
+  trimSpaces: Boolean
+  uncompressedBytes: Int
+  updatedAt: Timestamp
+  width: Int
+}
+
+type ColumnStat {
+  count: Int
+  value: String
+}
+
+type ConnectedEntities {
+  folders: Json
+  objects: Json
+}
+
+type Connection {
+  id: Int
+  joinType: JoinType
+  leftTableFieldId: String
+  leftTableId: Int
+  rightTableFieldId: String
+  rightTableId: Int
+}
+
+type CubeFilter {
+  cubeId: String!
+  cubeTitle: String
+  draftInput: String
+  filter: [FormulaToken]
+}
+
+input CubeFilterInput {
+  cubeId: String!
+  draftInput: String
+  filter: [FormulaTokenInput]
+}
+
+type DashboardAnalysis {
+  regression: DashboardRegression
+}
+
+input DashboardAnalysisInput {
+  regression: DashboardRegressionInput
+}
+
+type DashboardRegression {
+  models: [RegressionModelV1]
+  predictSize: Int!
+}
+
+input DashboardRegressionInput {
+  models: [RegressionModelV1Input]
+  predictSize: Int!
+}
+
+type Datasource {
+  datasetCode: String
+  datasourceProgress: DatasourceProgress
+  datasourceState: DatasourceState
+  dbParams: DbParams
+  eisParams: EisParams
+  id: Int
+  link: String
+  locked: Boolean
+  object: Object
+  odataParams: OdataParams
+  periodicityType: PeriodicityType
+  periodicityValue: Float
+  sourceType: SourceType
+  steps: [Step]
+  title: String
+}
+
+type DatasourceProgress {
+  datasourceId: Int
+  doneDate: Timestamp
+  futureStartDate: Timestamp
+  processes: [Progress]
+  startDate: Timestamp
+  status: ProgressStatus
+  stopDate: Timestamp
+}
+
+type DatasourceState {
+  allCount: Int
+  currentSubsource: String
+  datasourceId: Int
+  doneCount: Int
+}
+
+enum DataType {
+  DATE
+  DATETIME
+  ENUM
+  FLOAT32
+  FLOAT64
+  INT16
+  INT32
+  INT64
+  INT8
+  STRING
+  STRING_N
+  UINT16
+  UINT32
+  UINT64
+  UINT8
+  UUID
+}
+
+input DataTypeInput {
+  value: DataType
+}
+
+type DataValue {
+  agg: Agg
+  columnId: Int
+  fieldId: String
+  filter: [FormulaToken]
+  groupFieldId: String
+  tableId: Int
+  title: String
+}
+
+input DataValueInput {
+  agg: Agg
+  columnId: Int
+  fieldId: String
+  filter: [FormulaTokenInput]
+  groupFieldId: String
+  tableId: Int
+  title: String
+}
+
+type DbParams {
+  db: String
+  dbType: DbType
+  host: String
+  pass: String
+  port: String
+  tables: [DbTable]
+  user: String
+}
+
+input DbParamsInp {
+  db: String
+  dbType: DbType
+  host: String
+  pass: String
+  port: String
+  tables: [DbTableInp]
+  user: String
+}
+
+type DbTable {
+  name: String
+  periodicityType: PeriodicityType
+  periodicityValue: Float
+  schema: String
+}
+
+input DbTableInp {
+  name: String
+  periodicityType: PeriodicityType
+  periodicityValue: Float
+  schema: String
+}
+
+enum DbType {
+  MSSQL
+  MYSQL
+  ORACLE
+  POSTGRES
+}
+
+type DefaultPanel {
+  panelId: UUID!
+  userId: Int!
+}
+
+type EisDir {
+  includeSubdirs: Boolean
+  path: String
+  queries: [String]
+  regexp: String
+  title: String
+}
+
+input EisDirInp {
+  includeSubdirs: Boolean
+  path: String
+  queries: [String]
+  regexp: String
+  title: String
+}
+
+type EisParams {
+  dirs: [EisDir]
+  host: String
+  pass: String
+  port: String
+  user: String
+}
+
+input EisParamsInp {
+  dirs: [EisDirInp]
+  host: String
+  pass: String
+  port: String
+  user: String
+}
+
+type EtlAcl {
+  datasourceEdit: Boolean
+  datasourceRead: Boolean
+  flowEdit: Boolean
+  flowRead: Boolean
+}
+
+type Field {
+  datatype: FieldDataType
+  description: String
+  fieldType: FieldType
+  id: String
+  isFKey: Boolean
+  isInvisible: Boolean
+  isLink: Boolean
+  position: Int
+  postfix: String
+  title: String
+}
+
+enum FieldDataType {
+  DATE
+  DATETIME
+  FLOAT
+  GEO
+  INT
+  STRING
+}
+
+enum FieldType {
+  DIMENSION
+  MEASURE
+}
+
+enum FilterVisType {
+  BUTTONS
+  MULTISELECT
+  TABS
+}
+
+type Flow {
+  acl: FlowAcl
+  connectedEntities: ConnectedEntities
+  id: Int
+  insertedAt: Timestamp
+  object: Object
+  title: String
+  updatedAt: Timestamp
+}
+
+type FlowAcl {
+  copy: Boolean
+  delete: Boolean
+  update: Boolean
+}
+
+type Folder {
+  asOwner: Boolean
+  defaultPanels: [DefaultPanel]
+  folders: [Folder]
+  groupAccessList: [UserGroup]
+  id: Int
+  invitedUsers: [User]
+  isLocked: Boolean
+  isOpened: Boolean
+  objects: [Object]
+  sharedAccess: Boolean
+  sharedToken: String
+  title: String
+  usersAccessList: [User]
+}
+
+type FormulaToken {
+  dataValue: DataValue
+  funcValue: FuncValue
+  listValue: ListValue
+  tokenType: TokenType!
+  value: String
+}
+
+input FormulaTokenInput {
+  dataValue: DataValueInput
+  funcValue: FuncValueInput
+  listValue: ListValueInput
+  tokenType: TokenType!
+  value: String
+}
+
+type FtpEnity {
+  name: String
+  type: FtpEnityType
+}
+
+enum FtpEnityType {
+  DIR
+  FILE
+}
+
+type Function {
+  arg1Type: ArgType
+  arg2Type: ArgType
+  arg3Type: ArgType
+  argsCount: Int
+  description: String
+  examples: [FunctionExample]
+  name: String!
+  resultType: ResultType
+}
+
+type FunctionExample {
+  formula: String
+  result: String
+}
+
+type FuncValue {
+  arg1: [FormulaToken]
+  arg2: [FormulaToken]
+  arg3: [FormulaToken]
+  args: [[FormulaToken]]
+  name: String!
+}
+
+input FuncValueInput {
+  arg1: [FormulaTokenInput]
+  arg2: [FormulaTokenInput]
+  arg3: [FormulaTokenInput]
+  args: [[FormulaTokenInput]]
+  name: String!
+}
+
+type Hierarchy {
+  description: String
+  dims: [HierarchyDim]
+  id: Int
+  insertedAt: Timestamp
+  isInvisible: Boolean
+  isOpened: Boolean
+  position: Int
+  title: String
+  updatedAt: Timestamp
+}
+
+type HierarchyDim {
+  dimId: String
+  position: Int
+}
+
+input HierarchyDimInput {
+  dimId: String
+  position: Int
+}
+
+input IncludeInput {
+  value: Boolean
+}
+
+type Indicator {
+  baseRating: [[String]]
+  connectedEntities: ConnectedEntities
+  displayColumnIds: [String]
+  displayFKeyId: String
+  displayTableId: Int
+  formula: [FormulaToken]
+  id: Int
+  insertedAt: Timestamp
+  object: Object
+  periodicity: Periodicity
+  periodicityDays: Int
+  showCountedFormula: Boolean
+  sortType: SortType
+  sortValue: Float
+  sortValueType: SortValueType
+  title: String
+  updatedAt: Timestamp
+}
+
+type IndicatorsAutocomplete {
+  field: Field
+  function: Function
+  name: String
+  table: Table
+  type: IndicatorsAutocompleteType
+}
+
+enum IndicatorsAutocompleteType {
+  FIELD
+  FUNCTION
+  KEYWORD
+  TABLE
+}
+
+enum JoinType {
+  ALL_FULL
+  ALL_INNER
+  ALL_LEFT
+  ALL_RIGHT
+  ANTI_LEFT
+  ANTI_RIGHT
+  ANY_INNER
+  ANY_LEFT
+  ANY_RIGHT
+  CROSS_JOIN
+  SEMI_LEFT
+  SEMI_RIGHT
+}
+
+"""
+The `Json` scalar type represents arbitrary json string data, represented as UTF-8
+character sequences. The Json type is most often used to represent a free-form
+human-readable json string.
+"""
+scalar Json
+
+enum LegendDirection {
+  COLUMN
+  ROW
+}
+
+enum LegendPosition {
+  BOTTOM
+  LEFT
+  RIGHT
+  TOP
+}
+
+type ListValue {
+  list: [String]
+  title: String
+}
+
+input ListValueInput {
+  list: [String]
+  title: String
+}
+
+type Object {
+  attachment: Attachment
+  attachmentId: String
+  entityId: String
+  folderId: Int
+  groupAccessList: [UserGroup]
+  id: String
+  objectType: ObjectType
+  title: String
+  updatedAt: Timestamp
+  usersAccessList: [User]
+}
+
+enum ObjectType {
+  DASHBOARD
+  DATASOURCE
+  FLOW
+  GROUP_CHAT
+  INDICATOR
+  PM
+  TABLE
+}
+
+type OdataParams {
+  host: String
+  pass: String
+  port: String
+  tables: [String]
+  url: String
+  user: String
+}
+
+input OdataParamsInp {
+  host: String
+  pass: String
+  port: String
+  tables: [String]
+  url: String
+  user: String
+}
+
+type OlapAcl {
+  olapRequest: Boolean
+  panelsEdit: Boolean
+  panelsRead: Boolean
+}
+
+type OlapChartLayer implements OlapLayer {
+  analysis: Analysis
+  chartType: OlapChartType
+  columns: [OlapRequestField]
+  cubeId: String
+  drillAsidePanelId: String
+  havingFilters: [FormulaToken]
+  height: Float
+  hierarchy: OlapHierarchy
+  id: UUID!
+  limit: Int
+  mapProperties: OlapLayerMapProperties
+  offset: Int
+  positionX: Float
+  positionY: Float
+  rows: [OlapRequestField]
+  scannerDrillFields: [String]
+  showTotal: Boolean
+  showValueMeasureName: Boolean
+  sorting: OlapLayerSorting
+  styles: OlapLayerStyles
+  type: OlapLayerType
+  valueFontColor: String
+  valueFontSize: Int
+  valuePostfix: String
+  whereFilters: [FormulaToken]
+  width: Float
+}
+
+enum OlapChartType {
+  BUBBLE
+  CONFIGURABLE
+  GRAPH
+  MAP
+  PIE
+  RADAR
+  SCANNER
+  SCATTER
+  TABLE
+  VALUE
+}
+
+type OlapDashboard {
+  analysis: DashboardAnalysis
+  backgroundColor: String
+  borderColor: String
+  height: Int
+  horizontalMargin: Int
+  id: UUID!
+  insertedAt: Timestamp
+  layers: [OlapLayer]
+  maxWidth: Int
+  minWidth: Int
+  object: Object
+  rowHeight: Int
+  title: String!
+  updatedAt: Timestamp
+  verticalMargin: Int
+  width: Int
+  workspace: OlapDashboardWorkspace!
+}
+
+input OlapDashboardInput {
+  analysis: DashboardAnalysisInput
+  backgroundColor: String
+  borderColor: String
+  height: Int
+  horizontalMargin: Int
+  layers: [OlapLayerInput]
+  maxWidth: Int
+  minWidth: Int
+  rowHeight: Int
+  title: String
+  verticalMargin: Int
+  width: Int
+  workspace: OlapDashboardWorkspace
+}
+
+enum OlapDashboardWorkspace {
+  FIXED
+  UNLIMITED
+}
+
+type OlapFilterLayer implements OlapLayer {
+  applyToAllElement: Boolean
+  cubeId: String
+  defaultSelectedValues: [String]
+  fieldId: String
+  fieldValues: [String]
+  filterField: OlapRequestField
+  filterVisType: FilterVisType
+  height: Float
+  id: UUID!
+  positionX: Float
+  positionY: Float
+  relatedElements: [UUID]
+  type: OlapLayerType
+  width: Float
+}
+
+enum OlapFontStyle {
+  ITALIC
+  NORMAL
+}
+
+enum OlapFontWeight {
+  BOLD
+  NORMAL
+}
+
+enum OlapGridType {
+  COMBINED
+  HORIZONTAL
+  VERTICAL
+}
+
+type OlapHierarchy {
+  fields: [OlapRequestField]
+  id: String
+}
+
+input OlapHierarchyInput {
+  fields: [OlapRequestFieldInput]
+  id: String
+}
+
+interface OlapLayer {
+  height: Float
+  id: UUID!
+  positionX: Float
+  positionY: Float
+  type: OlapLayerType
+  width: Float
+}
+
+type OlapLayerAlias {
+  alias: String
+  fieldId: String
+  hiddenAlias: String
+  id: String
+  name: String
+}
+
+input OlapLayerAliasInput {
+  alias: String
+  fieldId: String
+  hiddenAlias: String
+  id: String
+  name: String
+}
+
+type OlapLayerAxis {
+  color: String
+  gridColor: String
+  isLog: Boolean
+  lineStyle: OlapLayerLineStyle
+  logBase: Float
+  textStyle: OlapLayerTextStyle
+  x: OlapLayerDirectAxis
+  y: OlapLayerDirectAxis
+}
+
+input OlapLayerAxisInput {
+  color: String
+  gridColor: String
+  isLog: Boolean
+  lineStyle: OlapLayerLineStyleInput
+  logBase: Float
+  textStyle: OlapLayerTextStyleInput
+  x: OlapLayerDirectAxisInput
+  y: OlapLayerDirectAxisInput
+}
+
+type OlapLayerBarFillStyle {
+  color: String
+  opacity: Float
+}
+
+input OlapLayerBarFillStyleInput {
+  color: String
+  opacity: Float
+}
+
+type OlapLayerDirectAxis {
+  rotate: Float
+  withAxisLine: Boolean
+  withLabel: Boolean
+  withName: Boolean
+}
+
+input OlapLayerDirectAxisInput {
+  rotate: Float
+  withAxisLine: Boolean
+  withLabel: Boolean
+  withName: Boolean
+}
+
+type OlapLayerGrid {
+  color: String
+  lineStyle: OlapLayerLineStyle
+  type: OlapGridType
+}
+
+input OlapLayerGridInput {
+  color: String
+  lineStyle: OlapLayerLineStyleInput
+  type: OlapGridType
+}
+
+input OlapLayerInput {
+  applyToAllElement: Boolean
+  valueFontSize: Int
+  height: Float
+  relatedElements: [UUID]
+  fieldValues: [String]
+  cubeId: String
+  defaultSelectedValues: [String]
+  columns: [OlapRequestFieldInput]
+  analysis: AnalysisInput
+  textDecoration: OlapTextDecoration
+  rows: [OlapRequestFieldInput]
+  chartType: OlapChartType
+  havingFilters: [FormulaTokenInput]
+  showValueMeasureName: Boolean
+  scannerDrillFields: [String]
+  whereFilters: [FormulaTokenInput]
+  size: Int
+  fontWeight: OlapFontWeight
+  positionX: Float
+  showTotal: Boolean
+  styles: OlapLayerStylesInput
+  rtx: [OlapLayerRtxDataInput]
+  color: String
+  fieldId: String
+  textAlign: OlapTextAlign
+  hierarchy: OlapHierarchyInput
+  valuePostfix: String
+  fontStyle: OlapFontStyle
+  positionY: Float
+  sorting: OlapLayerSortingInput
+  mapProperties: OlapLayerMapPropertiesInput
+  type: OlapLayerType
+  drillAsidePanelId: String
+  valueFontColor: String
+  width: Float
+  text: String
+  filterField: OlapRequestFieldInput
+  limit: Int
+  id: UUID
+  offset: Int
+  filterVisType: FilterVisType
+}
+
+type OlapLayerLegend {
+  direction: LegendDirection
+  linesCount: Int
+  position: LegendPosition
+  show: Boolean
+}
+
+input OlapLayerLegendInput {
+  direction: LegendDirection
+  linesCount: Int
+  position: LegendPosition
+  show: Boolean
+}
+
+type OlapLayerLineStyle {
+  color: String
+  opacity: Float
+  type: OlapLineType
+  width: Float
+}
+
+input OlapLayerLineStyleInput {
+  color: String
+  opacity: Float
+  type: OlapLineType
+  width: Float
+}
+
+type OlapLayerMap {
+  color: String
+  ranges: [OlapLayerRanges]
+}
+
+input OlapLayerMapInput {
+  color: String
+  ranges: [OlapLayerRangesInput]
+}
+
+type OlapLayerMapProperties {
+  center: [Float]
+  zoom: Float
+}
+
+input OlapLayerMapPropertiesInput {
+  center: [Float]
+  zoom: Float
+}
+
+type OlapLayerMark {
+  color: String
+  position: String
+  rtx: [OlapLayerRtxData]
+  showLine: Boolean
+  type: String
+  value: String
+}
+
+input OlapLayerMarkInput {
+  color: String
+  position: String
+  rtx: [OlapLayerRtxDataInput]
+  showLine: Boolean
+  type: String
+  value: String
+}
+
+type OlapLayerMarkLine {
+  category: String
+  color: String
+  label: String
+  position: String
+  type: OlapMarkLineType
+  value: Float
+}
+
+input OlapLayerMarkLineInput {
+  category: String
+  color: String
+  label: String
+  position: String
+  type: OlapMarkLineType
+  value: Float
+}
+
+type OlapLayerPie {
+  id: String
+  innerRadius: Int
+}
+
+input OlapLayerPieInput {
+  id: String
+  innerRadius: Int
+}
+
+type OlapLayerPoint {
+  barFill: OlapLayerBarFillStyle
+  barStroke: OlapLayerShapeStyle
+  fill: OlapLayerShapeStyle
+  id: String
+  marks: [OlapLayerMark]
+  stroke: OlapLayerShapeStyle
+}
+
+input OlapLayerPointInput {
+  barFill: OlapLayerBarFillStyleInput
+  barStroke: OlapLayerShapeStyleInput
+  fill: OlapLayerShapeStyleInput
+  id: String
+  marks: [OlapLayerMarkInput]
+  stroke: OlapLayerShapeStyleInput
+}
+
+type OlapLayerRanges {
+  color: String
+  end: Float
+  start: Float
+}
+
+input OlapLayerRangesInput {
+  color: String
+  end: Float
+  start: Float
+}
+
+type OlapLayerRtxData {
+  align: String
+  children: [OlapLayerRtxItem]
+  type: RtxDataType
+}
+
+input OlapLayerRtxDataInput {
+  align: String
+  children: [OlapLayerRtxItemInput]
+  type: RtxDataType
+}
+
+type OlapLayerRtxItem {
+  bold: Boolean
+  children: [OlapLayerRtxItemChild]
+  color: String
+  element: OlapChartLayer
+  fontSize: Float
+  italic: Boolean
+  linkPanelId: String
+  text: String
+  type: RtxItemType
+  value: String
+}
+
+type OlapLayerRtxItemChild {
+  text: String
+}
+
+input OlapLayerRtxItemChildInput {
+  text: String
+}
+
+input OlapLayerRtxItemInput {
+  bold: Boolean
+  children: [OlapLayerRtxItemChildInput]
+  color: String
+  element: OlapLayerInput
+  fontSize: Float
+  italic: Boolean
+  linkPanelId: String
+  text: String
+  type: RtxItemType
+  value: String
+}
+
+type OlapLayerSeria {
+  cumulative: Boolean
+  donutPadding: Int
+  donutWidth: Int
+  gain: Boolean
+  growthRate: Boolean
+  id: String
+  innerRadius: Int
+  lineStyle: OlapLayerLineStyle
+  marks: [OlapLayerMark]
+  outerRadius: Int
+  pointStyle: OlapLayerPoint
+  showTrend: Boolean
+  smooth: Boolean
+  stack: String
+  trendLine: TrendLine
+  type: OlapSeriaType
+}
+
+input OlapLayerSeriaInput {
+  cumulative: Boolean
+  donutPadding: Int
+  donutWidth: Int
+  gain: Boolean
+  growthRate: Boolean
+  id: String
+  innerRadius: Int
+  lineStyle: OlapLayerLineStyleInput
+  marks: [OlapLayerMarkInput]
+  outerRadius: Int
+  pointStyle: OlapLayerPointInput
+  showTrend: Boolean
+  smooth: Boolean
+  stack: String
+  trendLine: TrendLineInput
+  type: OlapSeriaType
+}
+
+type OlapLayerShapeStyle {
+  color: String
+  opacity: Float
+  size: Float
+}
+
+input OlapLayerShapeStyleInput {
+  color: String
+  opacity: Float
+  size: Float
+}
+
+type OlapLayerSorting {
+  asc: Boolean
+  type: String
+}
+
+input OlapLayerSortingInput {
+  asc: Boolean
+  type: String
+}
+
+type OlapLayerStyles {
+  aliases: [OlapLayerAlias]
+  axis: OlapLayerAxis
+  backgroundColor: String
+  grid: OlapLayerGrid
+  hGrid: OlapLayerVHGrid
+  legend: OlapLayerLegend
+  map: OlapLayerMap
+  markLines: [OlapLayerMarkLine]
+  pie: OlapLayerPie
+  points: [OlapLayerPoint]
+  series: [OlapLayerSeria]
+  seriesConfig: OlapLayerSeria
+  sortingType: SortingType
+  table: OlapLayerTable
+  vGrid: OlapLayerVHGrid
+  valueRounding: Int
+  zooming: OlapLayerZooming
+}
+
+input OlapLayerStylesInput {
+  aliases: [OlapLayerAliasInput]
+  axis: OlapLayerAxisInput
+  backgroundColor: String
+  grid: OlapLayerGridInput
+  hGrid: OlapLayerVHGridInput
+  legend: OlapLayerLegendInput
+  map: OlapLayerMapInput
+  markLines: [OlapLayerMarkLineInput]
+  pie: OlapLayerPieInput
+  points: [OlapLayerPointInput]
+  series: [OlapLayerSeriaInput]
+  seriesConfig: OlapLayerSeriaInput
+  sortingType: SortingType
+  table: OlapLayerTableInput
+  vGrid: OlapLayerVHGridInput
+  valueRounding: Int
+  zooming: OlapLayerZoomingInput
+}
+
+type OlapLayerTable {
+  columnWidths: [TablePartSize]
+  horizontalPadding: Int
+  id: String
+  mergeCells: Boolean
+  rowLines: [TablePartSize]
+  stickyHeader: Boolean
+  stickySide: Boolean
+  verticalPadding: Int
+}
+
+input OlapLayerTableInput {
+  columnWidths: [TablePartSizeInput]
+  horizontalPadding: Int
+  id: String
+  mergeCells: Boolean
+  rowLines: [TablePartSizeInput]
+  stickyHeader: Boolean
+  stickySide: Boolean
+  verticalPadding: Int
+}
+
+type OlapLayerTextStyle {
+  color: String
+  fontSize: Float
+}
+
+input OlapLayerTextStyleInput {
+  color: String
+  fontSize: Float
+}
+
+enum OlapLayerType {
+  CHART
+  FILTER
+  TEXT
+}
+
+type OlapLayerVHGrid {
+  areas: Int
+  show: Boolean
+}
+
+input OlapLayerVHGridInput {
+  areas: Int
+  show: Boolean
+}
+
+type OlapLayerZooming {
+  horizontal: OlapLayerZoomingOpts
+  vertical: OlapLayerZoomingOpts
+}
+
+input OlapLayerZoomingInput {
+  horizontal: OlapLayerZoomingOptsInput
+  vertical: OlapLayerZoomingOptsInput
+}
+
+type OlapLayerZoomingOpts {
+  enabled: Boolean
+  end: Float
+  start: Float
+}
+
+input OlapLayerZoomingOptsInput {
+  enabled: Boolean
+  end: Float
+  start: Float
+}
+
+enum OlapLineType {
+  DASHED
+  DOTTED
+  SOLID
+}
+
+enum OlapMarkLineType {
+  HORIZONTAL
+  VERTICAL
+}
+
+enum OlapRequestAgg {
+  ANYHEAVY
+  ARG_MAX
+  ARG_MIN
+  AVG
+  CALCULATED
+  COUNT
+  KURTPOP
+  KURTSAMP
+  MAX
+  MEDIAN
+  MIN
+  NONE
+  QUANTILE
+  SKEWPOP
+  SKEWSAMP
+  SUM
+  VAR_POP
+  VAR_SAMP
+}
+
+type OlapRequestArg {
+  columnId: String
+  cubeId: String
+  dataType: FieldDataType
+  dateFormat: String
+  label: String
+  type: OlapRequestArgType!
+  value: String
+}
+
+input OlapRequestArgInput {
+  columnId: String
+  cubeId: String
+  dataType: FieldDataType
+  dateFormat: String
+  label: String
+  type: OlapRequestArgType!
+  value: String
+}
+
+enum OlapRequestArgType {
+  COLUMN
+  FLOAT
+  INTEGER
+  STRING
+}
+
+input OlapRequestConditionInput {
+  field: OlapRequestFieldInput!
+  value: String
+}
+
+type OlapRequestField {
+  additionalCalc: AdditionalCalc
+  agg: OlapRequestAgg!
+  args: [OlapRequestArg]
+  calculatedFormula: [FormulaToken]
+  hierarchyId: String
+  id: String!
+  index: Int
+  name: String
+  showTotal: Boolean
+  valueRounding: Int
+}
+
+input OlapRequestFieldInput {
+  additionalCalc: AdditionalCalcInput
+  agg: OlapRequestAgg!
+  args: [OlapRequestArgInput]
+  calculatedFormula: [FormulaTokenInput]
+  hierarchyId: String
+  id: String!
+  index: Int
+  name: String
+  showTotal: Boolean
+  valueRounding: Int
+}
+
+input OlapRequestInput {
+  conditions: [OlapRequestConditionInput]
+  cubeId: String
+  fields: [OlapRequestFieldInput!]
+  format: OlapRequestType!
+  havingFilters: [FormulaTokenInput]
+  limit: Int
+  offset: Int
+  scannerId: String
+  whereFilters: [FormulaTokenInput]
+}
+
+enum OlapRequestType {
+  AXIS
+  FLAT
+}
+
+type OlapResponse {
+  data: Json
+}
+
+enum OlapSeriaType {
+  BAR
+  LINE
+  SCATTER
+}
+
+enum OlapTextAlign {
+  CENTER
+  JUSTIFY
+  LEFT
+  RIGHT
+}
+
+enum OlapTextDecoration {
+  LINE_THROUGH
+  NONE
+  UNDERLINE
+}
+
+type OlapTextLayer implements OlapLayer {
+  color: String
+  fontStyle: OlapFontStyle
+  fontWeight: OlapFontWeight
+  height: Float
+  id: UUID!
+  positionX: Float
+  positionY: Float
+  rtx: [OlapLayerRtxData]
+  size: Int
+  text: String
+  textAlign: OlapTextAlign
+  textDecoration: OlapTextDecoration
+  type: OlapLayerType
+  width: Float
+}
+
+type Organisation {
+  acl: Acl
+  description: String
+  email: String
+  id: Int
+  name: String
+  private: Boolean
   url: String
 }
 
-type Calendar {
-  dates: [CalendarDate]
-  endDate: Date
-  friday: ExceptionType
-  id: Int
+type OseAcl {
+  tablesEdit: Boolean
+  tablesRead: Boolean
+}
+
+type OutDbParams {
+  db: String
+  dbType: DbType
+  exportToDb: Boolean
+  host: String
+  pass: String
+  port: String
+  tableName: String
+  title: String
+  user: String
+}
+
+input OutDbParamsInput {
+  db: String
+  dbType: DbType
+  exportToDb: Boolean
+  host: String
+  pass: String
+  port: String
+  tableName: String
+  title: String
+  user: String
+}
+
+enum Periodicity {
+  CUSTOM
+  DAY
+  HOUR
+  MONTH
+  NONE
+  QUARTER
+  WEEK
+}
+
+enum PeriodicityType {
+  DAYS
+  HOURS
+  NEVER
+  ONCE
+}
+
+type PmChecklist {
+  description: String
+  id: UUID!
   insertedAt: Timestamp
-  isActive: Boolean
-  monday: ExceptionType
-  saturday: ExceptionType
-  serviceName: String
-  startDate: Date
-  sunday: ExceptionType
-  thursday: ExceptionType
-  trips: [Trip]
-  tuesday: ExceptionType
-  wednesday: ExceptionType
+  tasks: [PmChecklistTask]
+  title: String!
+  updatedAt: Timestamp
+  userIds: [Int]
 }
 
-input CalendarCreateInput {
-  dates: [CalendarDateInput!]!
-  endDate: Date!
-  friday: ExceptionType!
-  monday: ExceptionType!
-  saturday: ExceptionType!
-  serviceName: String
-  startDate: Date!
-  sunday: ExceptionType!
-  thursday: ExceptionType!
-  tuesday: ExceptionType!
-  wednesday: ExceptionType!
+type PmChecklistTask {
+  description: String
+  id: UUID!
+  planFinishTime: Timestamp
+  planStartTime: Timestamp
+  status: PmChecklistTaskStatus!
+  title: String!
+  userIds: [Int]
 }
 
-type CalendarDate {
-  date: Date
-  exceptionType: ExceptionType
-  id: Int
+enum PmChecklistTaskStatus {
+  APPROOVED
+  DONE
+  IN_PROGRESS
+  NEW
+}
+
+input PositionInput {
+  value: Int
+}
+
+type Progress {
+  allCount: Int
+  doneCount: Int
+  label: String
+}
+
+enum ProgressStatus {
+  CREATED
+  DONE
+  FAILED
+  IN_PROGRESS
+  STOPPED
+}
+
+type ProjectManagement {
+  checklists: [PmChecklist]
+  id: UUID!
   insertedAt: Timestamp
-  isActive: Boolean
+  object: Object
+  title: String!
+  updatedAt: Timestamp
 }
 
-input CalendarDateInput {
-  date: Date
-  exceptionType: ExceptionType
+type Regression {
+  models: [RegressionModel]
+  predictSize: Int!
 }
 
-input CalendarUpdateInput {
-  dates: [CalendarDateInput!]
-  endDate: Date
-  friday: ExceptionType
-  id: Int!
-  monday: ExceptionType
-  saturday: ExceptionType
-  serviceName: String
-  startDate: Date
-  sunday: ExceptionType
-  thursday: ExceptionType
-  tuesday: ExceptionType
-  wednesday: ExceptionType
+input RegressionCalculatedVarInput {
+  agg: OlapRequestAgg
+  coef: Float!
+  coefMax: Float!
+  coefMin: Float!
+  func: RegressionVarFunc!
+  lagsCount: Int!
+  relevant: Boolean!
+  seriaId: String!
 }
 
-enum DataSource {
-  GTFS_SPB
-  NATIVE
+input RegressionCalculatedVarV1Input {
+  agg: OlapRequestAgg!
+  coef: Float!
+  coefMax: Float!
+  coefMin: Float!
+  elementId: String!
+  func: RegressionVarFunc!
+  lagsCount: Int!
+  name: String!
+  relevant: Boolean!
+  seriaId: String!
 }
 
-"""Date in ISO 8601 format(YYYY-MM-DD)"""
-scalar Date
+input RegressionInput {
+  models: [RegressionModelInput]
+  predictSize: Int!
+}
 
-type Driver {
-  agency: Agency
-  agencyId: UUID
-  allowedVehiclesTypes: [RouteType]
-  avatar: Avatar
-  avatarId: UUID
-  drivingLicenseNumber: String
-  email: String
-  firstName: String
+type RegressionModel {
+  intercept: Float
+  predictId: String!
+  r2: Float!
+  relevant: Boolean!
+  seriaId: String!
+  significanceLevel: Float!
+  vars: [RegressionVar]!
+}
+
+input RegressionModelInput {
+  intercept: Float
+  predictId: String!
+  r2: Float!
+  relevant: Boolean!
+  seriaId: String!
+  significanceLevel: Float!
+  vars: [RegressionCalculatedVarInput]!
+}
+
+type RegressionModelV1 {
+  elementId: String
+  intercept: Float
+  predictId: String!
+  r2: Float!
+  relevant: Boolean!
+  seriaId: String!
+  significanceLevel: Float!
+  vars: [RegressionVarV1]!
+}
+
+input RegressionModelV1Input {
+  elementId: String
+  intercept: Float
+  predictId: String!
+  r2: Float!
+  relevant: Boolean!
+  seriaId: String!
+  significanceLevel: Float!
+  vars: [RegressionCalculatedVarV1Input]!
+}
+
+input RegressionSeriaInput {
+  id: String!
+  seria: [Float]!
+}
+
+type RegressionVar {
+  coef: Float!
+  coefMax: Float!
+  coefMin: Float!
+  func: RegressionVarFunc!
+  lagsCount: Int!
+  relevant: Boolean!
+  seriaId: String!
+}
+
+enum RegressionVarFunc {
+  CUBE
+  LN
+  NONE
+  SQRT
+  SQUARE
+}
+
+input RegressionVarInput {
+  func: RegressionVarFunc!
+  lagsCount: Int!
+  seriaId: String!
+}
+
+type RegressionVarV1 {
+  agg: OlapRequestAgg!
+  coef: Float!
+  coefMax: Float!
+  coefMin: Float!
+  elementId: String!
+  func: RegressionVarFunc!
+  lagsCount: Int!
+  name: String!
+  relevant: Boolean!
+  seriaId: String!
+}
+
+enum ResultType {
+  DATE
+  NUMBER
+  STRING
+}
+
+type Role {
+  dashboardRead: Boolean
+  dashboardWrite: Boolean
+  datasourceRead: Boolean
+  datasourceWrite: Boolean
+  description: String
+  etlRead: Boolean
+  etlWrite: Boolean
+  folderId: Int!
   id: Int
-  lastName: String
-  middleName: String
-  phone: String
-  route: Route
-  trips: [Trip]
-  vehicle: Vehicle
+  indicatorsRead: Boolean
+  indicatorsWrite: Boolean
+  olapschemaRead: Boolean
+  olapschemaWrite: Boolean
+  rolesRead: Boolean
+  rolesWrite: Boolean
+  title: String!
+  users: [User]
 }
 
-input DriverInput {
-  allowedVehiclesTypes: [RouteType]
-  avatarId: UUID
-  drivingLicenseNumber: String
-  email: String
-  firstName: String
-  lastName: String
-  middleName: String
-  phone: String
+type RootMutationType {
+  """Create folder user_group"""
+  createFolderUserGroup(description: String, folderId: Int!, title: String!): UserGroup
+
+  """Update folder user_group"""
+  updateFolderUserGroup(description: String, id: Int!, title: String!): UserGroup
+
+  """Create indicator"""
+  createIndicator(displayColumnIds: [String], displayFKeyId: String, displayTableId: Int, folderId: Int, formula: [FormulaTokenInput], periodicity: Periodicity, periodicityDays: Int, showCountedFormula: Boolean, sortType: SortType, sortValue: Float, sortValueType: SortValueType, title: String!): Indicator
+
+  """Update datasource"""
+  updateDatasource(dbParams: DbParamsInp, eisParams: EisParamsInp, id: Int, odataParams: OdataParamsInp, periodicityType: PeriodicityType, periodicityValue: Float, title: String): Datasource
+
+  """remove step from union"""
+  removeStepFromUnion(stepId: Int!, unionId: Int!): Step
+
+  """Create hierarchy"""
+  createHierarchy(tableId: Int!, title: String!): Hierarchy
+
+  """Delete hierarchy"""
+  deleteHierarchy(id: Int!): String
+
+  """Delete step"""
+  deleteStep(id: Int!): String
+
+  """Delete datasources"""
+  deleteDatasource(id: Int!): String
+
+  """Update organisation"""
+  organisationsUpdate(description: String, email: String, id: Int!, name: String!, private: Boolean, url: String!): Organisation
+
+  """Refresh session"""
+  sessionUpdate(refreshToken: UUID!): Session
+
+  """Create flow"""
+  createFlow(folderId: Int, title: String!): Flow
+
+  """Sign out"""
+  sessionDelete: Boolean
+
+  """Sign in"""
+  sessionCreate(email: String!, password: String!): Session
+
+  """Add role to user_group"""
+  addRoleToUserGroup(roleId: Int!, userGroupId: Int!): String
+
+  """Export Step"""
+  exportStep(db: String, dbType: DbType, host: String, id: Int!, pass: String, port: String, tableName: String, user: String): String
+
+  """import file"""
+  importFile(file: Upload, flowId: Int!, positionX: Int, positionY: Int): [Step]
+
+  """Remove role from user_group"""
+  removeRoleFromUserGroup(roleId: Int!, userGroupId: Int!): String
+
+  """Delete organisation"""
+  organisationsDelete(id: Int!): Boolean
+
+  """Create attachment"""
+  attachmentCreate(file: Upload): Attachment
+
+  """load table to memory"""
+  loadToMemory(id: Int!): Table
+
+  """Calculate join"""
+  calculateJoin(joinId: Int!, joinType: JoinType!, leftStepColumnId: Int!, leftStepId: Int!, rightStepColumnId: Int!, rightStepId: Int!): Step
+
+  """Pin folder"""
+  pinFolder(folderId: Int!): Folder
+
+  """Create folder role"""
+  createFolderRole(dashboardRead: Boolean, dashboardWrite: Boolean, datasourceRead: Boolean, datasourceWrite: Boolean, description: String, etlRead: Boolean, etlWrite: Boolean, folderId: Int!, indicatorsRead: Boolean, indicatorsWrite: Boolean, olapschemaRead: Boolean, olapschemaWrite: Boolean, rolesRead: Boolean, rolesWrite: Boolean, title: String!): Role
+
+  """Take away object access"""
+  takeAwayObjectAccess(objectId: String!, userGroupId: Int, userId: Int): String
+
+  """remove_default_panel_from_folder"""
+  removeDefaultPanelFromFolder(folderId: Int!, panelId: UUID!, userId: Int!): String
+
+  """Add steps to union"""
+  addStepsToUnion(stepIds: [Int], unionId: Int!): Step
+
+  """update checklist task"""
+  pmChecklistUpdateTask(checklistId: UUID!, description: String, planFinishTime: Timestamp, planStartTime: Timestamp, status: PmChecklistTaskStatus, taskId: UUID!, title: String, userIds: [Int]): PmChecklist
+
+  """Update object"""
+  updateObject(attachmentId: String, folderId: Int, id: String!, title: String): Object
+
+  """Delete attachment"""
+  attachmentDelete(id: UUID): String
+
+  """Get total column stats"""
+  getTotalColumnStats(columnIds: [Int]): [ColumnStat]
+
+  """Create column"""
+  createColumn(formula: [FormulaTokenInput]!, stepId: Int!, title: String!): Column
+
+  """Delete flow"""
+  deleteFlow(id: Int!): String
+
+  """Invite user to orgfolder"""
+  inviteUserToOrgfolder(folderId: Int!, userId: Int!): String
+
+  """Update hierarchy"""
+  updateHierarchy(description: String, dims: [HierarchyDimInput], id: Int!, isInvisible: Boolean, isOpened: Boolean, position: Int, title: String): Hierarchy
+
+  """Unpin folder"""
+  unpinFolder(folderId: Int!): String
+
+  """Create organisation"""
+  organisationsCreate(description: String, email: String, name: String!, private: Boolean, url: String!): Organisation
+
+  """Create step"""
+  createStep(flowId: Int!, joinType: JoinType, positionX: Int, positionY: Int, sourceStepId: Int, sourceStepIds: [Int], stepType: StepType!, title: String): Step
+
+  """Create dashboard"""
+  olapDashboardCreate(dashboard: OlapDashboardInput!, folderId: Int): OlapDashboard
+
+  """Update step"""
+  updateStep(dateColumn: String, exportToMadd: Boolean, fullUpdate: Boolean, id: Int!, outDbParams: [OutDbParamsInput], periodicity: Int, positionX: Int, positionY: Int, title: String): Step
+
+  """init datasource import"""
+  initImport(datasourceId: Int): Datasource
+
+  """Update field"""
+  updateField(description: String, fieldType: FieldType, id: String!, isFKey: Boolean, isInvisible: Boolean, isLink: Boolean, position: Int, postfix: String, title: String): Field
+
+  """Delete project_management"""
+  projectManagementDelete(id: UUID!): String
+
+  """add_default_panel_to_folder"""
+  addDefaultPanelToFolder(folderId: Int!, panelId: UUID!, userId: Int!): String
+
+  """Take away folder access"""
+  takeAwayFolderAccess(folderId: Int!, userGroupId: Int, userId: Int): String
+
+  """Create datasource"""
+  createDatasource(dbParams: DbParamsInp, eisParams: EisParamsInp, folderId: Int, odataParams: OdataParamsInp, periodicityType: PeriodicityType, periodicityValue: Float, sourceType: SourceType, title: String): Datasource
+
+  """Update folder"""
+  updateFolder(folderId: Int, id: Int!, title: String): Folder
+
+  """Run step"""
+  runStep(stepId: Int!): String
+
+  """Update folder role"""
+  updateFolderRole(dashboardRead: Boolean, dashboardWrite: Boolean, datasourceRead: Boolean, datasourceWrite: Boolean, description: String, etlRead: Boolean, etlWrite: Boolean, id: Int!, indicatorsRead: Boolean, indicatorsWrite: Boolean, olapschemaRead: Boolean, olapschemaWrite: Boolean, rolesRead: Boolean, rolesWrite: Boolean, title: String): Role
+
+  """add task to checklist"""
+  pmChecklistAddTask(checklistId: UUID!, title: String!): PmChecklist
+
+  """Remove role from user"""
+  removeRoleFromUser(roleId: Int!, userId: Int!): String
+
+  """Unshare folder"""
+  unshareFolder(id: Int!): String
+
+  """Delete checklist"""
+  pmChecklistDelete(id: UUID!): String
+
+  """Remove cube_filter from user_group"""
+  removeCubeFilterFromUserGroup(cubeId: Int!, userGroupId: Int!): [CubeFilter]
+
+  """Create project_management"""
+  projectManagementCreate(folderId: Int!, title: String!): ProjectManagement
+
+  """Delete connection"""
+  deleteConnection(id: Int): String
+
+  """Create connection"""
+  createConnection(joinType: JoinType, leftTableFieldId: String, leftTableId: Int, rightTableFieldId: String, rightTableId: Int): Connection
+
+  """Delete folder role"""
+  deleteFolderRole(id: Int!): String
+
+  """remove task from checklist"""
+  pmChecklistRemoveTask(checklistId: UUID!, taskId: UUID!): PmChecklist
+
+  """Export Step to MADD"""
+  exportStepToMadd(id: Int!): String
+
+  """stop datasource import"""
+  stopImport(datasourceId: Int): Datasource
+
+  """Delete indicator"""
+  deleteIndicator(id: Int!): String
+
+  """Create OSE table"""
+  createOseTable(indicatorId: Int!): String
+
+  """Open folder"""
+  openFolder(id: Int!, pinnedFolderId: Int): Folder
+
+  """Set where filter"""
+  setWhereFilter(stepId: Int!, whereCond: [FormulaTokenInput]): Step
+
+  """Delete dashboard"""
+  olapDashboardDelete(id: UUID!): Boolean
+
+  """Delete folder"""
+  deleteFolder(id: Int!): String
+
+  """Get duplicates"""
+  getDuplicates(stepId: Int!): [[Int]]
+
+  """Delete steps"""
+  deleteSteps(ids: [Int]): String
+
+  """Unpin object"""
+  unpinObject(id: String!): String
+
+  """Update dashboard"""
+  olapDashboardUpdate(dashboard: OlapDashboardInput!, id: UUID!): OlapDashboard
+
+  """Update indicator"""
+  updateIndicator(displayColumnIds: [String], displayFKeyId: String, displayTableId: Int, formula: [FormulaTokenInput], id: Int!, periodicity: Periodicity, periodicityDays: Int, showCountedFormula: Boolean, sortType: SortType, sortValue: Float, sortValueType: SortValueType, title: String!): Indicator
+
+  """Set join steps"""
+  setJoinSteps(joinId: Int!, leftStepId: Int, rightStepId: Int): Step
+
+  """Add step to union"""
+  addStepToUnion(stepId: Int!, unionId: Int!): Step
+
+  """Update connection"""
+  updateConnection(id: Int, joinType: JoinType, leftTableFieldId: String, leftTableId: Int, rightTableFieldId: String, rightTableId: Int): Connection
+
+  """Share folder"""
+  shareFolder(id: Int!): String
+
+  """Add user to user_group"""
+  addUserToUserGroup(userGroupId: Int!, userId: Int!): String
+
+  """Remove user from user_group"""
+  removeUserFromUserGroup(userGroupId: Int!, userId: Int!): String
+
+  """remove table from memory"""
+  removeFromMemory(id: Int!): Table
+
+  """Close folder"""
+  closeFolder(id: Int!, pinnedFolderId: Int): String
+
+  """Give folder access"""
+  giveFolderAccess(folderId: Int!, userGroupId: Int, userId: Int): String
+
+  """Get csv export link"""
+  getCsvExportLink(stepId: Int!): String
+
+  """Uninvite user from orgfolder"""
+  uninviteUserFromOrgfolder(folderId: Int!, userId: Int!): String
+
+  """Pin object"""
+  pinObject(id: String!): String
+
+  """Create folder"""
+  createFolder(folderId: Int, title: String!): Folder
+
+  """Delete folder user_group"""
+  deleteFolderUserGroup(id: Int!): String
+
+  """Delete change"""
+  deleteChange(id: Int!): [Column]
+
+  """Update checklist"""
+  pmChecklistUpdate(description: String, id: UUID!, title: String, userIds: [Int]): PmChecklist
+
+  """Update flow"""
+  updateFlow(id: Int!, title: String): Flow
+
+  """Update project_management"""
+  projectManagementUpdate(id: UUID!, title: String!): ProjectManagement
+
+  """Create checklist"""
+  pmChecklistCreate(description: String, projectManagementId: UUID!, title: String!, userIds: [Int]): PmChecklist
+
+  """Add role to user"""
+  addRoleToUser(roleId: Int!, userId: Int!): String
+
+  """Add or replace cube_filter to user_group"""
+  addOrReplaceCubeFilterToUserGroup(cubeFilter: CubeFilterInput!, userGroupId: Int!): [CubeFilter]
+
+  """Create change"""
+  createChange(changeCaseTypeInput: ChangeCaseTypeInput, changeType: ChangeType, codecInput: CodecInput, columnId: Int, columnIds: [Int], dataTypeInput: DataTypeInput, includeInput: IncludeInput, positionInput: PositionInput, stepId: Int!, titleInput: TitleInput, unionColumnsInput: UnionColumnsInput, widthInput: WidthInput): Change
+
+  """Give object access"""
+  giveObjectAccess(objectId: String!, userGroupId: Int, userId: Int): String
+
+  """Close all folders"""
+  closeAllFolders(exceptIds: [Int]): String
+
+  """Update table"""
+  updateTable(cubeDescription: String, cubeTitle: String, description: String, id: Int!, isInvisible: Boolean, isOpened: Boolean, positionX: Int, positionY: Int, tableType: TableType, title: String): Table
 }
 
-input DriverUpdateInput {
-  allowedVehiclesTypes: [RouteType]
-  avatarId: UUID
-  drivingLicenseNumber: String
-  email: String
-  firstName: String
-  id: Int!
-  lastName: String
-  middleName: String
-  phone: String
+type RootQueryType {
+  """Get project_management"""
+  projectManagementGet(id: UUID!): ProjectManagement
+
+  """Get column stats by formula"""
+  getColumnStatsByFormula(formula: [FormulaTokenInput]!, stepId: Int!): [ColumnStat]
+
+  """Get indicators"""
+  getIndicators(ids: [Int]): [Indicator]
+
+  """Get hierarchies"""
+  getHierarchies(ids: [Int]): [Hierarchy]
+
+  """Get steps"""
+  getSteps(datasourceId: Int, flowId: Int, ids: [Int!], limit: Int = 100, offset: Int = 0): [Step]
+
+  """Get folder user_groups"""
+  getFolderUserGroups(folderId: Int!): [UserGroup]
+
+  """Get checklists"""
+  pmChecklistsGet(id: UUID, pmId: UUID): [PmChecklist]
+
+  """Get column values"""
+  getColumnValues(columnId: Int!, limit: Int, offset: Int, search: String): [String]
+
+  """Get datasources"""
+  getDatasources(ids: [Int]): [Datasource]
+
+  """Get folder trees"""
+  getFolderTree(id: Int): Trees
+
+  """Get olap_cube autocomplete"""
+  getOlapCubeAutocomplete(search: String!, tableId: Int!, types: [AutocompleteType]): [Autocomplete]
+
+  """Get tables"""
+  getTables(ids: [Int]): [Table]
+
+  """Get profile"""
+  profileGet: User
+
+  """Get regression models"""
+  regressionModelGet(predictId: String!, seriaId: String!, series: [RegressionSeriaInput]!, vars: [RegressionVarInput]!): RegressionModel
+
+  """Get flows"""
+  getFlows(ids: [Int!], limit: Int = 2000, offset: Int = 0, orderBy: String, search: String): [Flow]
+
+  """Get users"""
+  getUsers(id: Int, limit: Int, offset: Int, search: String): [User]
+
+  """Get columns"""
+  getColumns(ids: [Int!], limit: Int = 20, offset: Int = 0, orderBy: String, search: String, stepId: Int): [Column]
+
+  """Get field values"""
+  getFieldValues(fieldId: String!, limit: Int, offset: Int, search: String): [String]
+
+  """OLAP request"""
+  olapRequest(request: OlapRequestInput!): OlapResponse
+
+  """Get dashboards"""
+  olapDashboardGet(ids: [UUID], limit: Int = 20, offset: Int, search: String): [OlapDashboard]
+
+  """Get folder roles"""
+  getFolderRoles(folderId: Int!): [Role]
+
+  """Get indicator base rating"""
+  getIndicatorBaseRating(displayColumnIds: [String], displayFKeyId: String, displayTableId: Int, formula: [FormulaTokenInput], showCountedFormula: Boolean, sortType: SortType = ASC, sortValue: Float, sortValueType: SortValueType = VALUE): [[String]]
+
+  """check_where_formula"""
+  checkWhereFormula(whereCond: [FormulaTokenInput]!): String
+
+  """Scanner drill"""
+  scannerDrill(cubeId: String!, limit: Int = 1000, offset: Int = 0, scanDate: String!, scannerId: String!): [[String]]
+
+  """get db tables"""
+  getDbTables(db: String!, dbType: DbType!, host: String!, limit: Int, offset: Int, pass: String!, port: String!, search: String, user: String!): [DbTable]
+
+  """chech_indicator_formula"""
+  chechIndicatorFormula(formula: [FormulaTokenInput]): String
+
+  """ls ftp dir"""
+  lsFtpDir(host: String, limit: Int = 100, offset: Int = 0, pass: String, path: String = "/", port: String, regexp: String = ".*", user: String): [FtpEnity]
+
+  """Get autocomplete"""
+  getEtlStepAutocomplete(search: String!, stepId: Int!, types: [AutocompleteType]): [Autocomplete]
+
+  """get odata tables"""
+  getOdataTables(host: String!, limit: Int, offset: Int, pass: String, port: String, search: String, url: String!, user: String): [String]
+
+  """Get functions list"""
+  getFunctions: [Function]
+
+  """Get objects"""
+  getObjects(limit: Int = 50, offset: Int = 0, search: String, types: [ObjectType]): [Object]
+
+  """for socket_message to appear in schema"""
+  getSocketMessage: SocketMessage
+
+  """Get indicators autocomplete"""
+  getIndicatorsAutocomplete(search: String!, tableId: Int, types: [IndicatorsAutocompleteType]): [IndicatorsAutocomplete]
+
+  """Get current user organisations"""
+  organisationsMyGet: [Organisation]
 }
 
-enum ExceptionType {
-  AVALIABLE
-  UNAVALIABLE
+enum RtxDataType {
+  PARAGRAPH
 }
 
-enum InstructionType {
-  AWAIT
-  SLOW_DOWN
-  SPEED_UP
+enum RtxItemType {
+  ELEMENT
+  TEXT
+  VAR
 }
 
-"""JSON scalar"""
-scalar JSON
-
-enum LocationType {
-  BOARDING_AREA
-  ENTRANCE
-  NODE
-  RAILWAY_STATION
-  STATION
-  STOP
+type Session {
+  expireAt: Timestamp
+  refreshToken: UUID
+  token: UUID
+  user: User
 }
 
-type NetworkVersion {
-  id: Int
-  isActive: Boolean
-  name: String
-  parentVersion: NetworkVersion
+type SharedAcl {
+  foldersEdit: Boolean
+  foldersRead: Boolean
+  objectsEdit: Boolean
+  objectsRead: Boolean
+  organisationCreate: Boolean
 }
 
-input NetworkVersionCreateInput {
-  name: String
-  parentId: Int
+union SocketMessage = StepProgress | DatasourceState | DatasourceProgress | ChatOnline | ChatUser | ChatMessage | ChatRoom
+
+enum SortingType {
+  DIMENSION_ASC
+  DIMENSION_DESC
+  MEASURE_ASC
+  MEASURE_DESC
 }
 
-input NetworkVersionUpdateInput {
-  id: Int!
-  name: String
-}
-
-enum OrderDirection {
+enum SortType {
   ASC
   DESC
 }
 
-type Road {
-  access: RoadAccess
-  bridge: Boolean
-  class: RoadClass
-  geometry: [[Float]]
+enum SortValueType {
+  REFERENCE
+  REFERENCE_AVG
+  VALUE
+}
+
+enum SourceType {
+  CLICKHOUSE
+  DB
+  EIS
+  FTP
+  ODATA
+}
+
+type Step {
+  changes: [Change]
+  leftColumns: [Column]
+  exportToMadd: Boolean
+  title: String
+  leftInRecords: Int
   id: Int
-  lanes: Int
-  name: String
-  oneway: RoadDirection
-  osmId: Int
-  ref: String
-  service: String
-  tunnel: Boolean
-  type: RoadType
-  zOrder: Int
+  rightInKeys: Int
+  rightStepId: Int
+  leftNotInKeys: Int
+  stepType: StepType
+  leftInKeys: Int
+  rightUnmatchedKeys: [String]
+  stepIds: [Int]
+  dateColumn: String
+  insertedAt: Timestamp
+  whereCond: [FormulaToken]
+  joinType: JoinType
+  positionY: Int
+  rightInRecords: Int
+  leftStepId: Int
+  rightStepColumnId: Int
+  dupColumnsCount: Int
+  rightNotInKeys: Int
+  periodicity: Int
+  dupGroupsCount: Int
+  fullUpdate: Boolean
+  leftStepColumnId: Int
+  positionX: Int
+  updatedAt: Timestamp
+  rightColumns: [Column]
+  datasource: Datasource
+  tableName: String
+  outDbParams: [OutDbParams]
+  leftUnmatchedKeys: [String]
+  originalSchemaTitle: String
+  columnsCount: Int
+  flow: Flow
+  leftNotInRecords: Int
+  rightNotInRecords: Int
+  originalTitle: String
+  matchedKeys: [String]
 }
 
-enum RoadAccess {
-  AGRICULTURAL
-  COMMERCIAL
-  CUSTOMERS
-  DELIVERY
-  DESIGNATED
-  DESTINATION
-  FOOT
-  FORESTRY
-  ILLEGAL
-  NO
-  OFFICIAL
-  PERMISSIVE
-  PERMIT
-  PRIVATE
-  RESTRICTED
-  UNDEFINED
-  UNKNOWN
-  YES
+type StepProgress {
+  processes: [Progress]
+  status: ProgressStatus
+  stepId: Int
 }
 
-enum RoadClass {
-  HIGHWAY
-  MAN_MADE
-  RAILWAY
+enum StepType {
+  AGG
+  JOIN
+  OUT
+  PIVOT
+  SOURCE
+  TRANSFORM
+  UNION
 }
 
-enum RoadDirection {
-  BOTH
-  FORWARD
-  REVERSE
-}
-
-enum RoadType {
-  BRIDLEWAY
-  CYCLEWAY
-  DISUSED
-  FOOTWAY
-  GROYNE
-  LIVING_STREET
-  MONORAIL
-  MOTORWAY
-  MOTORWAY_LINK
-  NARROW_GAUGE
-  PATH
-  PEDESTRIAN
-  PIER
-  PRESERVED
-  PRIMARY
-  PRIMARY_LINK
-  RACEWAY
-  RAIL
-  RESIDENTIAL
-  ROAD
-  SECONDARY
-  SECONDARY_LINK
-  SERVICE
-  STEPS
-  SUBWAY
-  TERTIARY
-  TERTIARY_LINK
-  TRACK
-  TRAM
-  TRUNK
-  TRUNK_LINK
-  UNCLASSIFIED
-}
-
-type Role {
-  abilities: [Abilities]
+type Table {
+  connections: [Connection]
+  cubeDescription: String
+  cubeTitle: String
+  description: String
+  fields: [Field]
+  hierarchies: [Hierarchy]
   id: Int
-  name: String
-  users: [User]
+  inMemory: Boolean
+  insertedAt: Timestamp
+  isInvisible: Boolean
+  isOpened: Boolean
+  object: Object
+  positionX: Int
+  positionY: Int
+  tableType: TableType
+  title: String
+  updatedAt: Timestamp
 }
 
-input RoleInput {
-  abilities: [Abilities]!
-  name: String!
+type TablePartSize {
+  id: String
+  value: Int
 }
 
-input RoleUpdateInput {
-  abilities: [Abilities]
-  id: String!
-  name: String
+input TablePartSizeInput {
+  id: String
+  value: Int
 }
 
-type RootMutationType {
-  agencyCreate(agency: AgencyCreateInput!): Agency
-  agencyDelete(agencyId: UUID!): Agency
-  agencyUpdate(agency: AgencyUpdateInput!): Agency
-
-  """Create attachment"""
-  attachmentCreate(file: Upload!): Attachment
-
-  """Delete attachment"""
-  attachmentDelete(id: UUID!): String
-
-  """Create avatar"""
-  avatarCreate(file: Upload!): Avatar
-
-  """Delete avatar"""
-  avatarDelete(id: UUID!): String
-  brandCreate(name: String!): VehicleBrand
-  brandDelete(id: Int!): VehicleBrand
-  brandUpdate(id: Int!, name: String): VehicleBrand
-  calendarCreate(obj: CalendarCreateInput!): Calendar
-  calendarDelete(calendarId: Int): Calendar
-  calendarUpdate(obj: CalendarUpdateInput!): Calendar
-  driverAuthCodeReset(driverId: Int!): String
-  driverCreate(driver: DriverInput!): Driver
-  driverDelete(driverId: Int!): Driver
-  driverUpdate(driver: DriverUpdateInput!): Driver
-  instructionSend(
-    instructionType: InstructionType!
-
-    """await interval in seconds"""
-    interval: Int
-    stopId: Int
-    vehicleId: Int!
-  ): String
-  modelCreate(brandId: Int!, name: String!): VehicleModel
-  modelDelete(id: Int): VehicleModel
-  modelUpdate(brandId: Int, id: Int!, name: String): VehicleModel
-  networkVersionDelete(networkVersionId: Int): NetworkVersion
-  networkVersionSwitch(networkVersionId: Int): NetworkVersion
-  networkVersionUpdate(obj: NetworkVersionUpdateInput!): NetworkVersion
-  networkVersionsCreate(obj: NetworkVersionCreateInput!): NetworkVersion
-  roleCreate(role: RoleInput!): Role
-  roleUpdate(role: RoleUpdateInput!): Role
-  routeCreate(obj: RouteCreateInput!): Route
-  routeDelete(id: UUID!): Route
-  routeUpdate(obj: RouteUpdateInput!): Route
-  sessionCreate(email: String!, password: String!): UserSession
-  sessionDelete: String
-  sessionRefresh(refreshToken: String!): UserSession
-  stopCreate(obj: StopCreateInput!): Stop
-  stopDelete(id: Int!): Stop
-  stopUpdate(obj: StopUpdateInput!): Stop
-  tripCreate(obj: TripCreateInput!): Trip
-  tripDelete(id: Int!): Trip
-  tripUpdate(obj: TripUpdateInput!): Trip
-  userCreate(user: UserInput!): User
-
-  """DEV"""
-  userDelete(userId: UUID!): User
-  userSelfUpdate(user: UserSelfUpdateInput!): User
-  userUpdate(user: UserUpdateInput!): User
-  vehicleCreate(vehicle: VehicleCreateInput!): Vehicle
-  vehicleDelete(id: Int!): Vehicle
-  vehicleUpdate(vehicle: VehicleUpdateInput!): Vehicle
-}
-
-type RootQueryType {
-  agenciesGet(agenciesNames: [String], ids: [UUID], limit: Int, offset: Int, orderBy: String = "asc", orderDirection: OrderDirection, search: String): [Agency]
-  brandsGet(ids: [Int], name: String, names: [String]): [VehicleBrand]
-  calendarGet: [Calendar]
-  driverGetByAuthCode(authCode: String): Driver
-  driversGet(emails: [String], ids: [Int], limit: Int, offset: Int, orderBy: String = "asc", orderDirection: OrderDirection, phones: [Int], search: String): [Driver]
-  modelsGet(brandsIds: [Int], ids: [Int], name: String, names: [String]): [VehicleModel]
-  networkVersionsGet(ids: [Int!], isActive: Boolean, limit: Int, name: String, offset: Int): [NetworkVersion]
-  roadsGet(
-    access: [RoadAccess]
-    bbox: [[Float]]
-    bridge: [Boolean]
-    class: [RoadClass]
-    ids: [Int]
-
-    """Filter by amount of lanes"""
-    lanes: [Int]
-    limit: Int = 10
-    name: String
-    offset: Int = 0
-    oneway: [RoadDirection]
-    osmIds: [Int]
-    tunnel: [Boolean]
-    types: [RoadType]
-  ): [Road]
-  rolesGet(ids: [Int], limit: Int, names: [String], offset: Int, orderBy: String = "asc", orderDirection: OrderDirection): [Role]
-  routesGet(agencyIds: [UUID], ids: [Int], isActive: Boolean, routeTypes: [RouteType], search: String): [Route]
-  stopsGet(bbox: [[Float]], ids: [Int], isService: Boolean, limit: Int = 10, locationTypes: [LocationType], names: [String], offset: Int = 0, orderBy: String = "asc", orderDirection: OrderDirection, search: String, version: Float): [Stop]
-  tripsGet(directions: [TripDirection], fromTime: Int, hasFrequencies: Boolean, ids: [Int], isActive: Boolean, routeIds: [Int], toTime: Int): [Trip]
-  usersGet(emails: [String], ids: [UUID], limit: Int, offset: Int, orderBy: String = "asc", orderDirection: OrderDirection, phones: [Int], rolesIds: [Int], search: String): [User]
-  vehiclesGet(agenciesIds: [UUID], boardNumbers: [String], driversIds: [Int], ids: [Int], limit: Int, modelsIds: [Int], offset: Int, orderBy: String = "asc", orderDirection: OrderDirection, originIds: [String], originSources: [DataSource], registrationNumbers: [String], search: String): [Vehicle]
-}
-
-type Route {
-  agency: Agency
-  directionName: String
-  id: Int
-  isActive: Boolean
-  routeColor: String
-  routeDesc: String
-  routeLongName: String
-  routeShortName: String
-  routeTextColor: String
-  routeType: RouteType
-  routeUrl: String
-  trips: [Trip]
-}
-
-input RouteCreateInput {
-  """Should be ignored if user doesn't have proper access abilities"""
-  agencyId: UUID
-  directionName: String
-  isActive: Boolean
-  routeColor: String
-  routeDesc: String
-  routeLongName: String!
-  routeShortName: String!
-  routeTextColor: String
-  routeType: RouteType!
-  routeUrl: String
-}
-
-enum RouteType {
-  BUS
-  CABLE_CAR
-  FERRY
-  FUNICULAR
-  GONDOLA
-  METRO
-  RAIL
-  TRAM
-  TROLLEY
-}
-
-input RouteUpdateInput {
-  """Should be ignored if user doesn't have proper access abilities"""
-  agencyId: UUID
-  directionName: String
-  id: Int!
-  isActive: Boolean
-  routeColor: String
-  routeDesc: String
-  routeLongName: String
-  routeShortName: String
-  routeTextColor: String
-  routeType: RouteType
-  routeUrl: String
-}
-
-type Shape {
-  dist: Float
-  id: Int
-  path: [[Float]]
-}
-
-type Stop {
-  agency: Agency
-  agencyId: UUID
-  coords: [Float]
-  id: Int
-  isService: Boolean
-  locationType: LocationType
-  stopName: String
-  version: Float
-}
-
-input StopCreateInput {
-  """Should be ignored if user doesn't have proper access abilities"""
-  agencyId: UUID
-  coords: [Float]!
-  isService: Boolean = false
-  locationType: LocationType
-  stopName: String!
-}
-
-type StopTime {
-  arrivalTime: Int
-  departureTime: Int
-  distTraveled: Float
-  shapeId: Int
-  stopId: Int
-}
-
-input StopUpdateInput {
-  """Should be ignored if user doesn't have proper access abilities"""
-  agencyId: UUID
-  coords: [Float]
-  id: Int!
-  isService: Boolean = false
-  locationType: LocationType
-  stopName: String
+enum TableType {
+  DIMENSION
+  FACT
 }
 
 """Unix timestamp"""
 scalar Timestamp
 
-input TrajectoryInput {
-  arrivalTime: Int
-  coords: [Float]
-  departureTime: Int
-  stopId: Int
-
-  """
-  if type == POINT -> only fill type and coords fields. if type == STOP -> fill type, stop_id, arr and dep times
-  """
-  type: TrajectoryPointType!
+input TitleInput {
+  value: String!
 }
 
-enum TrajectoryPointType {
-  POINT
-  STOP
+enum TokenType {
+  BRACKET
+  DATA
+  EQ_OPERATOR
+  FUNC
+  IN_OPERATOR
+  LIST
+  LOGIC_OPERATOR
+  NUMBER
+  OPERATOR
+  SPACE
+  STRING
 }
 
-type Trip {
-  calendar: Calendar
-  calendarDates: [CalendarDate]
-  direction: TripDirection
-  endTime: Int
-  hasFrequencies: Boolean
-  headwaySecs: Int
-  id: Int
-  isActive: Boolean
-  route: Route
-  serviceId: Int
-  shape: Shape
-  startTime: Int
-  stoptimes: [StopTime]
+type Tree {
+  folders: [Folder]
+  objects: [Object]
 }
 
-input TripCreateInput {
-  direction: TripDirection!
-  endTime: Int
-  hasFrequencies: Boolean = false
-  headwaySecs: Int
-  isActive: Boolean = false
-  routeId: Int!
-  serviceId: Int
-  startTime: Int
-  trajectory: [TrajectoryInput]
+type Trees {
+  pinnedTree: Tree
+  tree: Tree
 }
 
-enum TripDirection {
-  BACK
-  FORWARD
+type TrendLine {
+  color: String
+  opacity: Float
 }
 
-input TripUpdateInput {
-  direction: TripDirection
-  endTime: Int
-  hasFrequencies: Boolean
-  headwaySecs: Int
-  id: Int!
-  isActive: Boolean
-  routeId: Int
-  serviceId: Int
-  startTime: Int
-  trajectory: [TrajectoryInput]
+input TrendLineInput {
+  color: String
+  opacity: Float
+}
+
+input UnionColumnsInput {
+  value: [Int]
 }
 
 """Represents an uploaded file."""
 scalar Upload
 
 type User {
-  agency: Agency
-  agencyId: UUID
-  desktopSettings: JSON
-  desktopWallpaper: Attachment
+  acl: Acl
+  avatar: String
   email: String
   firstName: String
-  id: UUID
+  id: Int
   lastName: String
-  middleName: String
-  phone: Int
-  role: Role
-  roleId: Int
+  name: String
+  roles: [Role]
 }
 
-input UserInput {
-  desktopSettings: JSON
-  desktopWallpaperId: UUID
-  email: String!
-  firstName: String!
-  lastName: String!
-  middleName: String
-  password: String!
-  phone: Int
-  roleId: Int!
-}
-
-input UserSelfUpdateInput {
-  desktopSettings: JSON
-  desktopWallpaperId: UUID
-}
-
-type UserSession {
-  expireAt: Timestamp
-  refreshToken: String
-  token: String
-  user: User
-}
-
-input UserUpdateInput {
-  desktopSettings: JSON
-  desktopWallpaperId: UUID
-  email: String
-  firstName: String
-  id: UUID!
-  lastName: String
-  middleName: String
-  password: String
-  phone: Int
-  roleId: Int
+type UserGroup {
+  cubeFilters: [CubeFilter]
+  description: String
+  folderId: Int!
+  id: Int
+  roles: [Role]
+  title: String!
+  users: [User]
 }
 
 """UUID scalar"""
 scalar UUID
 
-type Vehicle {
-  agency: Agency
-  boardNumber: String
-  brand: VehicleBrand
-  driver: Driver
-  id: Int
-  model: VehicleModel
-  originId: String
-  originSource: DataSource
-  registrationNumber: String
-}
-
-type VehicleBrand {
-  id: Int
-  models: [VehicleModel]
-  name: String
-  vehicles: [Vehicle]
-}
-
-input VehicleCreateInput {
-  """Should be ignored for any role except SUPERADMIN"""
-  agencyId: UUID
-  boardNumber: String!
-  driverId: Int
-  modelId: Int!
-  registrationNumber: String!
-}
-
-type VehicleModel {
-  brand: VehicleBrand
-  id: Int
-  name: String
-  vehicles: [Vehicle]
-}
-
-input VehicleUpdateInput {
-  agencyId: UUID
-  boardNumber: String
-  driverId: Int
-  id: Int!
-  modelId: Int
-  registrationNumber: String
+input WidthInput {
+  value: Int
 }

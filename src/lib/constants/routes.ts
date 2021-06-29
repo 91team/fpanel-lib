@@ -2,7 +2,6 @@ import { ComponentType } from 'react'
 
 import { Route, State, constants } from 'router5'
 
-import { LoginPage } from '../../pages/Login/Login'
 import { MainPage } from '../../pages/Main/Main'
 import { NotFoundPage } from '../../pages/NotFound'
 
@@ -41,13 +40,6 @@ export const routes: ICustomRoute[] = [
     name: 'index',
     path: '/',
     component: MainPage,
-    withAuth: true,
-    withMenu: true,
-  },
-  {
-    name: 'login',
-    path: '/login',
-    component: LoginPage,
     withAuth: true,
     withMenu: true,
   },

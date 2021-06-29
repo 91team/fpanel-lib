@@ -34,8 +34,8 @@ export function generateTypes(globalVars: TGlobalVars, config: TConfig) {
   let content = readFileSync(resolve(__dirname, '../templates/types.template'), 'utf8')
 
   content = content.replace(/__imports__/i, imports.join('\n'))
-  content = content.replace(/__mutations__/i, mutations.join(' & '))
-  content = content.replace(/__queries__/i, queries.join(' & '))
+  content = content.replace(/__mutations__/i, mutations.join(' & ') || '{}')
+  content = content.replace(/__queries__/i, queries.join(' & ') || '{}')
 
   writeFileSync(`${GQL_TYPES_FOLDER_PATH}/index.ts`, content, 'utf8')
 }

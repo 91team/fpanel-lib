@@ -114,40 +114,6 @@ export class RouterService {
     return UNKNOWN_ROUTE
   }
 
-  public getAuthorizationMiddleware: () => MiddlewareFactory = () => () => (
-    toState,
-    fromState,
-    done
-  ) => {
-    const userStore = getStore(StoreName.USER)
-    const routeConfig = this.getRouteConfig({ route: toState })
-    const isUnknownRoute = this.getIsUnknownRoute(routeConfig)
-
-    if (isUnknownRoute || routeConfig.withAuth) {
-      if (userStore.isAuthorized) {
-        done()
-      } else {
-        userStore
-          .refreshSession()
-          .then(() => done())
-          .catch((error) => {
-            console.error(error)
-
-            if (!isUnknownRoute) {
-              this.getInstance().navigate('login')
-            } else {
-              done()
-            }
-          })
-      }
-    } else {
-      done()
-    }
-
-    // avoid transition state mutation
-    return undefined
-  }
-
   public setPlugins(plugins: PluginFactory[]) {
     const instance = this.getInstance()
 

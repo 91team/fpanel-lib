@@ -3,14 +3,12 @@ import { StoreName } from './constants'
 import { TStores, TStoresKeys } from './types'
 
 import Notifications from './notifications'
-import User from './user'
 
 export class Stores {
   // @ts-expect-error
   private stores: TStores = {}
 
   constructor() {
-    this.addStore(StoreName.USER, new User())
     this.addStore(StoreName.NOTIFICATIONS, new Notifications())
   }
 

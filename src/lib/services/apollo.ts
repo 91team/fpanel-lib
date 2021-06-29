@@ -68,9 +68,7 @@ export class ApolloService {
   }
 
   public getToken: () => string | undefined = () => {
-    const userStore = getStore(StoreName.USER)
-
-    return userStore.getTokens().token
+    throw new Error(`Apollo getter for token isn't initializes`)
   }
 
   public convertToJSON(): NormalizedCacheObject {

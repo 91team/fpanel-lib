@@ -8,6 +8,10 @@ import { getVariablesWithVitePrefix } from './src/lib/constants/env/variables'
 function injectEnv(mode: string) {
   const configPath = `./.env.${mode}`
   const env = config({ path: configPath }).parsed
+
+  if (!env) {
+    throw new Error(`'${configPath}' is not exists`)
+  }
   const viteEnv = getVariablesWithVitePrefix(env)
 
   Object.assign(process.env, viteEnv)

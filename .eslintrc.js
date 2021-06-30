@@ -22,7 +22,6 @@ module.exports = {
   },
   plugins: [
     '@typescript-eslint',
-    '@typescript-eslint/tslint',
     'react',
     'react-hooks',
     'prettier',
@@ -175,16 +174,6 @@ module.exports = {
     'space-before-function-paren': 'off',
     'use-isnan': 'error',
     'valid-typeof': 'off',
-    '@typescript-eslint/tslint/config': [
-      'error',
-      {
-        rulesDirectory: [path.resolve(__dirname, './node_modules/tslint-react/rules')],
-        rules: {
-          'no-reference-import': true,
-          'prefer-conditional-expression': true,
-        },
-      },
-    ],
     ...importsOrder.rules,
   },
   overrides: [stylesKeysOrder],

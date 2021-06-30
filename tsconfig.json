@@ -20,5 +20,5 @@
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "exclude": ["node_modules", "**/lib/gql/generated/*"],
-  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./scripts/**/*.ts"]
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./scripts/generateGQLConfigs/**/*.ts"]
 }

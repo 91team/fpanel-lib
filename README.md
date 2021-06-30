@@ -13,6 +13,7 @@
 - `yarn lint` - линтинг
 - `yarn schema:generate-types` - генерация типов для GraphQL (необходимо активное подключение к gql-сервису, адрес которого указан в `codegen.yml`)
 - `yarn gql:generate-configs` - генерация api для GraphQL (по конфигу `src/lib/gqlConfig/config.ts`)
+- `yarn figma:generate-resources` - генерация ресурсов из фигмы
 - `yarn dev` - запуск дев-сервера
 - `yarn serve` - запуск сервера для `production` ассетов
 

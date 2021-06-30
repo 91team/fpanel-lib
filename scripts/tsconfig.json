@@ -3,8 +3,10 @@
   "compilerOptions": {
     "module": "CommonJS",
     "baseUrl": "../",
-    "typeRoots": ["../node_modules/@types"]
+    "typeRoots": ["../node_modules/@types"],
+    "isolatedModules": false
   },
+  "types": ["node"],
   "include": ["./**/*.ts"],
   "exclude": ["node_modules", "**/lib/gql/generated/*"]
 }

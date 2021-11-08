@@ -1,7 +1,6 @@
 import React, { ComponentType } from 'react'
-
-import hoistNonReactStatics from 'hoist-non-react-statics'
 import { routerContext } from 'react-router5'
+import hoistNonReactStatics from 'hoist-non-react-statics'
 import { Router } from 'router5'
 
 import { getDisplayName } from '../utils/getDisplayName'

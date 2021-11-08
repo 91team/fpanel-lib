@@ -1,35 +1,34 @@
-import { dirname, join } from 'path'
-import { argv } from 'yargs'
+import { join } from 'path'
 
-import { TArgV, TGlobalVars } from './types'
+import { TGlobalVars } from './types'
 
-const { config: CONFIG_RELATIVE_PATH } = argv as TArgV
-
-if (!CONFIG_RELATIVE_PATH) {
-  throw new Error(`Script must contain '--config' argument`)
-}
-
-const GENERATED_FOLDER_NAME = 'generated'
 const GQL_TYPES_FOLDER_NAME = 'graphqlTypes'
 const GQL_CONFIGS_FOLDER_NAME = 'graphqlConfigs'
 
-const PROJECT_PATH = process.env.INIT_CWD as string
-const CONFIG_PATH = join(PROJECT_PATH, CONFIG_RELATIVE_PATH)
+const MODULE_PATH = join(__dirname, '../../')
+const CONFIG_PATH = join(MODULE_PATH, 'gqlConfig.ts')
+const DEFAULTS_FILE_PATH = join(MODULE_PATH, 'gqlDefaults.ts')
+const DEFAULTS_OUT_FILE_PATH = join(MODULE_PATH, 'src/lib/gql/generated/defaults.ts')
+const CUSTOM_TYPES_FILE_PATH = join(MODULE_PATH, 'src/lib/gql/generated/types.ts')
 
-const GENERATED_FOLDER_PATH = join(dirname(CONFIG_PATH), GENERATED_FOLDER_NAME)
+const GENERATED_FOLDER_PATH = join(MODULE_PATH, 'src/lib/gql/generated')
 const GQL_TYPES_FOLDER_PATH = join(GENERATED_FOLDER_PATH, GQL_TYPES_FOLDER_NAME)
 const GQL_CONFIGS_FOLDER_PATH = join(GENERATED_FOLDER_PATH, GQL_CONFIGS_FOLDER_NAME)
 
 export const GLOBAL_VARS: TGlobalVars = {
-  PROJECT_PATH,
+  MODULE_PATH,
   CONFIG_PATH,
   GENERATED_FOLDER_PATH,
   GQL_CONFIGS_FOLDER_NAME,
   GQL_CONFIGS_FOLDER_PATH,
   GQL_TYPES_FOLDER_NAME,
   GQL_TYPES_FOLDER_PATH,
+  DEFAULTS_FILE_PATH,
+  DEFAULTS_OUT_FILE_PATH,
+  CUSTOM_TYPES_FILE_PATH,
 }
-export enum ACTION_TYPE {
+
+export const enum ACTION_TYPE {
   mutations = 'mutations',
   queries = 'queries',
 }

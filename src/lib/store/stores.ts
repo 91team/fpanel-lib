@@ -1,8 +1,6 @@
 import { StoreName } from './constants'
-
-import { TStores, TStoresKeys } from './types'
-
 import Notifications from './notifications'
+import { TStores, TStoresKeys } from './types'
 
 export class Stores {
   // @ts-expect-error

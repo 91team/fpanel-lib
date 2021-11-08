@@ -1,11 +1,8 @@
 import React from 'react'
-
 import { render } from 'react-dom'
 
-import { ServiceName } from 'lib/services/types/constants'
-
-import { getService, initGlobals } from 'lib/utils/global'
-
+import { ServiceName } from 'src/lib/services/types/constants'
+import { getService, initGlobals } from 'src/lib/utils/global'
 import { App } from '../containers/App/App'
 
 initGlobals()

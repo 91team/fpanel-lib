@@ -1,5 +1,4 @@
 import { StoreName } from './constants'
-
 import Notifications from './notifications'
 
 export type TStores = {

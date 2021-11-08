@@ -1,13 +1,10 @@
-import { Stores } from 'lib/store/stores'
-import { TStores } from 'lib/store/types'
-
+import { TMutations, TQueries } from 'src/lib/gqlConfig/generated/graphqlTypes'
+import { Stores } from 'src/lib/store/stores'
+import { TStores } from 'src/lib/store/types'
 import { createGlobalObjectRef, getGlobal, setGlobal } from '../di/global'
-
 import { ServicesManager } from '../services/manager'
 import { TStorage, TStorageKeys } from '../services/types'
 import { ServiceName } from '../services/types/constants'
-
-import { TMutations, TQueries } from 'lib/gqlConfig/generated/graphqlTypes'
 
 type TGlobals = {
   stores: Stores

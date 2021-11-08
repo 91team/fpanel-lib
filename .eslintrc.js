@@ -1,6 +1,5 @@
 const path = require('path')
 
-const importsOrder = require('./eslint/.eslintrc.imports.js')
 const stylesKeysOrder = require('./eslint/.eslintrc.sortStylesKeys.js')
 
 module.exports = {
@@ -10,24 +9,16 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: [
-    'prettier/@typescript-eslint',
-    'plugin:react/recommended',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['plugin:react/recommended', 'plugin:prettier/recommended'],
   parser: '@typescript-eslint/parser',
-  parserOptions: {
-    project: path.resolve(__dirname, './tsconfig.json'),
-    sourceType: 'module',
-  },
   plugins: [
     '@typescript-eslint',
     'react',
     'react-hooks',
     'prettier',
-    'import',
     'sort-keys-fix',
     'css-modules',
+    'simple-import-sort',
   ],
   rules: {
     '@typescript-eslint/adjacent-overload-signatures': 'error',
@@ -164,23 +155,35 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
     'quote-props': 'off',
     radix: 'error',
-    'sort-imports': [
+    'simple-import-sort/imports': [
       'error',
       {
-        ignoreDeclarationSort: true,
+        groups: [
+          // external deps
+          ['^react', '^@?\\w'],
+          // internal deps
+          ['^src', '^assets', '^\\.\\.'],
+          // local deps
+          ['^\\.'],
+          // styles
+          ['^.+\\.module\\.s?css$'],
+          // side effects
+          ['^\\u0000'],
+          ['^'],
+          ['^.*\\u0000$'],
+        ],
       },
     ],
+    'simple-import-sort/exports': 'error',
     'spaced-comment': ['error', 'always'],
     'space-before-function-paren': 'off',
     'use-isnan': 'error',
     'valid-typeof': 'off',
-    ...importsOrder.rules,
   },
   overrides: [stylesKeysOrder],
   settings: {
     react: {
       version: 'detect',
     },
-    ...importsOrder.settings,
   },
 }

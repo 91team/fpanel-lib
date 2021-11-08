@@ -1,21 +1,17 @@
+import { MutationResult, QueryResult } from 'react-apollo'
 import { DocumentNode } from 'graphql'
 import { flow } from 'mobx'
 import { CancellablePromise } from 'mobx/lib/api/flow'
-import { MutationResult, QueryResult } from 'react-apollo'
 
-import { StoreName } from 'lib/store/constants'
-import { TNotification } from 'lib/store/notifications'
-
-import { getService, getStore } from 'lib/utils/global'
-
-import { STATE } from 'lib/constants/api'
-
-import { mutations, queries } from 'lib/gqlConfig/generated/graphqlConfigs'
-import { TMutations, TQueries } from 'lib/gqlConfig/generated/graphqlTypes'
-
-import { ServiceName } from './types/constants'
+import { STATE } from 'src/lib/constants/api'
+import { mutations, queries } from 'src/lib/gqlConfig/generated/graphqlConfigs'
+import { TMutations, TQueries } from 'src/lib/gqlConfig/generated/graphqlTypes'
+import { StoreName } from 'src/lib/store/constants'
+import { TNotification } from 'src/lib/store/notifications'
+import { getService, getStore } from 'src/lib/utils/global'
 
 import { IApollo } from './apollo'
+import { ServiceName } from './types/constants'
 
 type TGraphqlActionType = 'query' | 'mutation'
 type TSetState = (state: STATE) => void
@@ -54,8 +50,8 @@ type TGraphqlRequests = {
 }
 
 export class GraphqlAPIService {
-  public mutations: TMutations
-  public queries: TQueries
+  public mutations!: TMutations
+  public queries!: TQueries
 
   constructor() {
     this.addConfigs({ mutations, queries })
@@ -78,6 +74,7 @@ export class GraphqlAPIService {
     const self = this
     const notificationsStore = getStore(StoreName.NOTIFICATIONS)
 
+    // @ts-expect-error
     return flow(function* ({
       GQLVariables,
       onSuccess,

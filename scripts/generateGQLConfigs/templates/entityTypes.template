@@ -1,7 +1,11 @@
+import { TGraphqlAction } from '@bi-client/container/src/lib/services/graphqlAPI/types'
+
 import {
   __imports__
-} from 'lib/gql/generated/types'
-import { TGraphqlAction } from 'lib/services/graphqlAPI'
+} from '@bi-client/container/src/lib/gql/generated/typesOriginal'
+import {
+  __customImports__
+ } from '../types'
 
 export type TMutations = {__mutations_actions__}
 

@@ -1,24 +1,47 @@
-import { ACTION_TYPE } from './constants'
+export const enum ACTION_TYPE {
+  mutations = 'mutations',
+  queries = 'queries',
+}
 
 export type TArgV = {
   config?: string
 }
 export type TActionType = ACTION_TYPE
-export type TActionConfig = {
+export type TOverrides = Record<string, false | Record<string, string | false>>
+export type TActionInfo = {
+  resName: string
+  isList: boolean
+}
+export type TActionOverride = {
   name: string
-  errorMessage?: string
+  type: string
 }
-export type TEntityConfig = {
-  [ACTION_TYPE.mutations]?: TActionConfig[]
-  [ACTION_TYPE.queries]?: TActionConfig[]
+
+export type TCustomAction = {
+  name: string
+  resName: string
+  baseAction: string
+  errorMessage: string
 }
-export type TConfig = Record<string, TEntityConfig>
+
+export type TAliases = Record<string, string[]>
+
+export type TConfig = {
+  [ACTION_TYPE.mutations]: Record<string, string | null>
+  [ACTION_TYPE.queries]: Record<string, string | null>
+  fragmentOverrides: TOverrides
+  customActions: TCustomAction[]
+}
+
 export type TGlobalVars = {
-  PROJECT_PATH: string
+  MODULE_PATH: string
   CONFIG_PATH: string
   GENERATED_FOLDER_PATH: string
   GQL_TYPES_FOLDER_NAME: string
   GQL_TYPES_FOLDER_PATH: string
   GQL_CONFIGS_FOLDER_NAME: string
   GQL_CONFIGS_FOLDER_PATH: string
+  DEFAULTS_FILE_PATH: string
+  DEFAULTS_OUT_FILE_PATH: string
+  CUSTOM_TYPES_FILE_PATH: string
 }

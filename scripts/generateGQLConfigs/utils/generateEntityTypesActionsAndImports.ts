@@ -1,11 +1,11 @@
 import { ACTION_TYPE } from '../constants'
-
-import { TActionType, TEntityConfig } from '../types'
+import { TActionInfo, TActionOverride, TActionType, TAliases, TConfig } from '../types'
 
 import { convertFirstLetterToUpperCase } from './convertFirstLetterToUpperCase'
 
 type TEntityResult = {
   imports: string[]
+  customTypesImports: string[]
   actions: string[]
 }
 type TResult = Record<TActionType, TEntityResult>
@@ -24,35 +24,73 @@ const actionGenerator = ({
   variableType: string
 }): string => `${name}: TGraphqlAction<${resultType}, ${variableType}>`
 
-export function generateEntityTypesActionsAndImports(entityConfig: TEntityConfig): TResult {
-  const result: TResult = {
-    [ACTION_TYPE.mutations]: {
-      imports: [],
-      actions: [],
-    },
-    [ACTION_TYPE.queries]: {
-      imports: [],
-      actions: [],
-    },
-  }
+export function generateEntityTypesActionsAndImports(
+  entityConfig: TConfig,
+  actionOverrides: Record<string, TActionOverride>,
+  actionsInfo: Record<string, TActionInfo>,
+  aliases: Record<string, string>
+): TResult {
+  // @ts-expect-error
+  const result: TResult = {}
 
-  Object.keys(entityConfig).map((value) => {
-    const actionType = value as TActionType
-    const { imports, actions } = result[actionType]
+  const actionTypes = [ACTION_TYPE.mutations, ACTION_TYPE.queries]
+
+  actionTypes.map(actionType => {
+    const imports: TEntityResult['imports'] = []
+    const customTypesImports: TEntityResult['imports'] = []
+    const actions: TEntityResult['actions'] = []
     const actionsConfigs = entityConfig[actionType]
     const formattedActionType = formattedActionTypeNames[actionType]
 
-    actionsConfigs.forEach(({ name }) => {
+    Object.keys(actionsConfigs).forEach(name => {
       const typePrefix = convertFirstLetterToUpperCase(name)
-      const resultType = `${typePrefix}${formattedActionType}Result`
+      const info = actionsInfo[name]
+      const overrides = actionOverrides[`${info?.resName}Fragment`]
+
+      const dataKey = aliases[name] || name
+
+      const resultType = overrides?.type
+        ? `{ ${dataKey}: ${overrides.type}${info?.isList ? '[]' : ''} }`
+        : `${typePrefix}${formattedActionType}`
       const variableType = `${typePrefix}${formattedActionType}Variables`
 
-      imports.push(resultType, variableType)
+      if (overrides?.type) {
+        customTypesImports.push(overrides.type)
+      } else {
+        imports.push(resultType)
+      }
+
+      imports.push(variableType)
       actions.push(actionGenerator({ name, resultType, variableType }))
     })
 
+    if (actionType === ACTION_TYPE.queries) {
+      entityConfig.customActions.forEach(({ name, resName }) => {
+        const typePrefix = convertFirstLetterToUpperCase(name)
+        const info = actionsInfo[name]
+        const overrides = actionOverrides[`${info?.resName}Fragment`]
+
+        const dataKey = aliases[name] || name
+
+        const resultType = overrides?.type
+          ? `{ ${dataKey}: ${overrides.type}${info?.isList ? '[]' : ''} }`
+          : `${typePrefix}${formattedActionType}`
+        const variableType = `${typePrefix}${formattedActionType}Variables`
+
+        if (overrides?.type) {
+          customTypesImports.push(overrides.type)
+        } else {
+          imports.push(resultType)
+        }
+
+        imports.push(variableType)
+        actions.push(actionGenerator({ name, resultType, variableType }))
+      })
+    }
+
     result[actionType] = {
       imports,
+      customTypesImports,
       actions,
     }
   })

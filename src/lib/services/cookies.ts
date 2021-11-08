@@ -11,7 +11,7 @@ export class CookiesService {
     this.instance.set(name, value, options)
   }
 
-  public get = (name: string): string => this.instance.get(name)
+  public get = (name: string): string => this.instance.get(name)!
 
   public remove = (name: string) => {
     this.instance.remove(name)

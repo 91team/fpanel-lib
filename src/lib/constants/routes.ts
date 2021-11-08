@@ -1,11 +1,10 @@
 import { ComponentType } from 'react'
-
-import { Route, State, constants } from 'router5'
+import { constants, Route, State } from 'router5'
 
 import { MainPage } from '../../pages/Main/Main'
 import { NotFoundPage } from '../../pages/NotFound'
 
-type TRouteComponent = ComponentType<{ route: State; previousRoute: State }>
+type TRouteComponent = ComponentType<{ route: State; previousRoute: State | null }>
 
 export interface ICustomRoute extends Route {
   component?: TRouteComponent

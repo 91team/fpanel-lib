@@ -1,16 +1,12 @@
-import createRouter, { PluginFactory, Route, Router, cloneRouter, constants } from 'router5'
-import browserPlugin from 'router5-plugin-browser'
+import createRouter, { cloneRouter, constants, PluginFactory, Route, Router } from 'router5'
 import { MiddlewareFactory } from 'router5/types/types/router'
+import browserPlugin from 'router5-plugin-browser'
 
+import { BASE_URL } from 'src/lib/constants/api'
+import { ICustomRoute, routes, UNKNOWN_ROUTE } from 'src/lib/constants/routes'
+import { StoreName } from 'src/lib/store/constants'
 import { getService, getStore } from '../../utils/global'
-
-import { StoreName } from 'lib/store/constants'
-
-import { BASE_URL } from 'lib/constants/api'
-
 import { ServiceName } from '../types/constants'
-
-import { ICustomRoute, UNKNOWN_ROUTE, routes } from 'constants/routes'
 
 export type IRouter = Router
 
@@ -170,11 +166,13 @@ export class RouterService {
       const section = this.getRouteByName(route.name)
 
       if (section) {
-        return section.withMenu
+        return !!section.withMenu
       }
 
       return false
     }
+
+    return false
   }
 
   public getMenuRoutes(): ICustomRoute[] {
@@ -190,6 +188,6 @@ export class RouterService {
       return pathname
     }
 
-    return pathname.replace(BASE_URL, '')
+    return pathname.replace(BASE_URL!, '')
   }
 }

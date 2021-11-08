@@ -1,6 +1,6 @@
 import { ComponentType } from 'react'
 
-import { isDev } from 'lib/constants/env'
+import { isDev } from 'src/lib/constants/env'
 
 export function getDisplayName(component: ComponentType<any>) {
   return isDev

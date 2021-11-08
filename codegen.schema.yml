@@ -1,0 +1,9 @@
+overwrite: true
+schema:
+  - 'http://dev1.madd.91.vpn/api/graphql' #-boilerplate-
+generates:
+  schema.graphql:
+    plugins:
+      - schema-ast
+    config:
+      sort: true

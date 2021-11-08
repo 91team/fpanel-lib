@@ -8,13 +8,10 @@ import { setContext } from 'apollo-link-context'
 import loggerLink from 'apollo-link-logger'
 import universalFetch from 'isomorphic-unfetch'
 
-import { StoreName } from 'lib/store/constants'
-
-import { isDev } from 'lib/constants/env'
-
+import { GRAPHQL_API_URL } from 'src/lib/constants/api'
+import { isDev } from 'src/lib/constants/env'
+import { StoreName } from 'src/lib/store/constants'
 import { getStore } from '../utils/global'
-
-import { GRAPHQL_API_URL } from 'constants/api'
 
 export type IApollo = ApolloClient<NormalizedCacheObject>
 export type TInitialState = NormalizedCacheObject

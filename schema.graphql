@@ -4,10 +4,10 @@ schema {
 }
 
 type Acl {
-  etl: EtlAcl
-  olap: OlapAcl
-  ose: OseAcl
-  shared: SharedAcl
+  etl: EtlAcl!
+  olap: OlapAcl!
+  ose: OseAcl!
+  shared: SharedAcl!
 }
 
 type AdditionalCalc {
@@ -60,9 +60,23 @@ enum ArgType {
 type Attachment {
   aspectRatio: Float
   contentType: String
-  id: UUID
+  id: UUID!
   name: String
   url: String
+}
+
+enum AuthMode {
+  HARD
+  REFRESH
+}
+
+enum AuthType {
+  API_KEY
+  BASIC
+  BEARER
+  DIGEST
+  NONE
+  OAUTH20
 }
 
 type Autocomplete {
@@ -89,8 +103,8 @@ type Change {
   after: String
   before: String
   changeType: ChangeType
-  column: Column
-  id: Int
+  column: Column!
+  id: Int!
   insertedAt: Timestamp
 }
 
@@ -168,7 +182,7 @@ input CodecInp {
 }
 
 input CodecInput {
-  value: [CodecInp]
+  value: [CodecInp!]
 }
 
 enum CodecType {
@@ -184,15 +198,15 @@ enum CodecType {
 
 type Column {
   caseType: CaseType
-  changes: [Change]
-  codecs: [Codec]
-  columnIds: [Int]
+  changes: [Change!]
+  codecs: [Codec!]
+  columnIds: [Int!]
   columnName: String
-  columnStats: [ColumnStat]
+  columnStats: [ColumnStat!]
   compressedBytes: Int
   dataType: DataType
   defaultExpr: String
-  id: Int
+  id: Int!
   include: Boolean
   insertedAt: Timestamp
   nullable: Boolean
@@ -202,9 +216,9 @@ type Column {
   removeNumbers: Boolean
   removePunctuation: Boolean
   sourceStepId: Int
-  step: Step
-  stepIds: [Int]
-  title: String
+  step: Step!
+  stepIds: [Int!]!
+  title: String!
   trimSpaces: Boolean
   uncompressedBytes: Int
   updatedAt: Timestamp
@@ -230,17 +244,37 @@ type Connection {
   rightTableId: Int
 }
 
+type Coords {
+  coordsType: CoordsType!
+  lineCoords: [[Float!]!]
+  pointCoords: [Float!]
+  polyCoords: [[[Float!]!]!]
+}
+
+input CoordsInp {
+  coordsType: CoordsType
+  lineCoords: [[Float!]!]
+  pointCoords: [Float!]
+  polyCoords: [[[Float!]!]!]
+}
+
+enum CoordsType {
+  LINE
+  POINT
+  POLY
+}
+
 type CubeFilter {
   cubeId: String!
   cubeTitle: String
   draftInput: String
-  filter: [FormulaToken]
+  filter: [FormulaToken!]!
 }
 
 input CubeFilterInput {
   cubeId: String!
   draftInput: String
-  filter: [FormulaTokenInput]
+  filter: [FormulaTokenInput!]
 }
 
 type DashboardAnalysis {
@@ -252,41 +286,43 @@ input DashboardAnalysisInput {
 }
 
 type DashboardRegression {
-  models: [RegressionModelV1]
+  models: [RegressionModelV1!]
   predictSize: Int!
 }
 
 input DashboardRegressionInput {
-  models: [RegressionModelV1Input]
+  models: [RegressionModelV1Input!]
   predictSize: Int!
 }
 
 type Datasource {
-  datasetCode: String
-  datasourceProgress: DatasourceProgress
+  datasourceProgresses: [DatasourceProgress!]
   datasourceState: DatasourceState
   dbParams: DbParams
   eisParams: EisParams
-  id: Int
-  link: String
-  locked: Boolean
-  object: Object
+  ftpParams: FtpParams
+  id: Int!
+  object: Object!
   odataParams: OdataParams
   periodicityType: PeriodicityType
   periodicityValue: Float
-  sourceType: SourceType
-  steps: [Step]
-  title: String
+  restParams: RestParams
+  sourceType: SourceType!
+  steps: [Step!]!
+  title: String!
 }
 
 type DatasourceProgress {
+  allCount: Int
   datasourceId: Int
+  doneCount: Int
   doneDate: Timestamp
   futureStartDate: Timestamp
-  processes: [Progress]
+  processes: [Progress!]
   startDate: Timestamp
   status: ProgressStatus
   stopDate: Timestamp
+  tableId: String!
 }
 
 type DatasourceState {
@@ -294,6 +330,115 @@ type DatasourceState {
   currentSubsource: String
   datasourceId: Int
   doneCount: Int
+}
+
+type DataTable {
+  description: String
+  errorCount: Int
+  fields: [DataTableField!]!
+  id: UUID!
+  insertedAt: Timestamp
+  mapCenter: [Float!]
+  mapLayerStyles: MapLayerStyles
+  mapZoom: Float
+  object: Object
+  tablePositionType: TablePositionType
+  tablePositionX: Int
+  tablePositionY: Int
+  tileLayerLink: String
+  title: String!
+  tooltip: MapLayerTooltip
+  updatedAt: Timestamp
+}
+
+type DataTableField {
+  considerSearch: Boolean!
+  dataTableId: UUID!
+  defaultValue: [String!]
+  fieldCatalogId: String
+  fieldType: DataTableFieldType!
+  id: UUID!
+  insertedAt: Timestamp
+  isLink: Boolean!
+  isVideoLink: Boolean!
+  multiInput: Boolean!
+  position: Int!
+  required: Boolean!
+  showInTable: Boolean!
+  title: String!
+  uniq: Boolean!
+  updatedAt: Timestamp
+  validation: DataTableFieldValidation
+  width: Int
+}
+
+enum DataTableFieldType {
+  CATALOG
+  COORDINATES
+  DATE
+  DATETIME
+  FILE
+  NUMBER
+  STRING
+}
+
+type DataTableFieldValidation {
+  dateFormat: String
+  dateMax: String
+  dateMin: String
+  datetimeFormat: String
+  datetimeMax: String
+  datetimeMin: String
+  fileFormats: [DataTableFileFormat!]
+  numberMax: Float
+  numberMin: Float
+  stringMaxChars: Int
+  stringMinChars: Int
+  stringRegexp: String
+}
+
+input DataTableFieldValidationInput {
+  dateFormat: String
+  dateMax: String
+  dateMin: String
+  datetimeFormat: String
+  datetimeMax: String
+  datetimeMin: String
+  fileFormats: [DataTableFileFormat!]
+  numberMax: Float
+  numberMin: Float
+  stringMaxChars: Int
+  stringMinChars: Int
+  stringRegexp: String
+}
+
+enum DataTableFileFormat {
+  CSV
+  DOCX
+  JPG
+  PDF
+  PNG
+  XLSX
+  ZIP
+}
+
+type DataTableRow {
+  createdAt: Timestamp
+  fields: [DataTableRowField!]!
+  id: UUID!
+}
+
+type DataTableRowField {
+  catalogValue: [String!]
+  coordinatesValue: Coords
+  dataTableFieldId: String!
+  dateValue: [Timestamp!]
+  datetimeValue: [Timestamp!]
+  fileValue: [Attachment!]
+  numberValue: [Float!]
+  stringValue: [String!]
+  userEnteredValue: [String!]
+  validationErrors: [String!]
 }
 
 enum DataType {
@@ -322,8 +467,9 @@ input DataTypeInput {
 type DataValue {
   agg: Agg
   columnId: Int
+  dataTableFieldId: String
   fieldId: String
-  filter: [FormulaToken]
+  filter: [FormulaToken!]
   groupFieldId: String
   tableId: Int
   title: String
@@ -332,11 +478,18 @@ type DataValue {
 input DataValueInput {
   agg: Agg
   columnId: Int
+  dataTableFieldId: String
   fieldId: String
-  filter: [FormulaTokenInput]
+  filter: [FormulaTokenInput!]
   groupFieldId: String
   tableId: Int
   title: String
+}
+
+enum DateLimitType {
+  DAYS
+  HOURS
+  MINUTES
 }
 
 type DbParams {
@@ -345,7 +498,7 @@ type DbParams {
   host: String
   pass: String
   port: String
-  tables: [DbTable]
+  tables: [DbTable!]
   user: String
 }
 
@@ -355,21 +508,19 @@ input DbParamsInp {
   host: String
   pass: String
   port: String
-  tables: [DbTableInp]
+  tables: [DbTableInp!]
   user: String
 }
 
 type DbTable {
-  name: String
-  periodicityType: PeriodicityType
-  periodicityValue: Float
+  id: String
+  name: String!
   schema: String
 }
 
 input DbTableInp {
+  id: String
   name: String
-  periodicityType: PeriodicityType
-  periodicityValue: Float
   schema: String
 }
 
@@ -386,23 +537,25 @@ type DefaultPanel {
 }
 
 type EisDir {
+  id: String
   includeSubdirs: Boolean
-  path: String
-  queries: [String]
+  path: String!
+  queries: [String!]
   regexp: String
   title: String
 }
 
 input EisDirInp {
+  id: String
   includeSubdirs: Boolean
   path: String
-  queries: [String]
+  queries: [String!]
   regexp: String
   title: String
 }
 
 type EisParams {
-  dirs: [EisDir]
+  dirs: [EisDir!]
   host: String
   pass: String
   port: String
@@ -410,11 +563,23 @@ type EisParams {
 }
 
 input EisParamsInp {
-  dirs: [EisDirInp]
+  dirs: [EisDirInp!]
   host: String
   pass: String
   port: String
   user: String
+}
+
+type EntityCreated {
+  entity: Json
+  type: EntityCreatedType
+}
+
+enum EntityCreatedType {
+  ETL_STEP
+  FOLDER
+  OBJECT
+  OLAP_TABLE
 }
 
 type EtlAcl {
@@ -424,17 +589,39 @@ type EtlAcl {
   flowRead: Boolean
 }
 
+type ExternalSystem {
+  folderId: Int!
+  id: Int!
+  ips: [String!]!
+  params: [ExternalSystemParams!]!
+  title: String!
+}
+
+type ExternalSystemParams {
+  active: Boolean
+  description: String!
+  key: String!
+  value: String!
+}
+
+input ExternalSystemParamsInp {
+  active: Boolean
+  description: String!
+  key: String!
+  value: String!
+}
+
 type Field {
-  datatype: FieldDataType
+  datatype: FieldDataType!
   description: String
-  fieldType: FieldType
-  id: String
+  fieldType: FieldType!
+  id: String!
   isFKey: Boolean
   isInvisible: Boolean
   isLink: Boolean
   position: Int
   postfix: String
-  title: String
+  title: String!
 }
 
 enum FieldDataType {
@@ -459,11 +646,11 @@ enum FilterVisType {
 
 type Flow {
   acl: FlowAcl
-  connectedEntities: ConnectedEntities
-  id: Int
+  connectedEntities: ConnectedEntities!
+  id: Int!
   insertedAt: Timestamp
-  object: Object
-  title: String
+  object: Object!
+  title: String!
   updatedAt: Timestamp
 }
 
@@ -475,18 +662,19 @@ type FlowAcl {
 
 type Folder {
   asOwner: Boolean
-  defaultPanels: [DefaultPanel]
-  folders: [Folder]
-  groupAccessList: [UserGroup]
-  id: Int
-  invitedUsers: [User]
+  defaultPanels: [DefaultPanel!]!
+  folders: [Folder!]!
+  groupAccessList: [UserGroup!]
+  id: Int!
+  invitedUsers: [User!]
   isLocked: Boolean
   isOpened: Boolean
-  objects: [Object]
+  objects: [Object!]!
   sharedAccess: Boolean
   sharedToken: String
-  title: String
-  usersAccessList: [User]
+  title: String!
+  userQuota: Int
+  usersAccessList: [User!]
 }
 
 type FormulaToken {
@@ -505,6 +693,22 @@ input FormulaTokenInput {
   value: String
 }
 
+type FtpDir {
+  id: String
+  includeSubdirs: Boolean
+  path: String
+  regexp: String
+  title: String
+}
+
+input FtpDirInp {
+  id: String
+  includeSubdirs: Boolean
+  path: String
+  regexp: String
+  title: String
+}
+
 type FtpEnity {
   name: String
   type: FtpEnityType
@@ -515,13 +719,29 @@ enum FtpEnityType {
   FILE
 }
 
+type FtpParams {
+  dirs: [FtpDir!]
+  host: String
+  pass: String
+  port: String
+  user: String
+}
+
+input FtpParamsInp {
+  dirs: [FtpDirInp!]
+  host: String
+  pass: String
+  port: String
+  user: String
+}
+
 type Function {
   arg1Type: ArgType
   arg2Type: ArgType
   arg3Type: ArgType
-  argsCount: Int
+  argsCount: Int!
   description: String
-  examples: [FunctionExample]
+  examples: [FunctionExample!]
   name: String!
   resultType: ResultType
 }
@@ -532,24 +752,24 @@ type FunctionExample {
 }
 
 type FuncValue {
-  arg1: [FormulaToken]
-  arg2: [FormulaToken]
-  arg3: [FormulaToken]
-  args: [[FormulaToken]]
+  arg1: [FormulaToken!]
+  arg2: [FormulaToken!]
+  arg3: [FormulaToken!]
+  args: [[FormulaToken!]!]!
   name: String!
 }
 
 input FuncValueInput {
-  arg1: [FormulaTokenInput]
-  arg2: [FormulaTokenInput]
-  arg3: [FormulaTokenInput]
-  args: [[FormulaTokenInput]]
+  arg1: [FormulaTokenInput!]
+  arg2: [FormulaTokenInput!]
+  arg3: [FormulaTokenInput!]
+  args: [[FormulaTokenInput!]!]!
   name: String!
 }
 
 type Hierarchy {
   description: String
-  dims: [HierarchyDim]
+  dims: [HierarchyDim!]
   id: Int
   insertedAt: Timestamp
   isInvisible: Boolean
@@ -574,12 +794,12 @@ input IncludeInput {
 }
 
 type Indicator {
-  baseRating: [[String]]
+  baseRating: [[String!]!]
   connectedEntities: ConnectedEntities
-  displayColumnIds: [String]
+  displayColumnIds: [String!]
   displayFKeyId: String
   displayTableId: Int
-  formula: [FormulaToken]
+  formula: [FormulaToken!]
   id: Int
   insertedAt: Timestamp
   object: Object
@@ -643,13 +863,373 @@ enum LegendPosition {
 }
 
 type ListValue {
-  list: [String]
+  list: [String!]
   title: String
 }
 
 input ListValueInput {
-  list: [String]
+  list: [String!]
   title: String
+}
+
+enum LOType {
+  DATE
+  NUMBER
+  PAGES
+}
+
+type Map {
+  center: [Float!]
+  id: UUID!
+  insertedAt: Timestamp
+  layers: [MapLayer!]
+  object: Object
+  privateToken: String
+  publicToken: String
+  tileLayerLink: String
+  updatedAt: Timestamp
+  zoom: Float
+}
+
+type MapLayer {
+  dataTableId: UUID!
+  filter: [FormulaToken!]
+  id: UUID!
+  insertedAt: Timestamp
+  mapId: UUID!
+  mapLayerStyles: MapLayerStyles
+  modal: MapLayerModal
+  position: Int
+  title: String
+  tooltip: MapLayerTooltip
+  updatedAt: Timestamp
+  visible: Boolean
+}
+
+type MapLayerModal {
+  backgroundColor: String
+  blocks: [ModalBlock!]
+  borderColor: String
+  borderType: String
+  borderWidth: String
+  paddingBottom: String
+  paddingLeft: String
+  paddingRight: String
+  paddingTop: String
+}
+
+enum MapLayerModalBlockType {
+  EMBED
+  LINK
+  LOCAL_IMAGE
+  REMOTE_IMAGE
+  RTX
+  VIDEO_STREAM
+}
+
+input MapLayerModalInp {
+  backgroundColor: String
+  blocks: [ModalBlockInp!]
+  borderColor: String
+  borderType: String
+  borderWidth: String
+  paddingBottom: String
+  paddingLeft: String
+  paddingRight: String
+  paddingTop: String
+}
+
+type MapLayerRtxData {
+  align: String
+  children: [MapLayerRtxItem!]!
+  type: MapLayerRtxDataType
+}
+
+input MapLayerRtxDataInp {
+  align: String
+  children: [MapLayerRtxItemInp!]
+  type: MapLayerRtxDataType
+}
+
+enum MapLayerRtxDataType {
+  PARAGRAPH
+}
+
+type MapLayerRtxItem {
+  backgroundColor: String
+  bold: Boolean
+  children: [MapLayerRtxItemChild!]
+  color: String
+  dataTableFieldId: String
+  fontSize: Float
+  italic: Boolean
+  text: String
+  type: MapLayerRtxItemType
+}
+
+type MapLayerRtxItemChild {
+  text: String
+}
+
+input MapLayerRtxItemChildInp {
+  text: String
+}
+
+input MapLayerRtxItemInp {
+  backgroundColor: String
+  bold: Boolean
+  children: [MapLayerRtxItemChildInp!]
+  color: String
+  dataTableFieldId: String
+  fontSize: Float
+  italic: Boolean
+  text: String
+  type: MapLayerRtxItemType
+}
+
+enum MapLayerRtxItemType {
+  FIELD
+  TEXT
+}
+
+type MapLayerShared {
+  id: UUID!
+  mapId: UUID!
+  mapLayerStyles: MapLayerStyles
+  modal: MapLayerModal
+  position: Int
+  title: String
+  tooltip: MapLayerTooltip
+  visible: Boolean
+}
+
+type MapLayerStyles {
+  fillOptions: MapLayerStylesFillOptions
+  gridSize: Float
+  gridType: MapLayerStylesGridType
+  showArrowLine: Boolean
+  sizeOptions: MapLayerStylesSizeOptions
+  stroke: MapLayerStylesStroke
+}
+
+type MapLayerStylesFillOptions {
+  color: String
+  fillType: MapLayerStylesFillType
+  gridAggType: MapLayerStylesGridAggType
+  opacity: Float
+  scales: [MapLayerStylesFillScale!]
+  scalesDataFieldId: String
+  showInLegend: Boolean
+}
+
+input MapLayerStylesFillOptionsInp {
+  color: String
+  fillType: MapLayerStylesFillType
+  gridAggType: MapLayerStylesGridAggType
+  opacity: Float
+  scales: [MapLayerStylesFillScaleInp!]
+  scalesDataFieldId: String
+  showInLegend: Boolean
+}
+
+type MapLayerStylesFillScale {
+  limits: [MapLayerStylesFillScaleLimit!]
+  name: String
+  scaleFunc: MapLayerStylesScaleFunc
+  scaleType: MapLayerStylesScaleType
+  showInLegend: Boolean
+}
+
+input MapLayerStylesFillScaleInp {
+  limits: [MapLayerStylesFillScaleLimitInp!]
+  name: String
+  scaleFunc: MapLayerStylesScaleFunc
+  scaleType: MapLayerStylesScaleType
+  showInLegend: Boolean
+}
+
+type MapLayerStylesFillScaleLimit {
+  colorFrom: String
+  colorTo: String
+  from: Float
+  to: Float
+}
+
+input MapLayerStylesFillScaleLimitInp {
+  colorFrom: String
+  colorTo: String
+  from: Float
+  to: Float
+}
+
+enum MapLayerStylesFillType {
+  FIXED
+  SCALES
+}
+
+enum MapLayerStylesGridAggType {
+  AVG
+  COUNT
+  MAX
+  MIN
+  SUM
+}
+
+enum MapLayerStylesGridType {
+  HEX
+  NONE
+  SQUARE
+}
+
+input MapLayerStylesInp {
+  fillOptions: MapLayerStylesFillOptionsInp
+  gridSize: Float
+  gridType: MapLayerStylesGridType
+  showArrowLine: Boolean
+  sizeOptions: MapLayerStylesSizeOptionsInp
+  stroke: MapLayerStylesStrokeInp
+}
+
+enum MapLayerStylesScaleFunc {
+  EXP
+  LINEAR
+  SQUARE
+}
+
+enum MapLayerStylesScaleType {
+  CUSTOM
+  LINEAR
+  UNIFORM
+}
+
+type MapLayerStylesSizeOptions {
+  gridAggType: MapLayerStylesGridAggType
+  scales: [MapLayerStylesSizeScale!]
+  scalesDataFieldId: String
+  size: Float
+  type: MapLayerStylesFillType
+}
+
+input MapLayerStylesSizeOptionsInp {
+  gridAggType: MapLayerStylesGridAggType
+  scales: [MapLayerStylesSizeScaleInp!]
+  scalesDataFieldId: String
+  size: Float
+  type: MapLayerStylesFillType
+}
+
+type MapLayerStylesSizeScale {
+  limits: [MapLayerStylesSizeScaleLimit!]
+  name: String
+  scaleFunc: MapLayerStylesScaleFunc
+  scaleType: MapLayerStylesScaleType
+  showInLegend: Boolean
+}
+
+input MapLayerStylesSizeScaleInp {
+  limits: [MapLayerStylesSizeScaleLimitInp!]
+  name: String
+  scaleFunc: MapLayerStylesScaleFunc
+  scaleType: MapLayerStylesScaleType
+  showInLegend: Boolean
+}
+
+type MapLayerStylesSizeScaleLimit {
+  from: Float
+  sizeFrom: Float
+  sizeTo: Float
+  to: Float
+}
+
+input MapLayerStylesSizeScaleLimitInp {
+  from: Float
+  sizeFrom: Float
+  sizeTo: Float
+  to: Float
+}
+
+type MapLayerStylesStroke {
+  color: String
+  opacity: Float
+  size: Float
+}
+
+input MapLayerStylesStrokeInp {
+  color: String
+  opacity: Float
+  size: Float
+}
+
+type MapLayerTooltip {
+  backgroundColor: String
+  borderColor: String
+  borderRadius: String
+  borderType: String
+  borderWidth: String
+  paddingBottom: String
+  paddingLeft: String
+  paddingRight: String
+  paddingTop: String
+  rtx: [MapLayerRtxData!]
+}
+
+input MapLayerTooltipInp {
+  backgroundColor: String
+  borderColor: String
+  borderRadius: String
+  borderType: String
+  borderWidth: String
+  paddingBottom: String
+  paddingLeft: String
+  paddingRight: String
+  paddingTop: String
+  rtx: [MapLayerRtxDataInp!]
+}
+
+type MapShared {
+  center: [Float!]
+  id: UUID!
+  layers: [MapLayerShared!]
+  tileLayerLink: String
+  zoom: Float
+}
+
+type ModalBlock {
+  backgroundColor: String
+  borderColor: String
+  borderType: String
+  borderWidth: String
+  embedLink: [MapLayerRtxData!]
+  link: [MapLayerRtxData!]
+  linkText: [MapLayerRtxData!]
+  localImageUrl: String
+  paddingBottom: String
+  paddingLeft: String
+  paddingRight: String
+  paddingTop: String
+  remoteImageUrl: [MapLayerRtxData!]
+  rtx: [MapLayerRtxData!]
+  type: MapLayerModalBlockType
+  videoStreamLink: [MapLayerRtxData!]
+}
+
+input ModalBlockInp {
+  backgroundColor: String
+  borderColor: String
+  borderType: String
+  borderWidth: String
+  embedLink: [MapLayerRtxDataInp!]
+  link: [MapLayerRtxDataInp!]
+  linkText: [MapLayerRtxDataInp!]
+  localImageUrl: String
+  paddingBottom: String
+  paddingLeft: String
+  paddingRight: String
+  paddingTop: String
+  remoteImageUrl: [MapLayerRtxDataInp!]
+  rtx: [MapLayerRtxDataInp!]
+  type: MapLayerModalBlockType
+  videoStreamLink: [MapLayerRtxDataInp!]
 }
 
 type Object {
@@ -657,20 +1237,22 @@ type Object {
   attachmentId: String
   entityId: String
   folderId: Int
-  groupAccessList: [UserGroup]
-  id: String
-  objectType: ObjectType
-  title: String
+  groupAccessList: [UserGroup!]!
+  id: String!
+  objectType: ObjectType!
+  title: String!
   updatedAt: Timestamp
-  usersAccessList: [User]
+  usersAccessList: [User!]!
 }
 
 enum ObjectType {
   DASHBOARD
+  DATA
   DATASOURCE
   FLOW
   GROUP_CHAT
   INDICATOR
+  MAP
   PM
   TABLE
 }
@@ -679,7 +1261,7 @@ type OdataParams {
   host: String
   pass: String
   port: String
-  tables: [String]
+  tables: [String!]
   url: String
   user: String
 }
@@ -688,7 +1270,7 @@ input OdataParamsInp {
   host: String
   pass: String
   port: String
-  tables: [String]
+  tables: [String!]
   url: String
   user: String
 }
@@ -701,11 +1283,12 @@ type OlapAcl {
 
 type OlapChartLayer implements OlapLayer {
   analysis: Analysis
+  chartProperties: OlapLayerChartProperties
   chartType: OlapChartType
-  columns: [OlapRequestField]
+  columns: [OlapRequestField!]
   cubeId: String
   drillAsidePanelId: String
-  havingFilters: [FormulaToken]
+  havingFilters: [FormulaToken!]
   height: Float
   hierarchy: OlapHierarchy
   id: UUID!
@@ -714,17 +1297,18 @@ type OlapChartLayer implements OlapLayer {
   offset: Int
   positionX: Float
   positionY: Float
-  rows: [OlapRequestField]
-  scannerDrillFields: [String]
+  rows: [OlapRequestField!]
+  scannerDrillFields: [String!]
   showTotal: Boolean
   showValueMeasureName: Boolean
   sorting: OlapLayerSorting
   styles: OlapLayerStyles
+  tableProperties: OlapLayerTableProperties
   type: OlapLayerType
   valueFontColor: String
   valueFontSize: Int
   valuePostfix: String
-  whereFilters: [FormulaToken]
+  whereFilters: [FormulaToken!]
   width: Float
 }
 
@@ -749,7 +1333,7 @@ type OlapDashboard {
   horizontalMargin: Int
   id: UUID!
   insertedAt: Timestamp
-  layers: [OlapLayer]
+  layers: [OlapLayer!]
   maxWidth: Int
   minWidth: Int
   object: Object
@@ -767,7 +1351,7 @@ input OlapDashboardInput {
   borderColor: String
   height: Int
   horizontalMargin: Int
-  layers: [OlapLayerInput]
+  layers: [OlapLayerInput!]
   maxWidth: Int
   minWidth: Int
   rowHeight: Int
@@ -785,16 +1369,16 @@ enum OlapDashboardWorkspace {
 type OlapFilterLayer implements OlapLayer {
   applyToAllElement: Boolean
   cubeId: String
-  defaultSelectedValues: [String]
+  defaultSelectedValues: [String!]
   fieldId: String
-  fieldValues: [String]
+  fieldValues: [String!]
   filterField: OlapRequestField
   filterVisType: FilterVisType
   height: Float
   id: UUID!
   positionX: Float
   positionY: Float
-  relatedElements: [UUID]
+  relatedElements: [UUID!]
   type: OlapLayerType
   width: Float
 }
@@ -816,12 +1400,12 @@ enum OlapGridType {
 }
 
 type OlapHierarchy {
-  fields: [OlapRequestField]
+  fields: [OlapRequestField!]
   id: String
 }
 
 input OlapHierarchyInput {
-  fields: [OlapRequestFieldInput]
+  fields: [OlapRequestFieldInput!]
   id: String
 }
 
@@ -882,6 +1466,14 @@ input OlapLayerBarFillStyleInput {
   opacity: Float
 }
 
+type OlapLayerChartProperties {
+  sorting: OlapLayerSorting
+}
+
+input OlapLayerChartPropertiesInput {
+  sorting: OlapLayerSortingInput
+}
+
 type OlapLayerDirectAxis {
   rotate: Float
   withAxisLine: Boolean
@@ -909,47 +1501,49 @@ input OlapLayerGridInput {
 }
 
 input OlapLayerInput {
-  applyToAllElement: Boolean
-  valueFontSize: Int
-  height: Float
-  relatedElements: [UUID]
-  fieldValues: [String]
-  cubeId: String
-  defaultSelectedValues: [String]
-  columns: [OlapRequestFieldInput]
-  analysis: AnalysisInput
-  textDecoration: OlapTextDecoration
-  rows: [OlapRequestFieldInput]
-  chartType: OlapChartType
-  havingFilters: [FormulaTokenInput]
-  showValueMeasureName: Boolean
-  scannerDrillFields: [String]
-  whereFilters: [FormulaTokenInput]
-  size: Int
-  fontWeight: OlapFontWeight
-  positionX: Float
+  havingFilters: [FormulaTokenInput!]
   showTotal: Boolean
-  styles: OlapLayerStylesInput
-  rtx: [OlapLayerRtxDataInput]
-  color: String
-  fieldId: String
-  textAlign: OlapTextAlign
-  hierarchy: OlapHierarchyInput
-  valuePostfix: String
-  fontStyle: OlapFontStyle
-  positionY: Float
-  sorting: OlapLayerSortingInput
-  mapProperties: OlapLayerMapPropertiesInput
-  type: OlapLayerType
-  drillAsidePanelId: String
-  valueFontColor: String
+  textDecoration: OlapTextDecoration
+  whereFilters: [FormulaTokenInput!]
+  scannerDrillFields: [String!]
   width: Float
-  text: String
-  filterField: OlapRequestFieldInput
-  limit: Int
-  id: UUID
   offset: Int
+  rows: [OlapRequestFieldInput!]
+  drillAsidePanelId: String
+  styles: OlapLayerStylesInput
+  valueFontSize: Int
+  tableProperties: OlapLayerTablePropertiesInput
+  type: OlapLayerType
+  mapProperties: OlapLayerMapPropertiesInput
+  text: String
+  fieldValues: [String!]
+  textAlign: OlapTextAlign
+  positionY: Float
+  id: UUID
+  fieldId: String
+  positionX: Float
+  limit: Int
+  filterField: OlapRequestFieldInput
+  color: String
+  defaultSelectedValues: [String!]
+  showValueMeasureName: Boolean
+  sorting: OlapLayerSortingInput
+  valueFontColor: String
+  valuePostfix: String
+  cubeId: String
+  analysis: AnalysisInput
+  height: Float
+  chartType: OlapChartType
+  fontWeight: OlapFontWeight
+  hierarchy: OlapHierarchyInput
+  fontStyle: OlapFontStyle
+  columns: [OlapRequestFieldInput!]
+  chartProperties: OlapLayerChartPropertiesInput
+  size: Int
   filterVisType: FilterVisType
+  rtx: [OlapLayerRtxDataInput!]
+  applyToAllElement: Boolean
+  relatedElements: [UUID!]
 }
 
 type OlapLayerLegend {
@@ -982,37 +1576,67 @@ input OlapLayerLineStyleInput {
 
 type OlapLayerMap {
   color: String
-  ranges: [OlapLayerRanges]
+  marks: [OlapLayerMark!]
+  ranges: [OlapLayerRanges!]
+  tooltip: OlapLayerTooltip
 }
 
 input OlapLayerMapInput {
   color: String
-  ranges: [OlapLayerRangesInput]
+  marks: [OlapLayerMarkInput!]
+  ranges: [OlapLayerRangesInput!]
+  tooltip: OlapLayerTooltipInput
 }
 
 type OlapLayerMapProperties {
-  center: [Float]
+  center: [Float!]
+  tile: String
   zoom: Float
 }
 
 input OlapLayerMapPropertiesInput {
-  center: [Float]
+  center: [Float!]
+  tile: String
   zoom: Float
 }
 
 type OlapLayerMark {
   color: String
+  filters: [OlapLayerMarkFilter!]
   position: String
-  rtx: [OlapLayerRtxData]
+  rtx: [OlapLayerRtxData!]
   showLine: Boolean
   type: String
   value: String
 }
 
+type OlapLayerMarkFilter {
+  dimensions: [OlapLayerMarkFilterDimension!]
+  measuresIds: [String!]
+}
+
+type OlapLayerMarkFilterDimension {
+  id: String!
+  index: Int!
+  values: [String!]!
+}
+
+input OlapLayerMarkFilterDimensionInput {
+  id: String!
+  index: Int!
+  values: [String!]!
+}
+
+input OlapLayerMarkFilterInput {
+  dimensions: [OlapLayerMarkFilterDimensionInput!]
+  measuresIds: [String!]
+}
+
 input OlapLayerMarkInput {
   color: String
+  filters: [OlapLayerMarkFilterInput!]
   position: String
-  rtx: [OlapLayerRtxDataInput]
+  rtx: [OlapLayerRtxDataInput!]
   showLine: Boolean
   type: String
   value: String
@@ -1051,8 +1675,9 @@ type OlapLayerPoint {
   barStroke: OlapLayerShapeStyle
   fill: OlapLayerShapeStyle
   id: String
-  marks: [OlapLayerMark]
+  marks: [OlapLayerMark!]
   stroke: OlapLayerShapeStyle
+  tooltip: OlapLayerTooltip
 }
 
 input OlapLayerPointInput {
@@ -1060,8 +1685,9 @@ input OlapLayerPointInput {
   barStroke: OlapLayerShapeStyleInput
   fill: OlapLayerShapeStyleInput
   id: String
-  marks: [OlapLayerMarkInput]
+  marks: [OlapLayerMarkInput!]
   stroke: OlapLayerShapeStyleInput
+  tooltip: OlapLayerTooltipInput
 }
 
 type OlapLayerRanges {
@@ -1078,19 +1704,19 @@ input OlapLayerRangesInput {
 
 type OlapLayerRtxData {
   align: String
-  children: [OlapLayerRtxItem]
+  children: [OlapLayerRtxItem!]!
   type: RtxDataType
 }
 
 input OlapLayerRtxDataInput {
   align: String
-  children: [OlapLayerRtxItemInput]
+  children: [OlapLayerRtxItemInput!]
   type: RtxDataType
 }
 
 type OlapLayerRtxItem {
   bold: Boolean
-  children: [OlapLayerRtxItemChild]
+  children: [OlapLayerRtxItemChild!]
   color: String
   element: OlapChartLayer
   fontSize: Float
@@ -1111,7 +1737,7 @@ input OlapLayerRtxItemChildInput {
 
 input OlapLayerRtxItemInput {
   bold: Boolean
-  children: [OlapLayerRtxItemChildInput]
+  children: [OlapLayerRtxItemChildInput!]
   color: String
   element: OlapLayerInput
   fontSize: Float
@@ -1131,12 +1757,13 @@ type OlapLayerSeria {
   id: String
   innerRadius: Int
   lineStyle: OlapLayerLineStyle
-  marks: [OlapLayerMark]
+  marks: [OlapLayerMark!]
   outerRadius: Int
   pointStyle: OlapLayerPoint
   showTrend: Boolean
   smooth: Boolean
   stack: String
+  tooltip: OlapLayerTooltip
   trendLine: TrendLine
   type: OlapSeriaType
 }
@@ -1150,12 +1777,13 @@ input OlapLayerSeriaInput {
   id: String
   innerRadius: Int
   lineStyle: OlapLayerLineStyleInput
-  marks: [OlapLayerMarkInput]
+  marks: [OlapLayerMarkInput!]
   outerRadius: Int
   pointStyle: OlapLayerPointInput
   showTrend: Boolean
   smooth: Boolean
   stack: String
+  tooltip: OlapLayerTooltipInput
   trendLine: TrendLineInput
   type: OlapSeriaType
 }
@@ -1183,17 +1811,17 @@ input OlapLayerSortingInput {
 }
 
 type OlapLayerStyles {
-  aliases: [OlapLayerAlias]
+  aliases: [OlapLayerAlias!]
   axis: OlapLayerAxis
   backgroundColor: String
   grid: OlapLayerGrid
   hGrid: OlapLayerVHGrid
   legend: OlapLayerLegend
   map: OlapLayerMap
-  markLines: [OlapLayerMarkLine]
+  markLines: [OlapLayerMarkLine!]
   pie: OlapLayerPie
-  points: [OlapLayerPoint]
-  series: [OlapLayerSeria]
+  points: [OlapLayerPoint!]
+  series: [OlapLayerSeria!]
   seriesConfig: OlapLayerSeria
   sortingType: SortingType
   table: OlapLayerTable
@@ -1203,17 +1831,17 @@ type OlapLayerStyles {
 }
 
 input OlapLayerStylesInput {
-  aliases: [OlapLayerAliasInput]
+  aliases: [OlapLayerAliasInput!]
   axis: OlapLayerAxisInput
   backgroundColor: String
   grid: OlapLayerGridInput
   hGrid: OlapLayerVHGridInput
   legend: OlapLayerLegendInput
   map: OlapLayerMapInput
-  markLines: [OlapLayerMarkLineInput]
+  markLines: [OlapLayerMarkLineInput!]
   pie: OlapLayerPieInput
-  points: [OlapLayerPointInput]
-  series: [OlapLayerSeriaInput]
+  points: [OlapLayerPointInput!]
+  series: [OlapLayerSeriaInput!]
   seriesConfig: OlapLayerSeriaInput
   sortingType: SortingType
   table: OlapLayerTableInput
@@ -1223,25 +1851,33 @@ input OlapLayerStylesInput {
 }
 
 type OlapLayerTable {
-  columnWidths: [TablePartSize]
+  columnWidths: [TablePartSize!]
   horizontalPadding: Int
   id: String
   mergeCells: Boolean
-  rowLines: [TablePartSize]
+  rowLines: [TablePartSize!]
   stickyHeader: Boolean
   stickySide: Boolean
   verticalPadding: Int
 }
 
 input OlapLayerTableInput {
-  columnWidths: [TablePartSizeInput]
+  columnWidths: [TablePartSizeInput!]
   horizontalPadding: Int
   id: String
   mergeCells: Boolean
-  rowLines: [TablePartSizeInput]
+  rowLines: [TablePartSizeInput!]
   stickyHeader: Boolean
   stickySide: Boolean
   verticalPadding: Int
+}
+
+type OlapLayerTableProperties {
+  showTotal: Boolean
+}
+
+input OlapLayerTablePropertiesInput {
+  showTotal: Boolean
 }
 
 type OlapLayerTextStyle {
@@ -1252,6 +1888,22 @@ type OlapLayerTextStyle {
 input OlapLayerTextStyleInput {
   color: String
   fontSize: Float
+}
+
+type OlapLayerTooltip {
+  color: String
+  filters: [OlapLayerMarkFilter!]
+  position: String
+  rtx: [OlapLayerRtxData!]
+  type: String
+}
+
+input OlapLayerTooltipInput {
+  color: String
+  filters: [OlapLayerMarkFilterInput!]
+  position: String
+  rtx: [OlapLayerRtxDataInput!]
+  type: String
 }
 
 enum OlapLayerType {
@@ -1359,8 +2011,8 @@ input OlapRequestConditionInput {
 type OlapRequestField {
   additionalCalc: AdditionalCalc
   agg: OlapRequestAgg!
-  args: [OlapRequestArg]
-  calculatedFormula: [FormulaToken]
+  args: [OlapRequestArg!]
+  calculatedFormula: [FormulaToken!]
   hierarchyId: String
   id: String!
   index: Int
@@ -1372,8 +2024,8 @@ type OlapRequestField {
 input OlapRequestFieldInput {
   additionalCalc: AdditionalCalcInput
   agg: OlapRequestAgg!
-  args: [OlapRequestArgInput]
-  calculatedFormula: [FormulaTokenInput]
+  args: [OlapRequestArgInput!]
+  calculatedFormula: [FormulaTokenInput!]
   hierarchyId: String
   id: String!
   index: Int
@@ -1383,15 +2035,15 @@ input OlapRequestFieldInput {
 }
 
 input OlapRequestInput {
-  conditions: [OlapRequestConditionInput]
+  conditions: [OlapRequestConditionInput!]
   cubeId: String
   fields: [OlapRequestFieldInput!]
   format: OlapRequestType!
-  havingFilters: [FormulaTokenInput]
+  havingFilters: [FormulaTokenInput!]
   limit: Int
   offset: Int
   scannerId: String
-  whereFilters: [FormulaTokenInput]
+  whereFilters: [FormulaTokenInput!]
 }
 
 enum OlapRequestType {
@@ -1430,7 +2082,7 @@ type OlapTextLayer implements OlapLayer {
   id: UUID!
   positionX: Float
   positionY: Float
-  rtx: [OlapLayerRtxData]
+  rtx: [OlapLayerRtxData!]
   size: Int
   text: String
   textAlign: OlapTextAlign
@@ -1491,6 +2143,7 @@ enum Periodicity {
 enum PeriodicityType {
   DAYS
   HOURS
+  MINUTES
   NEVER
   ONCE
 }
@@ -1499,10 +2152,10 @@ type PmChecklist {
   description: String
   id: UUID!
   insertedAt: Timestamp
-  tasks: [PmChecklistTask]
+  tasks: [PmChecklistTask!]
   title: String!
   updatedAt: Timestamp
-  userIds: [Int]
+  userIds: [Int!]
 }
 
 type PmChecklistTask {
@@ -1512,7 +2165,7 @@ type PmChecklistTask {
   planStartTime: Timestamp
   status: PmChecklistTaskStatus!
   title: String!
-  userIds: [Int]
+  userIds: [Int!]
 }
 
 enum PmChecklistTaskStatus {
@@ -1527,9 +2180,9 @@ input PositionInput {
 }
 
 type Progress {
-  allCount: Int
-  doneCount: Int
-  label: String
+  allCount: Int!
+  doneCount: Int!
+  label: String!
 }
 
 enum ProgressStatus {
@@ -1541,7 +2194,7 @@ enum ProgressStatus {
 }
 
 type ProjectManagement {
-  checklists: [PmChecklist]
+  checklists: [PmChecklist!]
   id: UUID!
   insertedAt: Timestamp
   object: Object
@@ -1550,7 +2203,7 @@ type ProjectManagement {
 }
 
 type Regression {
-  models: [RegressionModel]
+  models: [RegressionModel!]
   predictSize: Int!
 }
 
@@ -1579,7 +2232,7 @@ input RegressionCalculatedVarV1Input {
 }
 
 input RegressionInput {
-  models: [RegressionModelInput]
+  models: [RegressionModelInput!]
   predictSize: Int!
 }
 
@@ -1590,7 +2243,7 @@ type RegressionModel {
   relevant: Boolean!
   seriaId: String!
   significanceLevel: Float!
-  vars: [RegressionVar]!
+  vars: [RegressionVar!]!
 }
 
 input RegressionModelInput {
@@ -1600,7 +2253,7 @@ input RegressionModelInput {
   relevant: Boolean!
   seriaId: String!
   significanceLevel: Float!
-  vars: [RegressionCalculatedVarInput]!
+  vars: [RegressionCalculatedVarInput!]!
 }
 
 type RegressionModelV1 {
@@ -1611,7 +2264,7 @@ type RegressionModelV1 {
   relevant: Boolean!
   seriaId: String!
   significanceLevel: Float!
-  vars: [RegressionVarV1]!
+  vars: [RegressionVarV1!]!
 }
 
 input RegressionModelV1Input {
@@ -1622,12 +2275,12 @@ input RegressionModelV1Input {
   relevant: Boolean!
   seriaId: String!
   significanceLevel: Float!
-  vars: [RegressionCalculatedVarV1Input]!
+  vars: [RegressionCalculatedVarV1Input!]!
 }
 
 input RegressionSeriaInput {
   id: String!
-  seria: [Float]!
+  seria: [Float!]!
 }
 
 type RegressionVar {
@@ -1667,6 +2320,118 @@ type RegressionVarV1 {
   seriaId: String!
 }
 
+enum RequestType {
+  GET
+  POST
+}
+
+type RestHttpAnswer {
+  body: String
+  code: Int
+}
+
+type RestParams {
+  apiKeyName: String
+  apiKeyValue: String
+  authMode: AuthMode
+  authTokenKeys: [String!]
+  authTtl: Float
+  authType: AuthType
+  authUrl: String
+  bearerToken: String
+  delay: Float
+  endpoints: [RestParamsEndpoint!]
+  headers: [RestParamsHeader!]
+  login: String
+  loginFieldname: String
+  oauth20Prefix: String
+  oauth20Token: String
+  pass: String
+  passFieldname: String
+  refreshTokenFieldname: String
+  refreshTokenKeys: [String!]
+  refreshUrl: String
+  timeout: Float
+  url: String
+}
+
+type RestParamsEndpoint {
+  args: String
+  dateLimitType: DateLimitType
+  id: String
+  limit: Int
+  limitArgName: String
+  limitOffsetType: LOType
+  offset: Int
+  offsetArgName: String
+  offsetStopValue: Int
+  pageArgName: String
+  pageEnd: Int
+  pageRowCount: Int
+  pageStart: Int
+  pagination: Boolean
+  requestType: RequestType
+  resultArrayKeys: [String!]
+  stopOnLesslimit: Boolean
+  urlPostfix: String
+}
+
+input RestParamsEndpointInp {
+  args: String
+  dateLimitType: DateLimitType
+  id: String
+  limit: Int
+  limitArgName: String
+  limitOffsetType: LOType
+  offset: Int
+  offsetArgName: String
+  offsetStopValue: Int
+  pageArgName: String
+  pageEnd: Int
+  pageRowCount: Int
+  pageStart: Int
+  pagination: Boolean
+  requestType: RequestType
+  resultArrayKeys: [String!]
+  stopOnLesslimit: Boolean
+  urlPostfix: String
+}
+
+type RestParamsHeader {
+  name: String
+  value: String
+}
+
+input RestParamsHeaderInp {
+  name: String
+  value: String
+}
+
+input RestParamsInp {
+  apiKeyName: String
+  apiKeyValue: String
+  authMode: AuthMode
+  authTokenKeys: [String!]
+  authTtl: Float
+  authType: AuthType
+  authUrl: String
+  bearerToken: String
+  delay: Float
+  endpoints: [RestParamsEndpointInp!]
+  headers: [RestParamsHeaderInp!]
+  login: String
+  loginFieldname: String
+  oauth20Prefix: String
+  oauth20Token: String
+  pass: String
+  passFieldname: String
+  refreshTokenFieldname: String
+  refreshTokenKeys: [String!]
+  refreshUrl: String
+  timeout: Float
+  url: String
+}
+
 enum ResultType {
   DATE
   NUMBER
@@ -1681,8 +2446,9 @@ type Role {
   description: String
   etlRead: Boolean
   etlWrite: Boolean
+  externalSystems: [ExternalSystem!]!
   folderId: Int!
-  id: Int
+  id: Int!
   indicatorsRead: Boolean
   indicatorsWrite: Boolean
   olapschemaRead: Boolean
@@ -1690,246 +2456,333 @@ type Role {
   rolesRead: Boolean
   rolesWrite: Boolean
   title: String!
-  users: [User]
+  users: [User!]!
 }
 
 type RootMutationType {
-  """Create folder user_group"""
-  createFolderUserGroup(description: String, folderId: Int!, title: String!): UserGroup
-
-  """Update folder user_group"""
-  updateFolderUserGroup(description: String, id: Int!, title: String!): UserGroup
-
-  """Create indicator"""
-  createIndicator(displayColumnIds: [String], displayFKeyId: String, displayTableId: Int, folderId: Int, formula: [FormulaTokenInput], periodicity: Periodicity, periodicityDays: Int, showCountedFormula: Boolean, sortType: SortType, sortValue: Float, sortValueType: SortValueType, title: String!): Indicator
-
-  """Update datasource"""
-  updateDatasource(dbParams: DbParamsInp, eisParams: EisParamsInp, id: Int, odataParams: OdataParamsInp, periodicityType: PeriodicityType, periodicityValue: Float, title: String): Datasource
-
-  """remove step from union"""
-  removeStepFromUnion(stepId: Int!, unionId: Int!): Step
-
-  """Create hierarchy"""
-  createHierarchy(tableId: Int!, title: String!): Hierarchy
+  """add task to checklist"""
+  pmChecklistAddTask(checklistId: UUID!, title: String!): PmChecklist
 
   """Delete hierarchy"""
   deleteHierarchy(id: Int!): String
 
-  """Delete step"""
-  deleteStep(id: Int!): String
+  """Take away object access"""
+  takeAwayObjectAccess(objectId: String!, userGroupId: Int, userId: Int): String
 
-  """Delete datasources"""
-  deleteDatasource(id: Int!): String
-
-  """Update organisation"""
-  organisationsUpdate(description: String, email: String, id: Int!, name: String!, private: Boolean, url: String!): Organisation
-
-  """Refresh session"""
-  sessionUpdate(refreshToken: UUID!): Session
-
-  """Create flow"""
-  createFlow(folderId: Int, title: String!): Flow
-
-  """Sign out"""
-  sessionDelete: Boolean
-
-  """Sign in"""
-  sessionCreate(email: String!, password: String!): Session
-
-  """Add role to user_group"""
-  addRoleToUserGroup(roleId: Int!, userGroupId: Int!): String
-
-  """Export Step"""
-  exportStep(db: String, dbType: DbType, host: String, id: Int!, pass: String, port: String, tableName: String, user: String): String
-
-  """import file"""
-  importFile(file: Upload, flowId: Int!, positionX: Int, positionY: Int): [Step]
+  """init datasource import"""
+  initImport(datasourceId: Int!, tableId: String!): String
 
   """Remove role from user_group"""
   removeRoleFromUserGroup(roleId: Int!, userGroupId: Int!): String
 
-  """Delete organisation"""
-  organisationsDelete(id: Int!): Boolean
-
-  """Create attachment"""
-  attachmentCreate(file: Upload): Attachment
-
-  """load table to memory"""
-  loadToMemory(id: Int!): Table
-
-  """Calculate join"""
-  calculateJoin(joinId: Int!, joinType: JoinType!, leftStepColumnId: Int!, leftStepId: Int!, rightStepColumnId: Int!, rightStepId: Int!): Step
-
-  """Pin folder"""
-  pinFolder(folderId: Int!): Folder
-
-  """Create folder role"""
-  createFolderRole(dashboardRead: Boolean, dashboardWrite: Boolean, datasourceRead: Boolean, datasourceWrite: Boolean, description: String, etlRead: Boolean, etlWrite: Boolean, folderId: Int!, indicatorsRead: Boolean, indicatorsWrite: Boolean, olapschemaRead: Boolean, olapschemaWrite: Boolean, rolesRead: Boolean, rolesWrite: Boolean, title: String!): Role
-
-  """Take away object access"""
-  takeAwayObjectAccess(objectId: String!, userGroupId: Int, userId: Int): String
-
-  """remove_default_panel_from_folder"""
-  removeDefaultPanelFromFolder(folderId: Int!, panelId: UUID!, userId: Int!): String
-
-  """Add steps to union"""
-  addStepsToUnion(stepIds: [Int], unionId: Int!): Step
+  """Get total column stats"""
+  getTotalColumnStats(columnIds: [Int!]): [ColumnStat!]
 
   """update checklist task"""
-  pmChecklistUpdateTask(checklistId: UUID!, description: String, planFinishTime: Timestamp, planStartTime: Timestamp, status: PmChecklistTaskStatus, taskId: UUID!, title: String, userIds: [Int]): PmChecklist
+  pmChecklistUpdateTask(checklistId: UUID!, description: String, planFinishTime: Timestamp, planStartTime: Timestamp, status: PmChecklistTaskStatus, taskId: UUID!, title: String, userIds: [Int!]): PmChecklist
 
-  """Update object"""
-  updateObject(attachmentId: String, folderId: Int, id: String!, title: String): Object
-
-  """Delete attachment"""
-  attachmentDelete(id: UUID): String
-
-  """Get total column stats"""
-  getTotalColumnStats(columnIds: [Int]): [ColumnStat]
-
-  """Create column"""
-  createColumn(formula: [FormulaTokenInput]!, stepId: Int!, title: String!): Column
-
-  """Delete flow"""
-  deleteFlow(id: Int!): String
+  """Sign in"""
+  sessionCreate(email: String!, password: String!): Session
 
   """Invite user to orgfolder"""
   inviteUserToOrgfolder(folderId: Int!, userId: Int!): String
 
-  """Update hierarchy"""
-  updateHierarchy(description: String, dims: [HierarchyDimInput], id: Int!, isInvisible: Boolean, isOpened: Boolean, position: Int, title: String): Hierarchy
+  """Pin folder"""
+  pinFolder(folderId: Int!): Folder
 
-  """Unpin folder"""
-  unpinFolder(folderId: Int!): String
+  """Create data_table_row"""
+  dataTableRowCreate(dataTableId: UUID!): DataTableRow
 
-  """Create organisation"""
-  organisationsCreate(description: String, email: String, name: String!, private: Boolean, url: String!): Organisation
+  """Delete data_table_field"""
+  dataTableFieldDelete(id: UUID!): String
 
-  """Create step"""
-  createStep(flowId: Int!, joinType: JoinType, positionX: Int, positionY: Int, sourceStepId: Int, sourceStepIds: [Int], stepType: StepType!, title: String): Step
+  """Update folder user_group"""
+  updateFolderUserGroup(description: String, id: Int!, title: String!): UserGroup
 
-  """Create dashboard"""
-  olapDashboardCreate(dashboard: OlapDashboardInput!, folderId: Int): OlapDashboard
+  """Delete change"""
+  deleteChange(id: Int!): [Column!]
+
+  """Update data_table_field show_in_table"""
+  dataTableFieldUpdateShowInTable(id: UUID!, showInTable: Boolean!): DataTableField
+
+  """Create folder external_system"""
+  createFolderExternalSystem(folderId: Int!, ips: [String!], title: String!): ExternalSystem
+
+  """Pin object"""
+  pinObject(id: String!): String
+
+  """Get csv export link"""
+  getCsvExportLink(stepId: Int!): String
 
   """Update step"""
-  updateStep(dateColumn: String, exportToMadd: Boolean, fullUpdate: Boolean, id: Int!, outDbParams: [OutDbParamsInput], periodicity: Int, positionX: Int, positionY: Int, title: String): Step
-
-  """init datasource import"""
-  initImport(datasourceId: Int): Datasource
-
-  """Update field"""
-  updateField(description: String, fieldType: FieldType, id: String!, isFKey: Boolean, isInvisible: Boolean, isLink: Boolean, position: Int, postfix: String, title: String): Field
-
-  """Delete project_management"""
-  projectManagementDelete(id: UUID!): String
-
-  """add_default_panel_to_folder"""
-  addDefaultPanelToFolder(folderId: Int!, panelId: UUID!, userId: Int!): String
-
-  """Take away folder access"""
-  takeAwayFolderAccess(folderId: Int!, userGroupId: Int, userId: Int): String
-
-  """Create datasource"""
-  createDatasource(dbParams: DbParamsInp, eisParams: EisParamsInp, folderId: Int, odataParams: OdataParamsInp, periodicityType: PeriodicityType, periodicityValue: Float, sourceType: SourceType, title: String): Datasource
-
-  """Update folder"""
-  updateFolder(folderId: Int, id: Int!, title: String): Folder
-
-  """Run step"""
-  runStep(stepId: Int!): String
-
-  """Update folder role"""
-  updateFolderRole(dashboardRead: Boolean, dashboardWrite: Boolean, datasourceRead: Boolean, datasourceWrite: Boolean, description: String, etlRead: Boolean, etlWrite: Boolean, id: Int!, indicatorsRead: Boolean, indicatorsWrite: Boolean, olapschemaRead: Boolean, olapschemaWrite: Boolean, rolesRead: Boolean, rolesWrite: Boolean, title: String): Role
-
-  """add task to checklist"""
-  pmChecklistAddTask(checklistId: UUID!, title: String!): PmChecklist
-
-  """Remove role from user"""
-  removeRoleFromUser(roleId: Int!, userId: Int!): String
-
-  """Unshare folder"""
-  unshareFolder(id: Int!): String
-
-  """Delete checklist"""
-  pmChecklistDelete(id: UUID!): String
-
-  """Remove cube_filter from user_group"""
-  removeCubeFilterFromUserGroup(cubeId: Int!, userGroupId: Int!): [CubeFilter]
-
-  """Create project_management"""
-  projectManagementCreate(folderId: Int!, title: String!): ProjectManagement
-
-  """Delete connection"""
-  deleteConnection(id: Int): String
-
-  """Create connection"""
-  createConnection(joinType: JoinType, leftTableFieldId: String, leftTableId: Int, rightTableFieldId: String, rightTableId: Int): Connection
-
-  """Delete folder role"""
-  deleteFolderRole(id: Int!): String
-
-  """remove task from checklist"""
-  pmChecklistRemoveTask(checklistId: UUID!, taskId: UUID!): PmChecklist
-
-  """Export Step to MADD"""
-  exportStepToMadd(id: Int!): String
-
-  """stop datasource import"""
-  stopImport(datasourceId: Int): Datasource
-
-  """Delete indicator"""
-  deleteIndicator(id: Int!): String
-
-  """Create OSE table"""
-  createOseTable(indicatorId: Int!): String
+  updateStep(dateColumn: String, exportToMadd: Boolean, fullUpdate: Boolean, id: Int!, outDbParams: [OutDbParamsInput!], periodicity: Int, positionX: Int, positionY: Int, title: String): Step
 
   """Open folder"""
   openFolder(id: Int!, pinnedFolderId: Int): Folder
 
-  """Set where filter"""
-  setWhereFilter(stepId: Int!, whereCond: [FormulaTokenInput]): Step
+  """Remove cube_filter from user_group"""
+  removeCubeFilterFromUserGroup(cubeId: Int!, userGroupId: Int!): [CubeFilter!]
 
-  """Delete dashboard"""
-  olapDashboardDelete(id: UUID!): Boolean
+  """Run step"""
+  runStep(stepId: Int!): String
 
-  """Delete folder"""
-  deleteFolder(id: Int!): String
+  """Update data_table_field is_link"""
+  dataTableFieldUpdateIsLink(id: UUID!, isLink: Boolean!): DataTableField
 
-  """Get duplicates"""
-  getDuplicates(stepId: Int!): [[Int]]
+  """Set ext_sys role params"""
+  setExternalSystemRoleParams(externalSystemId: Int!, params: [ExternalSystemParamsInp!], roleId: Int!): [ExternalSystemParams!]
+
+  """Update data_table_field uniq"""
+  dataTableFieldUpdateUniq(id: UUID!, uniq: Boolean!): DataTableField
+
+  """Create OSE table"""
+  createOseTable(indicatorId: Int!): String
+
+  """Delete indicator"""
+  deleteIndicator(id: Int!): String
+
+  """Create hierarchy"""
+  createHierarchy(tableId: Int!, title: String!): Hierarchy
+
+  """Set ext_sys group params"""
+  setExternalSystemGroupParams(externalSystemId: Int!, groupId: Int!, params: [ExternalSystemParamsInp!]): [ExternalSystemParams!]
+
+  """Delete organisation"""
+  organisationsDelete(id: Int!): Boolean
+
+  """Update indicator"""
+  updateIndicator(displayColumnIds: [String!], displayFKeyId: String, displayTableId: Int, formula: [FormulaTokenInput!], id: Int!, periodicity: Periodicity, periodicityDays: Int, showCountedFormula: Boolean, sortType: SortType, sortValue: Float, sortValueType: SortValueType, title: String!): Indicator
+
+  """Export Step to MADD"""
+  exportStepToMadd(id: Int!): String
+
+  """Delete flow"""
+  deleteFlow(id: Int!): String
+
+  """Create folder user_group"""
+  createFolderUserGroup(description: String, folderId: Int!, title: String!): UserGroup
+
+  """Update data_table"""
+  dataTableUpdate(description: String, id: UUID!, mapCenter: [Float!], mapLayerStyles: MapLayerStylesInp, mapZoom: Float, tablePositionType: TablePositionType, tablePositionX: Int, tablePositionY: Int, tileLayerLink: String, title: String, tooltip: MapLayerTooltipInp): DataTable
+
+  """Update data_table_field default_value"""
+  dataTableFieldUpdateDefaultValue(defaultValue: [String!], id: UUID!): DataTableField
+
+  """Sign out"""
+  sessionDelete: Boolean
+
+  """Calculate join"""
+  calculateJoin(joinId: Int!, joinType: JoinType!, leftStepColumnId: Int!, leftStepId: Int!, rightStepColumnId: Int!, rightStepId: Int!): Step
+
+  """Remove external_system from user_group"""
+  removeExternalSystemFromUserGroup(externalSystemId: Int!, groupId: Int!): String
+
+  """Set map_layer filter"""
+  setMapLayerFilter(filter: [FormulaTokenInput!], id: UUID!): MapLayer
 
   """Delete steps"""
-  deleteSteps(ids: [Int]): String
+  deleteSteps(ids: [Int!]): String
 
-  """Unpin object"""
-  unpinObject(id: String!): String
+  """Update folder"""
+  updateFolder(folderId: Int, id: Int!, title: String): Folder
+
+  """Delete datasources"""
+  deleteDatasource(id: Int!): String
+
+  """Create data_table_field"""
+  dataTableFieldCreate(dataTableId: UUID!, title: String, width: Int): DataTableField
 
   """Update dashboard"""
   olapDashboardUpdate(dashboard: OlapDashboardInput!, id: UUID!): OlapDashboard
 
-  """Update indicator"""
-  updateIndicator(displayColumnIds: [String], displayFKeyId: String, displayTableId: Int, formula: [FormulaTokenInput], id: Int!, periodicity: Periodicity, periodicityDays: Int, showCountedFormula: Boolean, sortType: SortType, sortValue: Float, sortValueType: SortValueType, title: String!): Indicator
+  """Update map_layer"""
+  mapLayerUpdate(id: UUID!, mapLayerStyles: MapLayerStylesInp, modal: MapLayerModalInp, position: Int, title: String, tooltip: MapLayerTooltipInp, visible: Boolean): MapLayer
+
+  """Take away folder access"""
+  takeAwayFolderAccess(folderId: Int!, userGroupId: Int, userId: Int): String
+
+  """stop datasource import"""
+  stopImport(datasourceId: Int!, tableId: String!): String
+
+  """Update flow"""
+  updateFlow(id: Int!, title: String): Flow
+
+  """Create folder role"""
+  createFolderRole(dashboardRead: Boolean, dashboardWrite: Boolean, datasourceRead: Boolean, datasourceWrite: Boolean, description: String, etlRead: Boolean, etlWrite: Boolean, folderId: Int!, indicatorsRead: Boolean, indicatorsWrite: Boolean, olapschemaRead: Boolean, olapschemaWrite: Boolean, rolesRead: Boolean, rolesWrite: Boolean, title: String!): Role
+
+  """Update folder role"""
+  updateFolderRole(dashboardRead: Boolean, dashboardWrite: Boolean, datasourceRead: Boolean, datasourceWrite: Boolean, description: String, etlRead: Boolean, etlWrite: Boolean, id: Int!, indicatorsRead: Boolean, indicatorsWrite: Boolean, olapschemaRead: Boolean, olapschemaWrite: Boolean, rolesRead: Boolean, rolesWrite: Boolean, title: String): Role
+
+  """Set where filter"""
+  setWhereFilter(stepId: Int!, whereCond: [FormulaTokenInput!]): Step
+
+  """Update organisation"""
+  organisationsUpdate(description: String, email: String, id: Int!, name: String!, private: Boolean, url: String!): Organisation
+
+  """remove map public token"""
+  mapRemovePublicToken(id: UUID!): Map
+
+  """Remove external_system from role"""
+  removeExternalSystemFromRole(externalSystemId: Int!, roleId: Int!): String
+
+  """Create project_management"""
+  projectManagementCreate(folderId: Int!, title: String!): ProjectManagement
+
+  """Delete folder role"""
+  deleteFolderRole(id: Int!): String
+
+  """Update data_table_field multi_input"""
+  dataTableFieldUpdateMultiInput(id: UUID!, multiInput: Boolean!): DataTableField
+
+  """Unpin object"""
+  unpinObject(id: String!): String
+
+  """Delete folder user_group"""
+  deleteFolderUserGroup(id: Int!): String
+
+  """Update object"""
+  updateObject(attachmentId: String, folderId: Int, id: String!, title: String): Object
+
+  """Update field"""
+  updateField(description: String, fieldType: FieldType, id: String!, isFKey: Boolean, isInvisible: Boolean, isLink: Boolean, position: Int, postfix: String, title: String): Field
+
+  """generate map public token"""
+  mapGenPublicToken(id: UUID!): Map
+
+  """Update folder external_system"""
+  updateFolderExternalSystem(id: Int!, ips: [String!], title: String!): ExternalSystem
+
+  """Create flow"""
+  createFlow(folderId: Int, title: String!): Flow
+
+  """Update map"""
+  mapUpdate(center: [Float!], id: UUID!, tileLayerLink: String, zoom: Float): Map
+
+  """Delete folder external_system"""
+  deleteFolderExternalSystem(id: Int!): String
 
   """Set join steps"""
   setJoinSteps(joinId: Int!, leftStepId: Int, rightStepId: Int): Step
 
-  """Add step to union"""
-  addStepToUnion(stepId: Int!, unionId: Int!): Step
+  """Update table"""
+  updateTable(cubeDescription: String, cubeTitle: String, description: String, id: Int!, isInvisible: Boolean, isOpened: Boolean, positionX: Int, positionY: Int, tableType: TableType, title: String): Table
 
-  """Update connection"""
-  updateConnection(id: Int, joinType: JoinType, leftTableFieldId: String, leftTableId: Int, rightTableFieldId: String, rightTableId: Int): Connection
+  """Update data_table_field validation"""
+  dataTableFieldUpdateValidation(id: UUID!, validation: DataTableFieldValidationInput): DataTableField
 
-  """Share folder"""
-  shareFolder(id: Int!): String
+  """update user profile"""
+  profileUpdate(firstName: String, lastName: String, name: String): User
+
+  """send user invite email"""
+  sendInviteEmail(email: String!, folderId: Int!): User
+
+  """Create connection"""
+  createConnection(joinType: JoinType, leftTableFieldId: String, leftTableId: Int, rightTableFieldId: String, rightTableId: Int): Connection
+
+  """Create folder"""
+  createFolder(folderId: Int, title: String!): Folder
+
+  """Delete map_layer"""
+  mapLayerDelete(id: UUID!): String
+
+  """Update project_management"""
+  projectManagementUpdate(id: UUID!, title: String!): ProjectManagement
+
+  """Update data_table_field consider_search"""
+  dataTableFieldUpdateConsiderSearch(considerSearch: Boolean!, id: UUID!): DataTableField
+
+  """Update data_table_field position"""
+  dataTableFieldUpdatePosition(id: UUID!, position: Int!): [DataTableField!]
+
+  """Uninvite user from orgfolder"""
+  uninviteUserFromOrgfolder(folderId: Int!, userId: Int!): String
+
+  """Delete data_table_row"""
+  dataTableRowDelete(dataTableId: UUID!, rowId: UUID!): String
 
   """Add user to user_group"""
   addUserToUserGroup(userGroupId: Int!, userId: Int!): String
 
-  """Remove user from user_group"""
-  removeUserFromUserGroup(userGroupId: Int!, userId: Int!): String
+  """Close all folders"""
+  closeAllFolders(exceptIds: [Int!]): String
+
+  """Delete attachment"""
+  attachmentDelete(id: UUID): String
+
+  """Update connection"""
+  updateConnection(id: Int, joinType: JoinType, leftTableFieldId: String, leftTableId: Int, rightTableFieldId: String, rightTableId: Int): Connection
+
+  """remove map private token"""
+  mapRemovePrivateToken(id: UUID!): Map
+
+  """Create map_layer"""
+  mapLayerCreate(dataTableId: UUID!, mapId: UUID!, title: String, visible: Boolean): MapLayer
 
   """remove table from memory"""
   removeFromMemory(id: Int!): Table
+
+  """Delete connection"""
+  deleteConnection(id: Int): String
+
+  """Update checklist"""
+  pmChecklistUpdate(description: String, id: UUID!, title: String, userIds: [Int!]): PmChecklist
+
+  """Create change"""
+  createChange(changeCaseTypeInput: ChangeCaseTypeInput, changeType: ChangeType, codecInput: CodecInput, columnId: Int, columnIds: [Int!], dataTypeInput: DataTypeInput, includeInput: IncludeInput, positionInput: PositionInput, stepId: Int!, titleInput: TitleInput, unionColumnsInput: UnionColumnsInput, widthInput: WidthInput): Change
+
+  """Create data_table"""
+  dataTableCreate(folderId: Int!, title: String!): DataTable
+
+  """load table to memory"""
+  loadToMemory(id: Int!): Table
+
+  """Give object access"""
+  giveObjectAccess(objectId: String!, userGroupId: Int, userId: Int): String
+
+  """Unshare folder"""
+  unshareFolder(id: Int!): String
+
+  """Get duplicates"""
+  getDuplicates(stepId: Int!): [[Int!]!]
+
+  """Delete project_management"""
+  projectManagementDelete(id: UUID!): String
+
+  """Create indicator"""
+  createIndicator(displayColumnIds: [String!], displayFKeyId: String, displayTableId: Int, folderId: Int, formula: [FormulaTokenInput!], periodicity: Periodicity, periodicityDays: Int, showCountedFormula: Boolean, sortType: SortType, sortValue: Float, sortValueType: SortValueType, title: String!): Indicator
+
+  """Create checklist"""
+  pmChecklistCreate(description: String, projectManagementId: UUID!, title: String!, userIds: [Int!]): PmChecklist
+
+  """Delete folder"""
+  deleteFolder(id: Int!): String
+
+  """Create organisation"""
+  organisationsCreate(description: String, email: String, name: String!, private: Boolean, url: String!): Organisation
+
+  """generate map private token"""
+  mapGenPrivateToken(id: UUID!): Map
+
+  """Create map"""
+  mapCreate(folderId: Int!, title: String!): Map
+
+  """remove step from union"""
+  removeStepFromUnion(stepId: Int!, unionId: Int!): Step
+
+  """import file"""
+  importFile(file: Upload, flowId: Int!, positionX: Int, positionY: Int): [Step!]
+
+  """Add role to user_group"""
+  addRoleToUserGroup(roleId: Int!, userGroupId: Int!): String
+
+  """Update data_table_field field_type"""
+  dataTableFieldUpdateFieldType(fieldType: DataTableFieldType!, id: UUID!): DataTableField
+
+  """Remove user from user_group"""
+  removeUserFromUserGroup(userGroupId: Int!, userId: Int!): String
+
+  """remove_default_panel_from_folder"""
+  removeDefaultPanelFromFolder(folderId: Int!, panelId: UUID!, userId: Int!): String
 
   """Close folder"""
   closeFolder(id: Int!, pinnedFolderId: Int): String
@@ -1937,157 +2790,232 @@ type RootMutationType {
   """Give folder access"""
   giveFolderAccess(folderId: Int!, userGroupId: Int, userId: Int): String
 
-  """Get csv export link"""
-  getCsvExportLink(stepId: Int!): String
-
-  """Uninvite user from orgfolder"""
-  uninviteUserFromOrgfolder(folderId: Int!, userId: Int!): String
-
-  """Pin object"""
-  pinObject(id: String!): String
-
-  """Create folder"""
-  createFolder(folderId: Int, title: String!): Folder
-
-  """Delete folder user_group"""
-  deleteFolderUserGroup(id: Int!): String
-
-  """Delete change"""
-  deleteChange(id: Int!): [Column]
-
-  """Update checklist"""
-  pmChecklistUpdate(description: String, id: UUID!, title: String, userIds: [Int]): PmChecklist
-
-  """Update flow"""
-  updateFlow(id: Int!, title: String): Flow
-
-  """Update project_management"""
-  projectManagementUpdate(id: UUID!, title: String!): ProjectManagement
-
-  """Create checklist"""
-  pmChecklistCreate(description: String, projectManagementId: UUID!, title: String!, userIds: [Int]): PmChecklist
-
   """Add role to user"""
   addRoleToUser(roleId: Int!, userId: Int!): String
 
+  """Update data_table_field title"""
+  dataTableFieldUpdateTitle(id: UUID!, title: String): DataTableField
+
+  """Export Step to MADD data"""
+  exportStepToMaddData(id: Int!): String
+
+  """Import data_table"""
+  dataTableImport(dataTableId: UUID!, file: Upload): DataTable
+
+  """Delete step"""
+  deleteStep(id: Int!): String
+
+  """Delete dashboard"""
+  olapDashboardDelete(id: UUID!): Boolean
+
+  """Update data_table_field field_catalog_id"""
+  dataTableFieldUpdateFieldCatalogId(fieldCatalogId: String, id: UUID!): DataTableField
+
+  """Add step to union"""
+  addStepToUnion(stepId: Int!, unionId: Int!): Step
+
+  """Create step"""
+  createStep(flowId: Int!, joinType: JoinType, positionX: Int, positionY: Int, sourceStepId: Int, sourceStepIds: [Int!], stepType: StepType!, title: String): Step
+
+  """Add steps to union"""
+  addStepsToUnion(stepIds: [Int!], unionId: Int!): Step
+
+  """Update data_table_field width"""
+  dataTableFieldUpdateWidth(id: UUID!, width: Int): DataTableField
+
+  """add_default_panel_to_folder"""
+  addDefaultPanelToFolder(folderId: Int!, panelId: UUID!, userId: Int!): String
+
+  """Export Step"""
+  exportStep(db: String, dbType: DbType, host: String, id: Int!, pass: String, port: String, tableName: String, user: String): String
+
+  """Update data_table_field is_video_link"""
+  dataTableFieldUpdateIsVideoLink(id: UUID!, isVideoLink: Boolean!): DataTableField
+
+  """Create column"""
+  createColumn(formula: [FormulaTokenInput!]!, stepId: Int!, title: String!): Column
+
+  """remove task from checklist"""
+  pmChecklistRemoveTask(checklistId: UUID!, taskId: UUID!): PmChecklist
+
+  """Remove role from user"""
+  removeRoleFromUser(roleId: Int!, userId: Int!): String
+
+  """Create datasource"""
+  createDatasource(dbParams: DbParamsInp, eisParams: EisParamsInp, folderId: Int, ftpParams: FtpParamsInp, odataParams: OdataParamsInp, periodicityType: PeriodicityType, periodicityValue: Float, restParams: RestParamsInp, sourceType: SourceType, title: String): Datasource
+
+  """Add external_system to role"""
+  addExternalSystemToRole(externalSystemId: Int!, roleId: Int!): String
+
   """Add or replace cube_filter to user_group"""
-  addOrReplaceCubeFilterToUserGroup(cubeFilter: CubeFilterInput!, userGroupId: Int!): [CubeFilter]
+  addOrReplaceCubeFilterToUserGroup(cubeFilter: CubeFilterInput!, userGroupId: Int!): [CubeFilter!]
 
-  """Create change"""
-  createChange(changeCaseTypeInput: ChangeCaseTypeInput, changeType: ChangeType, codecInput: CodecInput, columnId: Int, columnIds: [Int], dataTypeInput: DataTypeInput, includeInput: IncludeInput, positionInput: PositionInput, stepId: Int!, titleInput: TitleInput, unionColumnsInput: UnionColumnsInput, widthInput: WidthInput): Change
+  """Delete checklist"""
+  pmChecklistDelete(id: UUID!): String
 
-  """Give object access"""
-  giveObjectAccess(objectId: String!, userGroupId: Int, userId: Int): String
+  """Create dashboard"""
+  olapDashboardCreate(dashboard: OlapDashboardInput!, folderId: Int): OlapDashboard
 
-  """Close all folders"""
-  closeAllFolders(exceptIds: [Int]): String
+  """Update hierarchy"""
+  updateHierarchy(description: String, dims: [HierarchyDimInput!], id: Int!, isInvisible: Boolean, isOpened: Boolean, position: Int, title: String): Hierarchy
 
-  """Update table"""
-  updateTable(cubeDescription: String, cubeTitle: String, description: String, id: Int!, isInvisible: Boolean, isOpened: Boolean, positionX: Int, positionY: Int, tableType: TableType, title: String): Table
+  """Refresh session"""
+  sessionUpdate(refreshToken: UUID!): Session
+
+  """Update datasource"""
+  updateDatasource(dbParams: DbParamsInp, eisParams: EisParamsInp, ftpParams: FtpParamsInp, id: Int!, odataParams: OdataParamsInp, periodicityType: PeriodicityType, periodicityValue: Float, restParams: RestParamsInp, sourceType: SourceType, title: String): Datasource
+
+  """Update data_table_field required"""
+  dataTableFieldUpdateRequired(id: UUID!, required: Boolean!): DataTableField
+
+  """Create attachment"""
+  attachmentCreate(file: Upload): Attachment
+
+  """Share folder"""
+  shareFolder(id: Int!): String
+
+  """Update data_table_row field"""
+  dataTableRowUpdate(catalogValue: [String!], coordinatesValue: CoordsInp, dataTableFieldId: UUID!, dataTableId: UUID!, dateValue: [Timestamp!], datetimeValue: [Timestamp!], fileValue: [String!], numberValue: [Float!], rowId: UUID!, stringValue: [String!], userEnteredValue: [String!]): DataTableRowField
+
+  """Unpin folder"""
+  unpinFolder(folderId: Int!): String
+
+  """Add external_system to user_group"""
+  addExternalSystemToUserGroup(externalSystemId: Int!, groupId: Int!): String
 }
 
 type RootQueryType {
-  """Get project_management"""
-  projectManagementGet(id: UUID!): ProjectManagement
+  """Get data_table"""
+  dataTableGet(id: UUID!): DataTable
 
-  """Get column stats by formula"""
-  getColumnStatsByFormula(formula: [FormulaTokenInput]!, stepId: Int!): [ColumnStat]
+  """Get autocomplete"""
+  getEtlStepAutocomplete(search: String!, stepId: Int!, types: [AutocompleteType!]): [Autocomplete!]
 
-  """Get indicators"""
-  getIndicators(ids: [Int]): [Indicator]
+  """check_where_formula"""
+  checkWhereFormula(whereCond: [FormulaTokenInput!]!): String
 
-  """Get hierarchies"""
-  getHierarchies(ids: [Int]): [Hierarchy]
-
-  """Get steps"""
-  getSteps(datasourceId: Int, flowId: Int, ids: [Int!], limit: Int = 100, offset: Int = 0): [Step]
+  """Scanner drill"""
+  scannerDrill(cubeId: String!, limit: Int = 1000, offset: Int = 0, scanDate: String!, scannerId: String!): [[String!]!]
 
   """Get folder user_groups"""
-  getFolderUserGroups(folderId: Int!): [UserGroup]
-
-  """Get checklists"""
-  pmChecklistsGet(id: UUID, pmId: UUID): [PmChecklist]
-
-  """Get column values"""
-  getColumnValues(columnId: Int!, limit: Int, offset: Int, search: String): [String]
-
-  """Get datasources"""
-  getDatasources(ids: [Int]): [Datasource]
+  getFolderUserGroups(folderId: Int!): [UserGroup!]
 
   """Get folder trees"""
   getFolderTree(id: Int): Trees
 
-  """Get olap_cube autocomplete"""
-  getOlapCubeAutocomplete(search: String!, tableId: Int!, types: [AutocompleteType]): [Autocomplete]
+  """Get current user organisations"""
+  organisationsMyGet: [Organisation!]
 
-  """Get tables"""
-  getTables(ids: [Int]): [Table]
+  """Get data_table_fields"""
+  dataTableFieldGet(dataTableId: UUID!, id: UUID): [DataTableField!]
+
+  """ls ftp dir"""
+  lsFtpDir(host: String, limit: Int = 100, offset: Int = 0, pass: String, path: String = "/", port: String, regexp: String = ".*", user: String): [FtpEnity!]
+
+  """Get project_management"""
+  projectManagementGet(id: UUID!): ProjectManagement
+
+  """Get dashboards"""
+  olapDashboardGet(ids: [UUID!], limit: Int = 20, offset: Int, search: String): [OlapDashboard!]
+
+  """Get indicator base rating"""
+  getIndicatorBaseRating(displayColumnIds: [String!], displayFKeyId: String, displayTableId: Int, formula: [FormulaTokenInput!], showCountedFormula: Boolean, sortType: SortType = ASC, sortValue: Float, sortValueType: SortValueType = VALUE): [[String!]!]
+
+  """Get olap_cube autocomplete"""
+  getOlapCubeAutocomplete(search: String!, tableId: Int!, types: [AutocompleteType!]): [Autocomplete!]
 
   """Get profile"""
   profileGet: User
 
-  """Get regression models"""
-  regressionModelGet(predictId: String!, seriaId: String!, series: [RegressionSeriaInput]!, vars: [RegressionVarInput]!): RegressionModel
+  """for socket_message to appear in schema"""
+  getSocketMessage: SocketMessage
+
+  """Get data_table_rows"""
+  dataTableGetRows(dataTableId: UUID!, id: UUID, limit: Int!, offset: Int!, search: String): [DataTableRow!]
+
+  """Get functions list"""
+  getFunctions: [Function!]
+
+  """Get checklists"""
+  pmChecklistsGet(id: UUID, pmId: UUID): [PmChecklist!]
+
+  """Get hierarchies"""
+  getHierarchies(ids: [Int!]): [Hierarchy!]
+
+  """Get column stats by formula"""
+  getColumnStatsByFormula(formula: [FormulaTokenInput!]!, stepId: Int!): [ColumnStat!]
+
+  """chech_indicator_formula"""
+  chechIndicatorFormula(formula: [FormulaTokenInput!]): String
 
   """Get flows"""
-  getFlows(ids: [Int!], limit: Int = 2000, offset: Int = 0, orderBy: String, search: String): [Flow]
+  getFlows(ids: [Int!], limit: Int = 2000, offset: Int = 0, orderBy: String, search: String): [Flow!]
 
-  """Get users"""
-  getUsers(id: Int, limit: Int, offset: Int, search: String): [User]
-
-  """Get columns"""
-  getColumns(ids: [Int!], limit: Int = 20, offset: Int = 0, orderBy: String, search: String, stepId: Int): [Column]
-
-  """Get field values"""
-  getFieldValues(fieldId: String!, limit: Int, offset: Int, search: String): [String]
+  """Get indicators autocomplete"""
+  getIndicatorsAutocomplete(search: String!, tableId: Int, types: [IndicatorsAutocompleteType!]): [IndicatorsAutocomplete!]
 
   """OLAP request"""
   olapRequest(request: OlapRequestInput!): OlapResponse
 
-  """Get dashboards"""
-  olapDashboardGet(ids: [UUID], limit: Int = 20, offset: Int, search: String): [OlapDashboard]
+  """Get indicators"""
+  getIndicators(ids: [Int!]): [Indicator!]
 
-  """Get folder roles"""
-  getFolderRoles(folderId: Int!): [Role]
-
-  """Get indicator base rating"""
-  getIndicatorBaseRating(displayColumnIds: [String], displayFKeyId: String, displayTableId: Int, formula: [FormulaTokenInput], showCountedFormula: Boolean, sortType: SortType = ASC, sortValue: Float, sortValueType: SortValueType = VALUE): [[String]]
-
-  """check_where_formula"""
-  checkWhereFormula(whereCond: [FormulaTokenInput]!): String
-
-  """Scanner drill"""
-  scannerDrill(cubeId: String!, limit: Int = 1000, offset: Int = 0, scanDate: String!, scannerId: String!): [[String]]
+  """Get column values"""
+  getColumnValues(columnId: Int!, limit: Int, offset: Int, search: String): [String!]
 
   """get db tables"""
-  getDbTables(db: String!, dbType: DbType!, host: String!, limit: Int, offset: Int, pass: String!, port: String!, search: String, user: String!): [DbTable]
+  getDbTables(db: String!, dbType: DbType!, host: String!, limit: Int, offset: Int, pass: String!, port: String!, search: String, user: String!): [DbTable!]
 
-  """chech_indicator_formula"""
-  chechIndicatorFormula(formula: [FormulaTokenInput]): String
+  """for entity_created to appear in schema"""
+  getEntityCreated: EntityCreated
 
-  """ls ftp dir"""
-  lsFtpDir(host: String, limit: Int = 100, offset: Int = 0, pass: String, path: String = "/", port: String, regexp: String = ".*", user: String): [FtpEnity]
+  """Get users"""
+  getUsers(id: Int, limit: Int, offset: Int, search: String): [User!]
 
-  """Get autocomplete"""
-  getEtlStepAutocomplete(search: String!, stepId: Int!, types: [AutocompleteType]): [Autocomplete]
+  """Get field values"""
+  getFieldValues(fieldId: String!, limit: Int, offset: Int, search: String): [String!]
+
+  """Get regression models"""
+  regressionModelGet(predictId: String!, seriaId: String!, series: [RegressionSeriaInput!]!, vars: [RegressionVarInput!]!): RegressionModel
 
   """get odata tables"""
-  getOdataTables(host: String!, limit: Int, offset: Int, pass: String, port: String, search: String, url: String!, user: String): [String]
+  getOdataTables(host: String!, limit: Int, offset: Int, pass: String, port: String, search: String, url: String!, user: String): [String!]
 
-  """Get functions list"""
-  getFunctions: [Function]
+  """Get tables"""
+  getTables(ids: [Int!]): [Table!]
+
+  """test rest refresh"""
+  testRestRefresh(refreshToken: String, refreshTokenFieldname: String, refreshUrl: String): RestHttpAnswer
 
   """Get objects"""
-  getObjects(limit: Int = 50, offset: Int = 0, search: String, types: [ObjectType]): [Object]
+  getObjects(limit: Int = 50, offset: Int = 0, search: String, types: [ObjectType!]): [Object!]
 
-  """for socket_message to appear in schema"""
-  getSocketMessage: SocketMessage
+  """Get columns"""
+  getColumns(ids: [Int!], limit: Int = 20, offset: Int = 0, orderBy: String, search: String, stepId: Int): [Column!]
 
-  """Get indicators autocomplete"""
-  getIndicatorsAutocomplete(search: String!, tableId: Int, types: [IndicatorsAutocompleteType]): [IndicatorsAutocomplete]
+  """Get map"""
+  mapGet(id: UUID!): Map
 
-  """Get current user organisations"""
-  organisationsMyGet: [Organisation]
+  """test rest auth"""
+  testRestAuth(authUrl: String, login: String, loginFieldname: String, pass: String, passFieldname: String): RestHttpAnswer
+
+  """Get datasources"""
+  getDatasources(ids: [Int!]): [Datasource!]
+
+  """Get folder external_systems"""
+  getFolderExternalSystems(folderId: Int!): [ExternalSystem!]
+
+  """Get folder roles"""
+  getFolderRoles(folderId: Int!): [Role!]
+
+  """Get steps"""
+  getSteps(datasourceId: Int, flowId: Int, ids: [Int!], limit: Int = 100, offset: Int = 0): [Step!]
+
+  """Get shared map"""
+  mapGetShared: MapShared
+
+  """Get shared data_table row"""
+  dataTableGetRowShared(id: UUID, layerId: UUID!): DataTableRow
 }
 
 enum RtxDataType {
@@ -2096,15 +3024,16 @@ enum RtxDataType {
 
 enum RtxItemType {
   ELEMENT
+  SLICE
   TEXT
   VAR
 }
 
 type Session {
-  expireAt: Timestamp
-  refreshToken: UUID
-  token: UUID
-  user: User
+  expireAt: Timestamp!
+  refreshToken: UUID!
+  token: UUID!
+  user: User!
 }
 
 type SharedAcl {
@@ -2141,54 +3070,55 @@ enum SourceType {
   EIS
   FTP
   ODATA
+  REST
 }
 
 type Step {
-  changes: [Change]
-  leftColumns: [Column]
-  exportToMadd: Boolean
-  title: String
-  leftInRecords: Int
-  id: Int
-  rightInKeys: Int
-  rightStepId: Int
-  leftNotInKeys: Int
-  stepType: StepType
+  originalSchemaTitle: String
+  tableName: String
   leftInKeys: Int
-  rightUnmatchedKeys: [String]
-  stepIds: [Int]
-  dateColumn: String
+  rightColumns: [Column!]
+  updatedAt: Timestamp
+  whereCond: [FormulaToken!]
+  exportToMadd: Boolean
+  leftStepColumnId: Int
+  periodicity: Int
+  stepIds: [Int!]!
+  stepType: StepType!
+  changes: [Change!]!
+  originalTitle: String
+  rightStepId: Int
+  leftNotInRecords: Int
+  columnsCount: Int!
+  leftNotInKeys: Int
+  leftInRecords: Int
+  rightStepColumnId: Int
+  positionX: Int
+  rightInRecords: Int
+  matchedKeys: [String!]
+  rightNotInRecords: Int
   insertedAt: Timestamp
-  whereCond: [FormulaToken]
+  id: Int!
+  rightNotInKeys: Int
   joinType: JoinType
   positionY: Int
-  rightInRecords: Int
-  leftStepId: Int
-  rightStepColumnId: Int
-  dupColumnsCount: Int
-  rightNotInKeys: Int
-  periodicity: Int
   dupGroupsCount: Int
-  fullUpdate: Boolean
-  leftStepColumnId: Int
-  positionX: Int
-  updatedAt: Timestamp
-  rightColumns: [Column]
   datasource: Datasource
-  tableName: String
-  outDbParams: [OutDbParams]
-  leftUnmatchedKeys: [String]
-  originalSchemaTitle: String
-  columnsCount: Int
   flow: Flow
-  leftNotInRecords: Int
-  rightNotInRecords: Int
-  originalTitle: String
-  matchedKeys: [String]
+  leftStepId: Int
+  rightInKeys: Int
+  dateColumn: String
+  rightUnmatchedKeys: [String!]
+  fullUpdate: Boolean
+  leftColumns: [Column!]
+  dupColumnsCount: Int
+  leftUnmatchedKeys: [String!]
+  title: String!
+  outDbParams: [OutDbParams!]
 }
 
 type StepProgress {
-  processes: [Progress]
+  processes: [Progress!]
   status: ProgressStatus
   stepId: Int
 }
@@ -2204,13 +3134,13 @@ enum StepType {
 }
 
 type Table {
-  connections: [Connection]
+  connections: [Connection!]
   cubeDescription: String
   cubeTitle: String
   description: String
-  fields: [Field]
-  hierarchies: [Hierarchy]
-  id: Int
+  fields: [Field!]
+  hierarchies: [Hierarchy!]
+  id: Int!
   inMemory: Boolean
   insertedAt: Timestamp
   isInvisible: Boolean
@@ -2231,6 +3161,13 @@ type TablePartSize {
 input TablePartSizeInput {
   id: String
   value: Int
+}
+
+enum TablePositionType {
+  BOTTOM
+  LEFT
+  RIGHT
+  TOP
 }
 
 enum TableType {
@@ -2260,13 +3197,13 @@ enum TokenType {
 }
 
 type Tree {
-  folders: [Folder]
-  objects: [Object]
+  folders: [Folder!]!
+  objects: [Object!]!
 }
 
 type Trees {
-  pinnedTree: Tree
-  tree: Tree
+  pinnedTree: Tree!
+  tree: Tree!
 }
 
 type TrendLine {
@@ -2280,7 +3217,7 @@ input TrendLineInput {
 }
 
 input UnionColumnsInput {
-  value: [Int]
+  value: [Int!]
 }
 
 """Represents an uploaded file."""
@@ -2289,22 +3226,30 @@ scalar Upload
 type User {
   acl: Acl
   avatar: String
-  email: String
+  email: String!
   firstName: String
-  id: Int
+  id: Int!
   lastName: String
   name: String
-  roles: [Role]
+  orgQuota: Int
+  roles: [Role!]
+  status: UserStatus
 }
 
 type UserGroup {
-  cubeFilters: [CubeFilter]
+  cubeFilters: [CubeFilter!]!
   description: String
+  externalSystems: [ExternalSystem!]!
   folderId: Int!
-  id: Int
-  roles: [Role]
+  id: Int!
+  roles: [Role!]!
   title: String!
-  users: [User]
+  users: [User!]!
+}
+
+enum UserStatus {
+  EMAIL_SENT
+  REGISTRATION_DONE
 }
 
 """UUID scalar"""

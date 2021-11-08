@@ -1,11 +1,8 @@
 import React, { ComponentType } from 'react'
-
 import hoistNonReactStatics from 'hoist-non-react-statics'
 
 import { IDIContainer } from '../di'
-
 import { DIScope } from '../di/context'
-
 import { getDisplayName } from '../utils/getDisplayName'
 
 export type TWithDIContainer = {

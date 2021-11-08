@@ -1,18 +1,15 @@
 import React, { FC } from 'react'
-
 import { ApolloProvider } from 'react-apollo'
 import { RouterProvider } from 'react-router5'
 
-import { ServiceName } from 'lib/services/types/constants'
-
-import { getService } from 'lib/utils/global'
-
-import { AppRouter } from 'containers/Router/Router'
+import { AppRouter } from 'src/containers/Router/Router'
+import { ServiceName } from 'src/lib/services/types/constants'
+import { getService } from 'src/lib/utils/global'
 
 // Global styles and variables
-import 'lib/styles/global.scss'
+import 'src/lib/styles/global.scss'
 // App themes
-import 'lib/styles/theme/index.scss'
+import 'src/lib/styles/theme/index.scss'
 
 export type TProps = {}
 

@@ -1,9 +1,9 @@
-import { ServiceName } from './constants'
-
 import { ApolloService, TOptions as TApolloOptions } from '../apollo'
 import { CookiesService } from '../cookies'
 import { GraphqlAPIService } from '../graphqlAPI'
 import { RouterService } from '../router'
+
+import { ServiceName } from './constants'
 
 export type TServiceConfigTemplate<TName, TService, TOptions = {}> = {
   name: TStorageKeys

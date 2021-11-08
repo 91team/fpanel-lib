@@ -1,5 +1,4 @@
 import React, { FC, useEffect } from 'react'
-
 import { useRouter } from 'react-router5'
 import { Params } from 'router5/types/types/base'
 
@@ -8,7 +7,7 @@ type TProps = {
   params?: Params
 }
 
-const Redirect: FC<TProps> = ({ routeName, params }) => {
+const Redirect: FC<TProps> = ({ routeName, params = {} }) => {
   const router = useRouter()
 
   useEffect(() => {

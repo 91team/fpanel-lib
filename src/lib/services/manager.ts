@@ -1,9 +1,7 @@
-import { TOptions, TServices, TStorage } from './types'
-
-import { ServiceName } from './types/constants'
-
 import { TInitialState as TApolloInitialState } from './apollo'
 import { ApolloService, CookiesService, GraphqlAPIService, RouterService } from './index'
+import { TOptions, TServices, TStorage } from './types'
+import { ServiceName } from './types/constants'
 
 export class ServicesManager {
   // @ts-expect-error

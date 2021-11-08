@@ -1,7 +1,5 @@
-import {
-  
-} from 'lib/gql/generated/types'
-import { TGraphqlAction } from 'lib/services/graphqlAPI'
+import {} from 'src/lib/gql/generated/types'
+import { TGraphqlAction } from 'src/lib/services/graphqlAPI'
 
 export type TMutations = {}
 

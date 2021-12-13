@@ -1,4 +1,5 @@
 **/lib/gql/generated/*
 **/lib/gqlConfig/generated/*
+**/lib/gql/documents/*
 node_modules
 vite.config.ts

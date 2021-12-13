@@ -1,19 +1,18 @@
-import { App } from '@bi-client/container/src/types/app'
-
 import {
   
-} from '@bi-client/container/src/lib/gql/generated/typesOriginal'
+} from '../typesOriginal'
 import { 
    
 } from '../defaults'
 import { TMutations, TQueries } from '../graphqlTypes'
+import { TGraphqlConfig } from 'src/lib/services/graphqlAPI'
 
 const mutations: {
-  [key in keyof TMutations]: App.TGraphqlConfig
+  [key in keyof TMutations]: TGraphqlConfig
 } = {}
 
 const queries: {
-  [key in keyof TQueries]: App.TGraphqlConfig
+  [key in keyof TQueries]: TGraphqlConfig
 } = {}
 
 export { mutations, queries }

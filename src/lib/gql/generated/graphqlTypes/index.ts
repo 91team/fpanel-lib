@@ -1,8 +1,8 @@
-import { TGraphqlAction } from '@bi-client/container/src/lib/services/graphqlAPI/types'
+import { TGraphqlAction } from 'src/lib/services/graphqlAPI'
 
 import {
   
-} from '@bi-client/container/src/lib/gql/generated/typesOriginal'
+} from '../typesOriginal'
 import {
   
  } from '../types'

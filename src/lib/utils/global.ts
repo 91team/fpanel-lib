@@ -1,4 +1,4 @@
-import { TMutations, TQueries } from 'src/lib/gqlConfig/generated/graphqlTypes'
+import { TMutations, TQueries } from 'src/lib/gql/generated/graphqlTypes'
 import { Stores } from 'src/lib/store/stores'
 import { TStores } from 'src/lib/store/types'
 import { createGlobalObjectRef, getGlobal, setGlobal } from '../di/global'

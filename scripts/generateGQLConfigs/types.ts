@@ -30,7 +30,8 @@ export type TConfig = {
   [ACTION_TYPE.mutations]: Record<string, string | null>
   [ACTION_TYPE.queries]: Record<string, string | null>
   fragmentOverrides: TOverrides
-  customActions: TCustomAction[]
+  customQueries: TCustomAction[]
+  customMutations: TCustomAction[]
 }
 
 export type TGlobalVars = {

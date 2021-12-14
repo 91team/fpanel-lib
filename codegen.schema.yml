@@ -1,6 +1,6 @@
 overwrite: true
 schema:
-  - 'http://dev1.madd.91.vpn/api/graphql' #-boilerplate-
+  - 'https://cpid.111111111.dev/api/graphql' #-boilerplate-
 generates:
   schema.graphql:
     plugins:

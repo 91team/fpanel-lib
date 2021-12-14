@@ -64,29 +64,30 @@ export function generateEntityTypesActionsAndImports(
       actions.push(actionGenerator({ name, resultType, variableType }))
     })
 
-    if (actionType === ACTION_TYPE.queries) {
-      entityConfig.customActions.forEach(({ name, resName }) => {
-        const typePrefix = convertFirstLetterToUpperCase(name)
-        const info = actionsInfo[name]
-        const overrides = actionOverrides[`${info?.resName}Fragment`]
+    const customActions =
+      actionType === ACTION_TYPE.queries ? entityConfig.customQueries : entityConfig.customMutations
 
-        const dataKey = aliases[name] || name
+    customActions.forEach(({ name, resName }) => {
+      const typePrefix = convertFirstLetterToUpperCase(name)
+      const info = actionsInfo[name]
+      const overrides = actionOverrides[`${info?.resName}Fragment`]
 
-        const resultType = overrides?.type
-          ? `{ ${dataKey}: ${overrides.type}${info?.isList ? '[]' : ''} }`
-          : `${typePrefix}${formattedActionType}`
-        const variableType = `${typePrefix}${formattedActionType}Variables`
+      const dataKey = aliases[name] || name
 
-        if (overrides?.type) {
-          customTypesImports.push(overrides.type)
-        } else {
-          imports.push(resultType)
-        }
+      const resultType = overrides?.type
+        ? `{ ${dataKey}: ${overrides.type}${info?.isList ? '[]' : ''} }`
+        : `${typePrefix}${formattedActionType}`
+      const variableType = `${typePrefix}${formattedActionType}Variables`
 
-        imports.push(variableType)
-        actions.push(actionGenerator({ name, resultType, variableType }))
-      })
-    }
+      if (overrides?.type) {
+        customTypesImports.push(overrides.type)
+      } else {
+        imports.push(resultType)
+      }
+
+      imports.push(variableType)
+      actions.push(actionGenerator({ name, resultType, variableType }))
+    })
 
     result[actionType] = {
       imports,

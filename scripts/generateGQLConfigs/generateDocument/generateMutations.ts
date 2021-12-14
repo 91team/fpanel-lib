@@ -1,8 +1,8 @@
-import { DocumentNode, TypeNode } from 'graphql'
+import { DocumentNode, FieldDefinitionNode, TypeNode } from 'graphql'
 
-import { TActionInfo } from '../types'
+import { TActionInfo, TCustomAction } from '../types'
 
-import { typeValue, typeValueName } from './generateFragments'
+import { schemaDefinition, typeValue, typeValueName } from './generateFragments'
 
 function formatType(type: TypeNode): string | null {
   if (type.kind === 'NonNullType') {
@@ -23,43 +23,65 @@ function formatArgs(args: string[], indent: number) {
   return args.length ? `(${paramPrefix}${args.join(paramPrefix)}${bracketPrefix})` : ''
 }
 
+function getMutationDocument({
+  field,
+  name,
+  baseName = name,
+  returnFieldType = field.type,
+}: {
+  field: FieldDefinitionNode
+  name: string
+  baseName?: string
+  returnFieldType?: TypeNode | string
+}) {
+  const args =
+    field.arguments?.map((arg) => ({
+      name: arg.name.value,
+      variable: `\$${arg.name.value}`,
+      type: formatType(arg.type),
+    })) || []
+
+  const mutation = `export const ${name}Mutation = gql\`
+  mutation ${name}${formatArgs(
+    args.map(({ variable, type }) => `${variable}: ${type}`),
+    4
+  )} {
+    ${baseName}${formatArgs(
+    args.map(({ variable, name }) => `${name}: ${variable}`),
+    6
+  )} ${typeValue(returnFieldType) || ''}
+  }
+\``
+
+  return mutation
+}
+
 export function generateMutations(
   doc: DocumentNode,
   mutationsList: Set<string>,
-  info: Record<string, TActionInfo>
+  info: Record<string, TActionInfo>,
+  customMutations: TCustomAction[]
 ): string {
   const mutations: Record<string, string> = {}
+  const fieldsMap: Record<string, FieldDefinitionNode> = {}
 
   doc.definitions.forEach((def) => {
     if (def.kind === 'ObjectTypeDefinition') {
       const name = def.name.value
 
-      if (name === 'RootMutationType') {
+      if (name === schemaDefinition.mutation) {
         def.fields?.forEach((field) => {
           const mutationName = field.name.value
 
+          fieldsMap[mutationName] = field
+
           if (mutationsList.has(mutationName)) {
-            const args =
-              field.arguments?.map((arg) => ({
-                name: arg.name.value,
-                variable: `\$${arg.name.value}`,
-                type: formatType(arg.type),
-              })) || []
+            const mutation = getMutationDocument({
+              field,
+              name: mutationName,
+            })
 
             info[mutationName] = typeValueName(field.type)
-
-            const mutation = `export const ${mutationName}Mutation = gql\`
-  mutation ${mutationName}${formatArgs(
-              args.map(({ variable, type }) => `${variable}: ${type}`),
-              4
-            )} {
-    ${mutationName}${formatArgs(
-              args.map(({ variable, name }) => `${name}: ${variable}`),
-              6
-            )} ${typeValue(field.type) || ''}
-  }
-\``
-
             mutations[mutationName] = mutation
 
             mutationsList.delete(mutationName)
@@ -67,6 +89,17 @@ export function generateMutations(
         })
       }
     }
+  })
+
+  customMutations.forEach(({ baseAction, name, resName }) => {
+    const field = fieldsMap[baseAction]
+
+    mutations[name] = getMutationDocument({
+      field,
+      name,
+      baseName: baseAction,
+      returnFieldType: resName,
+    })
   })
 
   return Object.keys(mutations)

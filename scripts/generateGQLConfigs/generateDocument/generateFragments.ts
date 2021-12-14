@@ -2,22 +2,14 @@ import { DocumentNode, TypeNode } from 'graphql'
 
 import { TActionInfo, TOverrides } from '../types'
 
-export const SCALARS = [
-  'DateTime',
-  'Timestamp',
-  'Decimal',
-  'UUID',
-  'Coordinates',
-  'ID',
-  'Upload',
-  'Boolean',
-  'String',
-  'Int',
-  'Json',
-  'Float',
-]
+const SCALARS = ['ID', 'String', 'Boolean', 'Int', 'Float']
 
 const enums: string[] = []
+
+export const schemaDefinition = {
+  query: 'Query',
+  mutation: 'Mutation',
+}
 
 export function typeValueName(type: TypeNode, isList: boolean = false): TActionInfo {
   if (type.kind === 'NonNullType') {
@@ -34,8 +26,8 @@ export function typeValueName(type: TypeNode, isList: boolean = false): TActionI
   }
 }
 
-export function typeValue(type: TypeNode): string | null {
-  const typeName = typeValueName(type).resName
+export function typeValue(type: TypeNode | string): string | null {
+  const typeName = typeof type === 'string' ? type : typeValueName(type).resName
 
   if (SCALARS.includes(typeName) || enums.includes(typeName)) {
     return null
@@ -54,6 +46,18 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides): str
     if (def.kind === 'EnumTypeDefinition') {
       enums.push(def.name.value)
     }
+
+    if (def.kind === 'ScalarTypeDefinition') {
+      SCALARS.push(def.name.value)
+    }
+
+    if (def.kind === 'SchemaDefinition') {
+      def.operationTypes.forEach((operation) => {
+        if (operation.operation === 'query' || operation.operation === 'mutation') {
+          schemaDefinition[operation.operation] = operation.type.name.value
+        }
+      })
+    }
   })
 
   doc.definitions.forEach((def) => {
@@ -71,8 +75,8 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides): str
 
     if (
       def.kind === 'ObjectTypeDefinition' &&
-      def.name.value !== 'RootMutationType' &&
-      def.name.value !== 'RootQueryType'
+      def.name.value !== schemaDefinition.mutation &&
+      def.name.value !== schemaDefinition.query
     ) {
       const typeName = def.name.value
 

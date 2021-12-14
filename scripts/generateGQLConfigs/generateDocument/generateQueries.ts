@@ -1,8 +1,8 @@
-import { DocumentNode, TypeNode } from 'graphql'
+import { DocumentNode, FieldDefinitionNode, TypeNode } from 'graphql'
 
-import { TActionInfo } from '../types'
+import { TActionInfo, TCustomAction } from '../types'
 
-import { typeValue, typeValueName } from './generateFragments'
+import { schemaDefinition, typeValue, typeValueName } from './generateFragments'
 
 function formatType(type: TypeNode): string | null {
   if (type.kind === 'NonNullType') {
@@ -23,20 +23,57 @@ function formatArgs(args: string[], indent: number) {
   return args.length ? `(${paramPrefix}${args.join(paramPrefix)}${bracketPrefix})` : ''
 }
 
+function getQueryDocument({
+  field,
+  name,
+  baseName = name,
+  returnFieldType = field.type,
+}: {
+  field: FieldDefinitionNode
+  name: string
+  baseName?: string
+  returnFieldType?: TypeNode | string
+}) {
+  const args =
+    field.arguments?.map((arg) => ({
+      name: arg.name.value,
+      variable: `\$${arg.name.value}`,
+      type: formatType(arg.type),
+    })) || []
+
+  const query = `export const ${name}Query = gql\`
+  query ${name}${formatArgs(
+    args.map(({ variable, type }) => `${variable}: ${type}`),
+    4
+  )} {
+    ${baseName}${formatArgs(
+    args.map(({ variable, name }) => `${name}: ${variable}`),
+    6
+  )} ${typeValue(returnFieldType) || ''}
+  }
+\``
+
+  return query
+}
+
 export function generateQueries(
   doc: DocumentNode,
   queriesList: Set<string>,
-  info: Record<string, TActionInfo>
+  info: Record<string, TActionInfo>,
+  customQueries: TCustomAction[]
 ): string {
   const queries: Record<string, string> = {}
+  const fieldsMap: Record<string, FieldDefinitionNode> = {}
 
   doc.definitions.forEach((def) => {
     if (def.kind === 'ObjectTypeDefinition') {
       const name = def.name.value
 
-      if (name === 'RootQueryType') {
+      if (name === schemaDefinition.query) {
         def.fields?.forEach((field) => {
           const queryName = field.name.value
+
+          fieldsMap[queryName] = field
 
           if (queriesList.has(queryName)) {
             const args =
@@ -46,20 +83,9 @@ export function generateQueries(
                 type: formatType(arg.type),
               })) || []
 
+            const query = getQueryDocument({ field, name: queryName })
+
             info[queryName] = typeValueName(field.type)
-
-            const query = `export const ${queryName}Query = gql\`
-  query ${queryName}${formatArgs(
-              args.map(({ variable, type }) => `${variable}: ${type}`),
-              4
-            )} {
-    ${queryName}${formatArgs(
-              args.map(({ variable, name }) => `${name}: ${variable}`),
-              6
-            )} ${typeValue(field.type) || ''}
-  }
-\``
-
             queries[queryName] = query
 
             queriesList.delete(queryName)
@@ -67,6 +93,17 @@ export function generateQueries(
         })
       }
     }
+  })
+
+  customQueries.forEach(({ baseAction, name, resName }) => {
+    const field = fieldsMap[baseAction]
+
+    queries[name] = getQueryDocument({
+      field,
+      name,
+      baseName: baseAction,
+      returnFieldType: resName,
+    })
   })
 
   return Object.keys(queries)

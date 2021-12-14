@@ -88,38 +88,39 @@ export function generateEntityConfigsActionsAndImports(
       }
     })
 
-    if (actionType === ACTION_TYPE.queries) {
-      entityConfig.customActions.forEach(({ name, errorMessage }) => {
-        const typePrefix = convertFirstLetterToUpperCase(name)
-        const documentType = `${typePrefix}Document`
-        const errorMessageConfig = errorGenerator(errorMessage)
-        const info = actionsInfo[name]
-        const overrides = actionOverrides[`${info?.resName}Fragment`]
+    const customActions =
+      actionType === ACTION_TYPE.queries ? entityConfig.customQueries : entityConfig.customMutations
 
-        imports.push(documentType)
+    customActions.forEach(({ name, errorMessage }) => {
+      const typePrefix = convertFirstLetterToUpperCase(name)
+      const documentType = `${typePrefix}Document`
+      const errorMessageConfig = errorGenerator(errorMessage)
+      const info = actionsInfo[name]
+      const overrides = actionOverrides[`${info?.resName}Fragment`]
 
-        let fillData = overrides?.name ? `${overrides?.name}` : null
+      imports.push(documentType)
 
-        if (fillData && info.isList) {
-          fillData = `[${fillData}]`
-        }
+      let fillData = overrides?.name ? `${overrides?.name}` : null
 
-        const dataKey = aliases[name] || name
+      if (fillData && info.isList) {
+        fillData = `[${fillData}]`
+      }
 
-        actions.push(
-          actionGenerator({
-            name,
-            documentType,
-            errorMessageConfig,
-            fillData: fillData ? `{ ${dataKey}: ${fillData} }` : null,
-          })
-        )
+      const dataKey = aliases[name] || name
 
-        if (overrides?.name) {
-          fillImports.push(overrides?.name)
-        }
-      })
-    }
+      actions.push(
+        actionGenerator({
+          name,
+          documentType,
+          errorMessageConfig,
+          fillData: fillData ? `{ ${dataKey}: ${fillData} }` : null,
+        })
+      )
+
+      if (overrides?.name) {
+        fillImports.push(overrides?.name)
+      }
+    })
 
     result[actionType] = {
       imports,

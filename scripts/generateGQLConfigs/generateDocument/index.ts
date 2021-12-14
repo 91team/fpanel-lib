@@ -38,8 +38,8 @@ export function generateDocument(config: TConfig, modulePath: string): Record<st
   const doc = parse(source)
 
   const fragmentsContent = generateFragments(doc, config.fragmentOverrides)
-  const queriesContent = generateQueries(doc, queries, info)
-  const mutationsContent = generateMutations(doc, mutations, info)
+  const queriesContent = generateQueries(doc, queries, info, config.customQueries)
+  const mutationsContent = generateMutations(doc, mutations, info, config.customMutations)
 
   fs.writeFileSync(outFragmentsFile, getFileContent(fragmentsContent), 'utf8')
   fs.writeFileSync(outQueriesFile, getFileContent(queriesContent), 'utf8')

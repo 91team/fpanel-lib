@@ -23,7 +23,7 @@ import(GLOBAL_VARS.CONFIG_PATH)
     const typeAliases: TAliases = {}
     const dataKeyAliases: Record<string, string> = {}
 
-    config.customActions.forEach((action) => {
+    config.customQueries.concat(config.customMutations).forEach((action) => {
       const baseAction = actionsInfo[action.baseAction]
 
       actionsInfo[action.name] = {

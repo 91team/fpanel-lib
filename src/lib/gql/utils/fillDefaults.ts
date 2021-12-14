@@ -62,24 +62,23 @@ export type Fill<
   TransformFn = D['__transform']
 > = TransformFn extends (v: any) => any
   ? ReturnType<TransformFn>
-  : Omit<T, keyof D> &
-      {
-        [P in keyof (D | T)]-?: NonNullable<D[P]> extends (infer U)[]
-          ? U extends object
-            ? NonNullable<T[P]> extends (infer U2)[]
-              ? U2 extends object
-                ? Fill<NonNullable<U2>, U>[]
-                : never
+  : Omit<T, keyof D> & {
+      [P in keyof (D | T)]-?: NonNullable<D[P]> extends (infer U)[]
+        ? U extends object
+          ? NonNullable<T[P]> extends (infer U2)[]
+            ? U2 extends object
+              ? Fill<NonNullable<U2>, U>[]
               : never
-            : U[]
-          : NonNullable<D[P]> extends object
-          ? T extends Record<P, T[P]>
-            ? Fill<NonNullable<T[P]>, NonNullable<D[P]>>
-            : '__new' extends keyof D[P]
-            ? Fill<NonNullable<T[P]>, NonNullable<D[P]>>
-            : Fill<NonNullable<T[P]>, NonNullable<D[P]>> | null
-          : NonNullable<D[P]>
-      }
+            : never
+          : U[]
+        : NonNullable<D[P]> extends object
+        ? T extends Record<P, T[P]>
+          ? Fill<NonNullable<T[P]>, NonNullable<D[P]>>
+          : '__new' extends keyof D[P]
+          ? Fill<NonNullable<T[P]>, NonNullable<D[P]>>
+          : Fill<NonNullable<T[P]>, NonNullable<D[P]>> | null
+        : NonNullable<D[P]>
+    }
 
 function transformFillDefaultsToObject(object: object): object {
   if (typeof object !== 'object' || object == null) {

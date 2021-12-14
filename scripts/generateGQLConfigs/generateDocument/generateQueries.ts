@@ -30,17 +30,17 @@ export function generateQueries(
 ): string {
   const queries: Record<string, string> = {}
 
-  doc.definitions.forEach(def => {
+  doc.definitions.forEach((def) => {
     if (def.kind === 'ObjectTypeDefinition') {
       const name = def.name.value
 
       if (name === 'RootQueryType') {
-        def.fields?.forEach(field => {
+        def.fields?.forEach((field) => {
           const queryName = field.name.value
 
           if (queriesList.has(queryName)) {
             const args =
-              field.arguments?.map(arg => ({
+              field.arguments?.map((arg) => ({
                 name: arg.name.value,
                 variable: `\$${arg.name.value}`,
                 type: formatType(arg.type),
@@ -71,6 +71,6 @@ export function generateQueries(
 
   return Object.keys(queries)
     .sort()
-    .map(key => queries[key])
+    .map((key) => queries[key])
     .join('\n\n')
 }

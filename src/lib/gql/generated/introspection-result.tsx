@@ -1,62 +1,60 @@
-
-      export interface IntrospectionResultData {
-        __schema: {
-          types: {
-            kind: string;
-            name: string;
-            possibleTypes: {
-              name: string;
-            }[];
-          }[];
-        };
-      }
-      const result: IntrospectionResultData = {
-  "__schema": {
-    "types": [
+export interface IntrospectionResultData {
+  __schema: {
+    types: {
+      kind: string
+      name: string
+      possibleTypes: {
+        name: string
+      }[]
+    }[]
+  }
+}
+const result: IntrospectionResultData = {
+  __schema: {
+    types: [
       {
-        "kind": "INTERFACE",
-        "name": "OlapLayer",
-        "possibleTypes": [
+        kind: 'INTERFACE',
+        name: 'OlapLayer',
+        possibleTypes: [
           {
-            "name": "OlapChartLayer"
+            name: 'OlapChartLayer',
           },
           {
-            "name": "OlapFilterLayer"
+            name: 'OlapFilterLayer',
           },
           {
-            "name": "OlapTextLayer"
-          }
-        ]
+            name: 'OlapTextLayer',
+          },
+        ],
       },
       {
-        "kind": "UNION",
-        "name": "SocketMessage",
-        "possibleTypes": [
+        kind: 'UNION',
+        name: 'SocketMessage',
+        possibleTypes: [
           {
-            "name": "StepProgress"
+            name: 'StepProgress',
           },
           {
-            "name": "DatasourceState"
+            name: 'DatasourceState',
           },
           {
-            "name": "DatasourceProgress"
+            name: 'DatasourceProgress',
           },
           {
-            "name": "ChatOnline"
+            name: 'ChatOnline',
           },
           {
-            "name": "ChatUser"
+            name: 'ChatUser',
           },
           {
-            "name": "ChatMessage"
+            name: 'ChatMessage',
           },
           {
-            "name": "ChatRoom"
-          }
-        ]
-      }
-    ]
-  }
-};
-      export default result;
-    
+            name: 'ChatRoom',
+          },
+        ],
+      },
+    ],
+  },
+}
+export default result

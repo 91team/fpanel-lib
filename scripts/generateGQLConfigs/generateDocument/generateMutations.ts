@@ -30,17 +30,17 @@ export function generateMutations(
 ): string {
   const mutations: Record<string, string> = {}
 
-  doc.definitions.forEach(def => {
+  doc.definitions.forEach((def) => {
     if (def.kind === 'ObjectTypeDefinition') {
       const name = def.name.value
 
       if (name === 'RootMutationType') {
-        def.fields?.forEach(field => {
+        def.fields?.forEach((field) => {
           const mutationName = field.name.value
 
           if (mutationsList.has(mutationName)) {
             const args =
-              field.arguments?.map(arg => ({
+              field.arguments?.map((arg) => ({
                 name: arg.name.value,
                 variable: `\$${arg.name.value}`,
                 type: formatType(arg.type),
@@ -71,6 +71,6 @@ export function generateMutations(
 
   return Object.keys(mutations)
     .sort()
-    .map(key => mutations[key])
+    .map((key) => mutations[key])
     .join('\n\n')
 }

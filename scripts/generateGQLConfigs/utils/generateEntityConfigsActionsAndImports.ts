@@ -50,13 +50,13 @@ export function generateEntityConfigsActionsAndImports(
 
   const actionTypes = [ACTION_TYPE.mutations, ACTION_TYPE.queries]
 
-  actionTypes.map(actionType => {
+  actionTypes.map((actionType) => {
     const imports: TEntityResult['imports'] = []
     const fillImports: TEntityResult['fillImports'] = []
     const actions: TEntityResult['actions'] = []
     const actionsConfigs = entityConfig[actionType]
 
-    Object.keys(actionsConfigs).forEach(name => {
+    Object.keys(actionsConfigs).forEach((name) => {
       const errorMessage = actionsConfigs[name]!
       const typePrefix = convertFirstLetterToUpperCase(name)
       const documentType = `${typePrefix}Document`

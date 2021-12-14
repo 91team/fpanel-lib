@@ -1,11 +1,7 @@
 import { TGraphqlAction } from 'src/lib/services/graphqlAPI'
 
-import {
-  
-} from '../typesOriginal'
-import {
-  
- } from '../types'
+import {} from '../typesOriginal'
+import {} from '../types'
 
 export type TMutations = {}
 

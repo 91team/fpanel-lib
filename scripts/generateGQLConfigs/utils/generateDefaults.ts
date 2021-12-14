@@ -27,7 +27,7 @@ export function generateDefaults(aliases: TAliases): Record<string, TActionOverr
 
     const typeAliases = aliases[type]
 
-    typeAliases?.forEach(alias => {
+    typeAliases?.forEach((alias) => {
       res[`${alias}Fragment`] = {
         type: `${alias}Fragment`,
         name,
@@ -41,13 +41,13 @@ export function generateDefaults(aliases: TAliases): Record<string, TActionOverr
 
   const customTypesContent = `import { Fill } from '../utils/fillDefaults'
 import { 
-  ${uniq(Object.keys(res).map(key => res[key].name))
+  ${uniq(Object.keys(res).map((key) => res[key].name))
     .sort()
     .join(',\n  ')}
 } from './defaults';
 import { 
   ${Object.keys(res)
-    .map(type => `${type} as T${type}`)
+    .map((type) => `${type} as T${type}`)
     .sort()
     .join(',\n  ')}
 } from './typesOriginal';
@@ -55,7 +55,7 @@ import {
 export * from './typesOriginal'
 
 ${Object.keys(res)
-  .map(originalType => {
+  .map((originalType) => {
     const { name, type } = res[originalType]
 
     return `export type ${originalType} = Fill<T${originalType}, typeof ${name}>`

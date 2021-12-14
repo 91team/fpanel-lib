@@ -13,7 +13,7 @@ if (!existsSync(GENERATED_FOLDER_PATH)) {
 }
 
 import(GLOBAL_VARS.CONFIG_PATH)
-  .catch(error => {
+  .catch((error) => {
     console.error(error)
     process.exit(0)
   })
@@ -23,7 +23,7 @@ import(GLOBAL_VARS.CONFIG_PATH)
     const typeAliases: TAliases = {}
     const dataKeyAliases: Record<string, string> = {}
 
-    config.customActions.forEach(action => {
+    config.customActions.forEach((action) => {
       const baseAction = actionsInfo[action.baseAction]
 
       actionsInfo[action.name] = {

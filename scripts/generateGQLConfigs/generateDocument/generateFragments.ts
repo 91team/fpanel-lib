@@ -50,19 +50,19 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides): str
   const fragments: Record<string, string> = {}
   const interfaces: Record<string, string[]> = {}
 
-  doc.definitions.forEach(def => {
+  doc.definitions.forEach((def) => {
     if (def.kind === 'EnumTypeDefinition') {
       enums.push(def.name.value)
     }
   })
 
-  doc.definitions.forEach(def => {
+  doc.definitions.forEach((def) => {
     if (def.kind === 'UnionTypeDefinition') {
       const name = def.name.value
 
       const fragment = `export const ${name}Fragment = gql\`
   fragment ${name} on ${name} {
-    ${def.types?.map(type => `...${type.name.value}`).join('\n    ')}
+    ${def.types?.map((type) => `...${type.name.value}`).join('\n    ')}
   }
 \``
 
@@ -91,7 +91,7 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides): str
       }
 
       const args =
-        def.fields?.flatMap(field => {
+        def.fields?.flatMap((field) => {
           const fieldName = field.name.value
           const typeOverrides = overrides[typeName]
 
@@ -116,10 +116,10 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides): str
     }
   })
 
-  Object.keys(interfaces).forEach(name => {
+  Object.keys(interfaces).forEach((name) => {
     const fragment = `export const ${name}Fragment = gql\`
   fragment ${name} on ${name} {
-    ${interfaces[name].map(typeName => `...${typeName}`).join('\n    ')}
+    ${interfaces[name].map((typeName) => `...${typeName}`).join('\n    ')}
   }
 \``
 
@@ -128,6 +128,6 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides): str
 
   return Object.keys(fragments)
     .sort()
-    .map(key => fragments[key])
+    .map((key) => fragments[key])
     .join('\n\n')
 }

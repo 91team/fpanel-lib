@@ -35,14 +35,14 @@ export function generateEntityTypesActionsAndImports(
 
   const actionTypes = [ACTION_TYPE.mutations, ACTION_TYPE.queries]
 
-  actionTypes.map(actionType => {
+  actionTypes.map((actionType) => {
     const imports: TEntityResult['imports'] = []
     const customTypesImports: TEntityResult['imports'] = []
     const actions: TEntityResult['actions'] = []
     const actionsConfigs = entityConfig[actionType]
     const formattedActionType = formattedActionTypeNames[actionType]
 
-    Object.keys(actionsConfigs).forEach(name => {
+    Object.keys(actionsConfigs).forEach((name) => {
       const typePrefix = convertFirstLetterToUpperCase(name)
       const info = actionsInfo[name]
       const overrides = actionOverrides[`${info?.resName}Fragment`]

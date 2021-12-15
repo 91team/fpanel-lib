@@ -29,6 +29,7 @@ export type TAliases = Record<string, string[]>
 export type TConfig = {
   [ACTION_TYPE.mutations]: Record<string, string | null>
   [ACTION_TYPE.queries]: Record<string, string | null>
+  usedFragments: string[]
   fragmentOverrides: TOverrides
   customQueries: TCustomAction[]
   customMutations: TCustomAction[]

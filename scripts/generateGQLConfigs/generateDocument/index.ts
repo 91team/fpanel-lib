@@ -51,6 +51,8 @@ export function generateDocument(config: TConfig, modulePath: string): Record<st
     }
   }
 
+  config.usedFragments.forEach(addFragment)
+
   Object.keys(info).forEach((key) => {
     const actionInfo = info[key]
 

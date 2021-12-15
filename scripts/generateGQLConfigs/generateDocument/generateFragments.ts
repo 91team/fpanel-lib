@@ -38,9 +38,10 @@ export function typeValue(type: TypeNode | string): string | null {
     }`
 }
 
-export function generateFragments(doc: DocumentNode, overrides: TOverrides): string {
+export function generateFragments(doc: DocumentNode, overrides: TOverrides) {
   const fragments: Record<string, string> = {}
   const interfaces: Record<string, string[]> = {}
+  const depsMap: Record<string, Set<string>> = {}
 
   doc.definitions.forEach((def) => {
     if (def.kind === 'EnumTypeDefinition') {
@@ -63,6 +64,9 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides): str
   doc.definitions.forEach((def) => {
     if (def.kind === 'UnionTypeDefinition') {
       const name = def.name.value
+
+      depsMap[name] = new Set()
+      def.types?.forEach((type) => depsMap[name].add(type.name.value))
 
       const fragment = `export const ${name}Fragment = gql\`
   fragment ${name} on ${name} {
@@ -94,6 +98,8 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides): str
         })
       }
 
+      depsMap[typeName] = new Set()
+
       const args =
         def.fields?.flatMap((field) => {
           const fieldName = field.name.value
@@ -101,6 +107,12 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides): str
 
           if (typeOverrides && typeOverrides[fieldName] === false) {
             return []
+          }
+
+          const argTypeName = typeValueName(field.type).resName
+
+          if (!SCALARS.includes(argTypeName) && !enums.includes(argTypeName)) {
+            depsMap[typeName].add(argTypeName)
           }
 
           const value = (typeOverrides && typeOverrides[fieldName]) || typeValue(field.type)
@@ -121,6 +133,8 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides): str
   })
 
   Object.keys(interfaces).forEach((name) => {
+    depsMap[name] = new Set(interfaces[name])
+
     const fragment = `export const ${name}Fragment = gql\`
   fragment ${name} on ${name} {
     ${interfaces[name].map((typeName) => `...${typeName}`).join('\n    ')}
@@ -130,8 +144,8 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides): str
     fragments[name] = fragment
   })
 
-  return Object.keys(fragments)
-    .sort()
-    .map((key) => fragments[key])
-    .join('\n\n')
+  return {
+    fragments,
+    depsMap,
+  }
 }

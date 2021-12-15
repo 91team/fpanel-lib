@@ -37,9 +37,30 @@ export function generateDocument(config: TConfig, modulePath: string): Record<st
   const source = new Source(content)
   const doc = parse(source)
 
-  const fragmentsContent = generateFragments(doc, config.fragmentOverrides)
+  const { fragments, depsMap } = generateFragments(doc, config.fragmentOverrides)
   const queriesContent = generateQueries(doc, queries, info, config.customQueries)
   const mutationsContent = generateMutations(doc, mutations, info, config.customMutations)
+
+  const usedFragments = new Set<string>()
+
+  function addFragment(name: string) {
+    if (!usedFragments.has(name)) {
+      usedFragments.add(name)
+
+      depsMap[name]?.forEach(addFragment)
+    }
+  }
+
+  Object.keys(info).forEach((key) => {
+    const actionInfo = info[key]
+
+    addFragment(actionInfo.resName)
+  })
+
+  const fragmentsContent = Array.from(usedFragments)
+    .sort()
+    .map((key) => fragments[key])
+    .join('\n\n')
 
   fs.writeFileSync(outFragmentsFile, getFileContent(fragmentsContent), 'utf8')
   fs.writeFileSync(outQueriesFile, getFileContent(queriesContent), 'utf8')

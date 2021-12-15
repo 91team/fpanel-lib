@@ -44,7 +44,7 @@ export function generateDocument(config: TConfig, modulePath: string): Record<st
   const usedFragments = new Set<string>()
 
   function addFragment(name: string) {
-    if (!usedFragments.has(name)) {
+    if (fragments[name] && !usedFragments.has(name)) {
       usedFragments.add(name)
 
       depsMap[name]?.forEach(addFragment)

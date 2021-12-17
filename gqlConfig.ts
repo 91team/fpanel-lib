@@ -2,9 +2,10 @@ import { TConfig } from './scripts/generateGQLConfigs/types'
 
 export const config: TConfig = {
   usedFragments: [],
-  fragmentOverrides: {},
+  customFragments: {},
   customQueries: [],
   customMutations: [],
+  fragments: {},
   mutations: {},
   queries: {},
 }

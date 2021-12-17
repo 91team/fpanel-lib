@@ -1,6 +1,6 @@
-import { DocumentNode, TypeNode } from 'graphql'
+import { DocumentNode, ObjectTypeDefinitionNode, TypeNode } from 'graphql'
 
-import { TActionInfo, TOverrides } from '../types'
+import { TActionInfo, TCustomField, TCustomFragments, TFragmentOverride } from '../types'
 
 const SCALARS = ['ID', 'String', 'Boolean', 'Int', 'Float']
 
@@ -38,10 +38,100 @@ export function typeValue(type: TypeNode | string): string | null {
     }`
 }
 
-export function generateFragments(doc: DocumentNode, overrides: TOverrides) {
+export function generateTypeFields(
+  typeName: string,
+  baseName: string,
+  fragmentFields: Record<string, ObjectTypeDefinitionNode>,
+  depsMap: Record<string, Set<string>>,
+  meta?: TCustomField
+): string {
+  const def = fragmentFields[baseName]
+
+  if (!depsMap[typeName]) depsMap[typeName] = new Set()
+
+  if (!def || !meta) {
+    return typeValue(typeName) || ''
+  }
+
+  const { fields, override } = meta || {}
+
+  const args =
+    def.fields?.flatMap((field) => {
+      const fieldName = field.name.value
+      const fieldMeta = override && override[fieldName]
+
+      if (fields?.includes(fieldName) === false || fieldMeta === false) {
+        return []
+      }
+
+      const argTypeName = typeValueName(field.type).resName
+
+      if (!fields || fields.includes(argTypeName)) {
+        if (!SCALARS.includes(argTypeName) && !enums.includes(argTypeName)) {
+          depsMap[typeName].add(argTypeName)
+        }
+      }
+
+      const value =
+        typeof fieldMeta === 'string'
+          ? fieldMeta
+          : generateTypeFields(
+              typeValueName(field.type).resName,
+              typeValueName(field.type).resName,
+              fragmentFields,
+              depsMap,
+              fieldMeta
+            )
+
+      return value ? `${fieldName} ${value}` : fieldName
+    }) || []
+
+  args.sort()
+
+  meta?.extends?.forEach((childType) => depsMap[typeName].add(childType))
+
+  return `{
+  ${meta?.extends ? meta.extends.map((type) => `...${type}`).join('\n') : ''}
+  ${args.join('\n    ')}
+}`
+}
+
+function generateFragment({
+  typeName,
+  baseName = typeName,
+  fragmentFields,
+  meta,
+  depsMap,
+}: {
+  typeName: string
+  baseName?: string
+  fragmentFields: Record<string, ObjectTypeDefinitionNode>
+  meta: TCustomField
+  depsMap: Record<string, Set<string>>
+  fields?: string[]
+}) {
+  const fragment = `export const ${typeName}Fragment = gql\`
+  fragment ${typeName} on ${baseName} ${generateTypeFields(
+    typeName,
+    baseName,
+    fragmentFields,
+    depsMap,
+    meta
+  )}
+\``
+
+  return fragment
+}
+
+export function generateFragments(
+  doc: DocumentNode,
+  overrides: TFragmentOverride,
+  custom: TCustomFragments
+) {
   const fragments: Record<string, string> = {}
   const interfaces: Record<string, string[]> = {}
   const depsMap: Record<string, Set<string>> = {}
+  const fragmentFields: Record<string, ObjectTypeDefinitionNode> = {}
 
   doc.definitions.forEach((def) => {
     if (def.kind === 'EnumTypeDefinition') {
@@ -59,9 +149,7 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides) {
         }
       })
     }
-  })
 
-  doc.definitions.forEach((def) => {
     if (def.kind === 'UnionTypeDefinition') {
       const name = def.name.value
 
@@ -84,52 +172,34 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides) {
     ) {
       const typeName = def.name.value
 
-      if (overrides[typeName] === false) {
-        return
-      }
-
-      if (def.interfaces && def.interfaces.length) {
-        def.interfaces.forEach(({ name }) => {
-          const implementations = interfaces[name.value] || []
-
-          implementations.push(typeName)
-
-          interfaces[name.value] = implementations
-        })
-      }
-
-      depsMap[typeName] = new Set()
-
-      const args =
-        def.fields?.flatMap((field) => {
-          const fieldName = field.name.value
-          const typeOverrides = overrides[typeName]
-
-          if (typeOverrides && typeOverrides[fieldName] === false) {
-            return []
-          }
-
-          const argTypeName = typeValueName(field.type).resName
-
-          if (!SCALARS.includes(argTypeName) && !enums.includes(argTypeName)) {
-            depsMap[typeName].add(argTypeName)
-          }
-
-          const value = (typeOverrides && typeOverrides[fieldName]) || typeValue(field.type)
-
-          return value ? `${fieldName} ${value}` : fieldName
-        }) || []
-
-      args.sort()
-
-      const fragment = `export const ${typeName}Fragment = gql\`
-  fragment ${typeName} on ${typeName} {
-    ${args.join('\n    ')}
-  }
-\``
-
-      fragments[typeName] = fragment
+      fragmentFields[typeName] = def
     }
+  })
+
+  Object.keys(fragmentFields).forEach((typeName) => {
+    const def = fragmentFields[typeName]
+    const override = overrides[typeName]
+
+    if (override === false) {
+      return
+    }
+
+    if (def.interfaces && def.interfaces.length) {
+      def.interfaces.forEach(({ name }) => {
+        const implementations = interfaces[name.value] || []
+
+        implementations.push(typeName)
+
+        interfaces[name.value] = implementations
+      })
+    }
+
+    fragments[typeName] = generateFragment({
+      typeName,
+      fragmentFields,
+      depsMap,
+      meta: override || {},
+    })
   })
 
   Object.keys(interfaces).forEach((name) => {
@@ -142,6 +212,18 @@ export function generateFragments(doc: DocumentNode, overrides: TOverrides) {
 \``
 
     fragments[name] = fragment
+  })
+
+  Object.keys(custom).forEach((typeName) => {
+    const meta = custom[typeName]
+
+    fragments[typeName] = generateFragment({
+      typeName,
+      baseName: meta.base,
+      fragmentFields,
+      depsMap,
+      meta,
+    })
   })
 
   return {

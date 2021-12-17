@@ -37,7 +37,7 @@ export function generateDocument(config: TConfig, modulePath: string): Record<st
   const source = new Source(content)
   const doc = parse(source)
 
-  const { fragments, depsMap } = generateFragments(doc, config.fragmentOverrides)
+  const { fragments, depsMap } = generateFragments(doc, config.fragments, config.customFragments)
   const queriesContent = generateQueries(doc, queries, info, config.customQueries)
   const mutationsContent = generateMutations(doc, mutations, info, config.customMutations)
 
@@ -58,6 +58,8 @@ export function generateDocument(config: TConfig, modulePath: string): Record<st
 
     addFragment(actionInfo.resName)
   })
+
+  config.usedFragments.concat(Object.keys(config.customFragments)).forEach(addFragment)
 
   const fragmentsContent = Array.from(usedFragments)
     .sort()

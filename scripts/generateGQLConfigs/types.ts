@@ -7,7 +7,16 @@ export type TArgV = {
   config?: string
 }
 export type TActionType = ACTION_TYPE
-export type TOverrides = Record<string, false | Record<string, string | false>>
+export type TFragmentOverride = Record<string, false | TCustomField>
+export type TCustomField = {
+  extends?: string[]
+  fields?: string[]
+  override?: TFragmentOverride
+}
+export type TCustomFragment = {
+  base: string
+} & TCustomField
+export type TCustomFragments = Record<string, TCustomFragment>
 export type TActionInfo = {
   resName: string
   isList: boolean
@@ -30,7 +39,8 @@ export type TConfig = {
   [ACTION_TYPE.mutations]: Record<string, string | null>
   [ACTION_TYPE.queries]: Record<string, string | null>
   usedFragments: string[]
-  fragmentOverrides: TOverrides
+  fragments: TFragmentOverride
+  customFragments: TCustomFragments
   customQueries: TCustomAction[]
   customMutations: TCustomAction[]
 }

@@ -53,14 +53,14 @@ export function generateTypeFields(
     return typeValue(typeName) || ''
   }
 
-  const { fields, override } = meta || {}
+  const { fields, ignoreFields, override } = meta || {}
 
   const args =
     def.fields?.flatMap((field) => {
       const fieldName = field.name.value
-      const fieldMeta = override && override[fieldName]
+      const fieldMeta = override?.[fieldName]
 
-      if (fields?.includes(fieldName) === false || fieldMeta === false) {
+      if (ignoreFields?.includes(fieldName) || fields?.includes(fieldName) === false) {
         return []
       }
 
@@ -72,16 +72,13 @@ export function generateTypeFields(
         }
       }
 
-      const value =
-        typeof fieldMeta === 'string'
-          ? fieldMeta
-          : generateTypeFields(
-              typeValueName(field.type).resName,
-              typeValueName(field.type).resName,
-              fragmentFields,
-              depsMap,
-              fieldMeta
-            )
+      const value = generateTypeFields(
+        typeValueName(field.type).resName,
+        typeValueName(field.type).resName,
+        fragmentFields,
+        depsMap,
+        fieldMeta
+      )
 
       return value ? `${fieldName} ${value}` : fieldName
     }) || []

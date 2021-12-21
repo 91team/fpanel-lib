@@ -7,10 +7,11 @@ export type TArgV = {
   config?: string
 }
 export type TActionType = ACTION_TYPE
-export type TFragmentOverride = Record<string, false | TCustomField>
+export type TFragmentOverride = Record<string, TCustomField>
 export type TCustomField = {
   extends?: string[]
   fields?: string[]
+  ignoreFields?: string[]
   override?: TFragmentOverride
 }
 export type TCustomFragment = {

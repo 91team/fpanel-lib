@@ -9,7 +9,7 @@
     "serve": "yarn vite preview",
     "tsc": "tsm \"src/**/*.module.scss\" && tsc",
     "gql:clean": "yarn rimraf src/lib/gql/generated",
-    "gql:generate-configs": "yarn ts-node --project ./scripts/tsconfig.json ./scripts/generateGQLConfigs",
+    "gql:generate-configs": "yarn ts-node --project ./scripts/tsconfig.json ./scripts/generateGQLConfigs && yarn eslint src/lib/gql/documents/* --fix",
     "gql:generate-schema": "graphql-codegen --config codegen.schema.yml",
     "gql:generate-from-schema": "yarn gql:clean && yarn gql:generate-configs && graphql-codegen --config codegen.yml",
     "gql:generate": "yarn gql:generate-schema && yarn gql:generate-from-schema",

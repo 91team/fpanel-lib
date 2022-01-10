@@ -15,24 +15,18 @@ import { ServiceName } from './types/constants'
 
 type TGraphqlActionType = 'query' | 'mutation'
 type TSetState = (state: STATE) => void
-type TCallGraphqlActionParams<
-  TGraphqlResult extends MutationResult | QueryResult,
-  TParams extends {}
-> = {
+type TCallGraphqlActionParams<TData, TParams extends {}> = {
   GQLVariables?: TParams
-  onSuccess?: (data: TGraphqlResult['data']) => void
+  onSuccess?: (data: TData) => void
   onError?: (erorr: any) => void
   setState?: TSetState
   notifications?: {
     [key in TNotification['type']]?: Omit<TNotification, 'id' | 'type'>
   }
 }
-export type TGraphqlAction<
-  TGraphqlResult extends MutationResult | QueryResult,
-  TParams extends {}
-> = (
-  params?: TCallGraphqlActionParams<TGraphqlResult, TParams>
-) => CancellablePromise<TGraphqlResult['data']>
+export type TGraphqlAction<TData, TParams extends {}> = (
+  params?: TCallGraphqlActionParams<TData, TParams>
+) => CancellablePromise<TData>
 type TCreateGraphqlActionParams = {
   GQLDocument: DocumentNode
   type: TGraphqlActionType
@@ -63,10 +57,7 @@ export class GraphqlAPIService {
     return apollo.getClient()
   }
 
-  private createGraphqlAction = <
-    TGraphqlResult extends MutationResult | QueryResult,
-    TParams extends {}
-  >({
+  private createGraphqlAction = <TData extends MutationResult | QueryResult, TParams extends {}>({
     GQLDocument,
     type,
     notifications = {},
@@ -81,13 +72,13 @@ export class GraphqlAPIService {
       onError,
       setState,
       notifications: { ERROR, SUCCESS } = notifications,
-    }: TCallGraphqlActionParams<TGraphqlResult, TParams>) {
+    }: TCallGraphqlActionParams<TData, TParams>) {
       if (setState) {
         setState(STATE.LOADING)
       }
 
       try {
-        let result: TGraphqlResult
+        let result: TData
 
         if (type === 'mutation') {
           result = yield self.apolloClient.mutate({

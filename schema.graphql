@@ -1,0 +1,12 @@
+schema {
+  query: RootQueryType
+  mutation: RootMutationType
+}
+
+type RootMutationType {
+  createSession: String
+}
+
+type RootQueryType {
+  getSeed: String
+}

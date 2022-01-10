@@ -7,5 +7,7 @@ export const config: TConfig = {
   customMutations: [],
   fragments: {},
   mutations: {},
-  queries: {},
+  queries: {
+    getSeed: null,
+  },
 }

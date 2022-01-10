@@ -1,8 +1,15 @@
 import { TGraphqlAction } from 'src/lib/services/graphqlAPI'
 
-import {} from '../original/types'
-import {} from '../types'
+import {
+  GetSeedQuery,
+  GetSeedQueryVariables
+} from '../original/types'
+import {
+  
+ } from '../types'
 
 export type TMutations = {}
 
-export type TQueries = {}
+export type TQueries = {
+  getSeed: TGraphqlAction<GetSeedQuery, GetSeedQueryVariables>
+}

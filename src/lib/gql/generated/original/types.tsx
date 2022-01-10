@@ -10,11 +10,6 @@ export interface Scalars {
   Float: number,
 }
 
-export interface RootMutationType {
-   __typename?: 'RootMutationType',
-  createSession?: Maybe<Scalars['String']>,
-}
-
 export interface RootQueryType {
    __typename?: 'RootQueryType',
   getSeed?: Maybe<Scalars['String']>,

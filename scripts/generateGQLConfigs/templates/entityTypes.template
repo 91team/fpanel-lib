@@ -2,7 +2,7 @@ import { TGraphqlAction } from 'src/lib/services/graphqlAPI'
 
 import {
   __imports__
-} from '../typesOriginal'
+} from '../original/types'
 import {
   __customImports__
  } from '../types'

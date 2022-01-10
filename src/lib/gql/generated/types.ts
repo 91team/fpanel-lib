@@ -1,5 +1,5 @@
 import { Fill } from '../utils/fillDefaults'
 import {} from './defaults'
-import {} from './typesOriginal'
+import {} from './original/types'
 
-export * from './typesOriginal'
+export * from './original/types'

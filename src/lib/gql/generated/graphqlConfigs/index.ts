@@ -1,4 +1,4 @@
-import {} from '../typesOriginal'
+import {} from '../original/types'
 import {} from '../defaults'
 import { TMutations, TQueries } from '../graphqlTypes'
 import { TGraphqlConfig } from 'src/lib/services/graphqlAPI'

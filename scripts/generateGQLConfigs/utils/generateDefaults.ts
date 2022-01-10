@@ -50,9 +50,9 @@ import {
     .map((type) => `${type} as T${type}`)
     .sort()
     .join(',\n  ')}
-} from './typesOriginal';
+} from './original/types';
 
-export * from './typesOriginal'
+export * from './original/types'
 
 ${Object.keys(res)
   .map((originalType) => {

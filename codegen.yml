@@ -9,7 +9,7 @@ generates:
       - '!./src/lib/gql/generated/**/*.{ts,tsx}'
     plugins:
       - fragment-matcher
-  src/lib/gql/generated/typesOriginal.tsx:
+  src/lib/gql/generated/original/types.tsx:
     documents:
       - ./src/lib/gql/documents/**/*.ts
       - ./src/lib/gql/custom/**/*.ts

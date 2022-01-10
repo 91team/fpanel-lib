@@ -1,6 +1,6 @@
 import {
   __imports__
-} from '../typesOriginal'
+} from '../original/types'
 import { 
   __fillImports__ 
 } from '../defaults'

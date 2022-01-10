@@ -57,7 +57,10 @@ export class GraphqlAPIService {
     return apollo.getClient()
   }
 
-  private createGraphqlAction = <TData extends MutationResult | QueryResult, TParams extends {}>({
+  private createGraphqlAction = <
+    TGraphqlResult extends MutationResult | QueryResult,
+    TParams extends {}
+  >({
     GQLDocument,
     type,
     notifications = {},
@@ -72,13 +75,13 @@ export class GraphqlAPIService {
       onError,
       setState,
       notifications: { ERROR, SUCCESS } = notifications,
-    }: TCallGraphqlActionParams<TData, TParams>) {
+    }: TCallGraphqlActionParams<TGraphqlResult['data'], TParams>) {
       if (setState) {
         setState(STATE.LOADING)
       }
 
       try {
-        let result: TData
+        let result: TGraphqlResult
 
         if (type === 'mutation') {
           result = yield self.apolloClient.mutate({

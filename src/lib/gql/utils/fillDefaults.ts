@@ -57,30 +57,32 @@ type RecursiveDefaults<T extends object> = T extends (infer U)[]
 type x = RecursiveDefaults<{ val: { a?: number; b: string }[] }>
 
 export type Fill<
-  T,
+  T extends object,
   D extends { __transform?: (value: T) => any } & object,
   TransformFn = D['__transform']
-> = T extends object
-  ? TransformFn extends (v: any) => any
-    ? ReturnType<TransformFn>
-    : Omit<T, Exclude<keyof D, '__new' | '__transform'>> & {
-        [P in keyof (D | T)]-?: NonNullable<D[P]> extends (infer U)[]
-          ? U extends object
-            ? NonNullable<T[P]> extends (infer U2)[]
-              ? U2 extends object
-                ? Fill<NonNullable<U2>, U>[]
-                : never
+> = TransformFn extends (v: any) => any
+  ? ReturnType<TransformFn>
+  : Omit<T, Exclude<keyof D, '__new' | '__transform'>> & {
+      [P in keyof (D | T)]-?: NonNullable<D[P]> extends (infer U)[]
+        ? U extends object
+          ? NonNullable<T[P]> extends (infer U2)[]
+            ? U2 extends object
+              ? Fill<NonNullable<U2>, U>[]
               : never
-            : U[]
-          : NonNullable<D[P]> extends object
+            : never
+          : U[]
+        : NonNullable<D[P]> extends object
+        ? NonNullable<T[P]> extends object
           ? T extends Record<P, T[P]>
-            ? Fill<NonNullable<T[P]>, NonNullable<D[P]>>
+            ? NonNullable<T[P]> extends object
+              ? Fill<NonNullable<T[P]>, NonNullable<D[P]>>
+              : never
             : '__new' extends keyof D[P]
             ? Fill<NonNullable<T[P]>, NonNullable<D[P]>>
             : Fill<NonNullable<T[P]>, NonNullable<D[P]>> | null
-          : NonNullable<D[P]>
-      }
-  : never
+          : never
+        : NonNullable<D[P]>
+    }
 
 function transformFillDefaultsToObject(object: object): object {
   if (typeof object !== 'object' || object == null) {

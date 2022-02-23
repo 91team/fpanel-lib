@@ -24,9 +24,15 @@ type TCallGraphqlActionParams<TData, TParams extends {}> = {
     [key in TNotification['type']]?: Omit<TNotification, 'id' | 'type'>
   }
 }
-export type TGraphqlAction<TData, TParams extends {}> = (
-  params?: TCallGraphqlActionParams<TData, TParams>
-) => CancellablePromise<TData>
+
+type Required2<NullableT, T = NonNullable<NullableT>> = {
+  [P in keyof T]-?: NonNullable<T[P]>
+}
+
+export type TGraphqlAction<TData, TParams extends {}, TDataStrict = Required2<TData>> = (
+  params?: TCallGraphqlActionParams<TDataStrict, TParams>
+) => CancellablePromise<TDataStrict>
+
 type TCreateGraphqlActionParams = {
   GQLDocument: DocumentNode
   type: TGraphqlActionType

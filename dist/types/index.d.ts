@@ -1,4 +1,4 @@
-import { TMutations, TQueries } from 'src/lib/gql/generated/graphqlTypes';
+import { TMutations, TQueries } from './lib/gql/generated/graphqlTypes';
 export declare type TFPanelQueries = TQueries;
 export declare type TFPanelMutations = TMutations;
 declare class FPanelClient {

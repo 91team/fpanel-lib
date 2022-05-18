@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
+    "declaration": true,
     "allowJs": true,
     // Useless without https://github.com/rbuckton/reflect-metadata
     "emitDecoratorMetadata": false,
@@ -14,7 +16,6 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "noEmit": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noUnusedLocals": false,

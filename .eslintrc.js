@@ -1,7 +1,5 @@
 const path = require('path')
 
-const stylesKeysOrder = require('./eslint/.eslintrc.sortStylesKeys.js')
-
 module.exports = {
   root: true,
   env: {
@@ -172,10 +170,6 @@ module.exports = {
     'use-isnan': 'error',
     'valid-typeof': 'off',
   },
-  overrides: [stylesKeysOrder],
-  settings: {
-    react: {
-      version: 'detect',
-    },
-  },
+  overrides: [],
+  settings: {},
 }

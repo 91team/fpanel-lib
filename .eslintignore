@@ -2,3 +2,4 @@
 **/lib/gqlConfig/generated/*
 node_modules
 vite.config.ts
+dist

@@ -5,7 +5,7 @@ import { ServiceName } from './types/constants'
 
 export class ServicesManager {
   // @ts-expect-error
-  private services: TStorage = {}
+  public services: TStorage = {}
 
   public initialize({
     initialApolloState,
@@ -13,7 +13,9 @@ export class ServicesManager {
     initialApolloState?: TApolloInitialState
   } = {}) {
     this.addService(ServiceName.APOLLO, new ApolloService({ cacheState: initialApolloState }))
-    this.addService(ServiceName.GRAPHQL_API, new GraphqlAPIService())
+    this.addService(ServiceName.GRAPHQL_API, new GraphqlAPIService(this.services))
+
+    console.log('this.services', this.services)
   }
 
   public addService<TServiceName extends keyof TStorage, TService extends TServices>(

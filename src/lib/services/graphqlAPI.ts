@@ -9,6 +9,7 @@ import { TMutations, TQueries } from 'src/lib/gql/generated/graphqlTypes'
 
 import { ApolloService, ServicesManager } from '.'
 import { IApollo } from './apollo'
+import { TStorage } from './types'
 import { ServiceName } from './types/constants'
 
 export type TNotification = {
@@ -50,18 +51,19 @@ type TGraphqlRequests = {
   [key in ['queries', 'mutations'][number]]: TGraphqlConfigs
 }
 
-export class GraphqlAPIService extends ServicesManager {
+export class GraphqlAPIService {
   public mutations!: TMutations
   public queries!: TQueries
+  private services!: TStorage
 
-  constructor() {
-    super()
+  constructor(services: TStorage) {
+    this.services = services
 
     this.addConfigs({ mutations, queries })
   }
 
   private get apolloClient() {
-    const apollo = this.getService<ApolloService>(ServiceName.APOLLO)
+    const apollo = this.services.APOLLO
 
     return apollo.getClient()
   }

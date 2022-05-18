@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "license": "MIT",
   "private": true,
+  "main": "dist/fpanel-public-api.umd.js",
+  "module": "dist/fpanel-public-api.es.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "yarn vite",
     "build": "yarn vite build && yarn tsc --emitDeclarationOnly && mv dist/src dist/types",

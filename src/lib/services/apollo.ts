@@ -10,7 +10,7 @@ import universalFetch from 'isomorphic-unfetch'
 
 import { GRAPHQL_API_URL } from 'src/lib/constants/api'
 
-import { ServicesManager } from '.'
+import { ServicesManager } from './manager'
 
 export type IApollo = ApolloClient<NormalizedCacheObject>
 export type TInitialState = NormalizedCacheObject
@@ -40,16 +40,16 @@ export class ApolloService extends ServicesManager {
       fetch: universalFetch,
     })
 
-    const authLink = setContext((_, { headers }) => {
-      const token = this.getToken()
+    const authLink = setContext((_, { headers }) =>
+      // const token = this.getToken()
 
-      return {
+      ({
         headers: {
           ...headers,
-          Authorization: token ? `Bearer ${token}` : '',
+          // Authorization: token ? `Bearer ${token}` : '',
         },
-      }
-    })
+      })
+    )
 
     return ApolloLink.from([authLink, uploadLink].filter(Boolean))
   }

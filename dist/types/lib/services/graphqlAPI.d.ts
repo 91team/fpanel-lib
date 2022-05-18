@@ -2,7 +2,7 @@ import { DocumentNode } from 'graphql';
 import { CancellablePromise } from 'mobx/lib/api/flow';
 import { STATE } from 'src/lib/constants/api';
 import { TMutations, TQueries } from 'src/lib/gql/generated/graphqlTypes';
-import { ServicesManager } from '.';
+import { TStorage } from './types';
 export declare type TNotification = {
     id: string;
     type: 'ERROR' | 'SUCCESS';
@@ -28,10 +28,11 @@ declare type TCreateGraphqlActionParams = {
     };
 };
 export declare type TGraphqlConfig = Pick<TCreateGraphqlActionParams, 'GQLDocument' | 'notifications'>;
-export declare class GraphqlAPIService extends ServicesManager {
+export declare class GraphqlAPIService {
     mutations: TMutations;
     queries: TQueries;
-    constructor();
+    private services;
+    constructor(services: TStorage);
     private get apolloClient();
     private createGraphqlAction;
     private createGraphqlActions;

@@ -9,7 +9,7 @@ module.exports = {
   },
   extends: ['plugin:react/recommended', 'plugin:prettier/recommended'],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'prettier', 'simple-import-sort'],
+  plugins: ['@typescript-eslint', 'react', 'prettier', 'simple-import-sort'],
   rules: {
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/array-type': 'off',
@@ -132,17 +132,6 @@ module.exports = {
     'prefer-arrow/prefer-arrow-functions': 'off',
     'prefer-const': 'error',
     'prefer-object-spread': 'error',
-    'react/display-name': 'off',
-    'react/jsx-no-bind': [
-      'error',
-      {
-        allowArrowFunctions: true,
-      },
-    ],
-    'react/prop-types': 'off',
-    'react/self-closing-comp': 'error',
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
     'quote-props': 'off',
     radix: 'error',
     'simple-import-sort/imports': [

@@ -1,7 +1,7 @@
 import { TInitialState as TApolloInitialState } from './apollo';
 import { TServices, TStorage } from './types';
 export declare class ServicesManager {
-    private services;
+    services: TStorage;
     initialize({ initialApolloState, }?: {
         initialApolloState?: TApolloInitialState;
     }): void;

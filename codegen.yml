@@ -1,0 +1,38 @@
+overwrite: true
+schema:
+  - 'schema.graphql'
+generates:
+  src/lib/gql/generated/introspection-result.tsx:
+    documents:
+      - ./src/lib/gql/documents/**/*.ts
+      - ./src/lib/gql/custom/**/*.ts
+      - '!./src/lib/gql/generated/**/*.{ts,tsx}'
+    plugins:
+      - fragment-matcher
+  src/lib/gql/generated/original/types.tsx:
+    documents:
+      - ./src/lib/gql/documents/**/*.ts
+      - ./src/lib/gql/custom/**/*.ts
+      - '!./src/lib/gql/generated/**/*.{ts,tsx}'
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+config:
+  apolloReactCommonImportFrom: '@apollo/react-common'
+  apolloReactComponentsImportFrom: '@apollo/react-components'
+  constEnums: true
+  reactApolloVersion: 3
+  declarationKind: 'interface'
+  withHOC: false
+  withComponent: false
+  withHooks: false
+  dedupeOperationSuffix: true
+  scalars:
+    DateTime: Date
+    Timestamp: number
+    Decimal: number
+    UUID: string
+    Coordinates: LatLonCoordinates
+    ID: string
+    Upload: File

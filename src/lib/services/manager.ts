@@ -14,8 +14,6 @@ export class ServicesManager {
   } = {}) {
     this.addService(ServiceName.APOLLO, new ApolloService({ cacheState: initialApolloState }))
     this.addService(ServiceName.GRAPHQL_API, new GraphqlAPIService(this.services))
-
-    console.log('this.services', this.services)
   }
 
   public addService<TServiceName extends keyof TStorage, TService extends TServices>(

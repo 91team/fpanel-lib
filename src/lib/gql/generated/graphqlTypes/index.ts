@@ -1,8 +1,20 @@
 import { TGraphqlAction } from 'src/lib/services/graphqlAPI'
 
 import {
-  GetSeedQuery,
-  GetSeedQueryVariables
+  PublicRouteDetailsGetQuery,
+  PublicRouteDetailsGetQueryVariables,
+  PublicRoutesGetQuery,
+  PublicRoutesGetQueryVariables,
+  PublicShapesGetQuery,
+  PublicShapesGetQueryVariables,
+  PublicStopScheduleGetQuery,
+  PublicStopScheduleGetQueryVariables,
+  PublicStopsGetQuery,
+  PublicStopsGetQueryVariables,
+  PublicTripGetQuery,
+  PublicTripGetQueryVariables,
+  PublicVehiclesGetQuery,
+  PublicVehiclesGetQueryVariables
 } from '../original/types'
 import {
   
@@ -11,5 +23,11 @@ import {
 export type TMutations = {}
 
 export type TQueries = {
-  getSeed: TGraphqlAction<GetSeedQuery, GetSeedQueryVariables>
+  publicRouteDetailsGet: TGraphqlAction<PublicRouteDetailsGetQuery, PublicRouteDetailsGetQueryVariables>
+  publicRoutesGet: TGraphqlAction<PublicRoutesGetQuery, PublicRoutesGetQueryVariables>
+  publicShapesGet: TGraphqlAction<PublicShapesGetQuery, PublicShapesGetQueryVariables>
+  publicStopScheduleGet: TGraphqlAction<PublicStopScheduleGetQuery, PublicStopScheduleGetQueryVariables>
+  publicStopsGet: TGraphqlAction<PublicStopsGetQuery, PublicStopsGetQueryVariables>
+  publicTripGet: TGraphqlAction<PublicTripGetQuery, PublicTripGetQueryVariables>
+  publicVehiclesGet: TGraphqlAction<PublicVehiclesGetQuery, PublicVehiclesGetQueryVariables>
 }

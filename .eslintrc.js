@@ -11,15 +11,7 @@ module.exports = {
   },
   extends: ['plugin:react/recommended', 'plugin:prettier/recommended'],
   parser: '@typescript-eslint/parser',
-  plugins: [
-    '@typescript-eslint',
-    'react',
-    'react-hooks',
-    'prettier',
-    'sort-keys-fix',
-    'css-modules',
-    'simple-import-sort',
-  ],
+  plugins: ['@typescript-eslint', 'react', 'react-hooks', 'prettier', 'simple-import-sort'],
   rules: {
     '@typescript-eslint/adjacent-overload-signatures': 'error',
     '@typescript-eslint/array-type': 'off',

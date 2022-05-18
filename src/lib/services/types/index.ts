@@ -1,7 +1,5 @@
 import { ApolloService, TOptions as TApolloOptions } from '../apollo'
-import { CookiesService } from '../cookies'
 import { GraphqlAPIService } from '../graphqlAPI'
-import { RouterService } from '../router'
 
 import { ServiceName } from './constants'
 
@@ -12,16 +10,12 @@ export type TServiceConfigTemplate<TName, TService, TOptions = {}> = {
 }
 export type TServiceConfig =
   | TServiceConfigTemplate<'apollo', typeof ApolloService, TApolloOptions>
-  | TServiceConfigTemplate<'cookies', typeof CookiesService>
   | TServiceConfigTemplate<'graphqlAPI', typeof GraphqlAPIService>
-  | TServiceConfigTemplate<'router', typeof RouterService>
 
-export type TServices = ApolloService | CookiesService | GraphqlAPIService | RouterService
+export type TServices = ApolloService | GraphqlAPIService
 
 export type TStorage = {
   [ServiceName.APOLLO]: ApolloService
-  [ServiceName.ROUTER]: RouterService
-  [ServiceName.COOKIES]: CookiesService
   [ServiceName.GRAPHQL_API]: GraphqlAPIService
 }
 

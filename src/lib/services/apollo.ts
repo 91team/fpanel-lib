@@ -9,9 +9,8 @@ import loggerLink from 'apollo-link-logger'
 import universalFetch from 'isomorphic-unfetch'
 
 import { GRAPHQL_API_URL } from 'src/lib/constants/api'
-import { isDev } from 'src/lib/constants/env'
-import { StoreName } from 'src/lib/store/constants'
-import { getStore } from '../utils/global'
+
+import { ServicesManager } from '.'
 
 export type IApollo = ApolloClient<NormalizedCacheObject>
 export type TInitialState = NormalizedCacheObject
@@ -19,10 +18,12 @@ export type TOptions = {
   cacheState?: TInitialState
 }
 
-export class ApolloService {
+export class ApolloService extends ServicesManager {
   private client: IApollo
 
   constructor({ cacheState: initialApolloState = {} }: TOptions) {
+    super()
+
     this.client = new ApolloClient<NormalizedCacheObject>({
       connectToDevTools: true,
       ssrMode: false,
@@ -50,7 +51,7 @@ export class ApolloService {
       }
     })
 
-    return ApolloLink.from([isDev && loggerLink, authLink, uploadLink].filter(Boolean))
+    return ApolloLink.from([authLink, uploadLink].filter(Boolean))
   }
 
   private getClientCache = (initialState: TInitialState) =>

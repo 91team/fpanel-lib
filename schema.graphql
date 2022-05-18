@@ -1,7 +1,1128 @@
 schema {
   query: RootQueryType
+  mutation: RootMutationType
+}
+
+type ActionLog {
+  content: String
+  id: Int
+  timestamp: Timestamp
+  type: ActionType
+  user: User
+}
+
+enum ActionType {
+  INSTRUCTION_OFF_ROUTE
+  INSTRUCTION_SWITCH_ROUTE
+  ORDER_CHANGE
+  ROUTE_INTERVAL
+}
+
+type Agency {
+  address: String
+  adminsCount: Int
+  city: String
+  dispatchersCount: Int
+  driversCount: Int
+  email: String
+  expireDate: Date
+  id: UUID
+  name: String
+  phone: Int
+  routesCount: Int
+  vehiclesCount: Int
+}
+
+type AskApiVehicle {
+  course: Float
+  id: String
+  ll: [Float!]
+  model: String
+  speed: Float
+  statenum: String
+  time: Timestamp
+}
+
+type Attachment {
+  aspectRatio: Float
+  contentType: String
+  id: UUID
+  name: String
+  url: String
+}
+
+enum AvaliableReports {
+  DAILY_TRIPS
+  DISPATCHER
+  DRIVING_QUALITY
+  MALFUNCTIONS
+  ORDER_DIST_TIMES
+  ROUTE_WORKLOAD
+  VEHICLES_MILEAGE
+}
+
+type Avatar {
+  aspectRatio: Float
+  contentType: String
+  id: UUID
+  name: String
+  url: String
+}
+
+type Chat {
+  driver: Driver
+  lastMessage: Message
+  messagesGroup: MessagesGroup
+  type: MessageType
+}
+
+type City {
+  id: Int
+  name: String
+}
+
+"""Date in ISO 8601 format(YYYY-MM-DD)"""
+scalar Date
+
+enum Day {
+  FR
+  MO
+  SA
+  SU
+  TH
+  TU
+  WE
+}
+
+type DictFile {
+  content: String
+  name: String
+}
+
+type Driver {
+  agency: Agency
+  agencyId: UUID
+  allowedVehiclesTypes: [RouteType!]
+  authCode: String
+  avatar: Avatar
+  avatarId: UUID
+  drivingLicenseNumber: String
+  email: String
+  firstName: String
+  id: Int
+  lastName: String
+  middleName: String
+  phone: String
+  workload: [[Int!]!]
+}
+
+type DriverRoute {
+  name: String
+  rId: Int
+  shortName: String
+}
+
+type DriverSession {
+  driver: DriverSimplified
+  expireAt: Timestamp
+  refreshToken: String
+  token: String
+}
+
+type DriverSimplified {
+  agency: Agency
+  allowedVehiclesTypes: [RouteType!]
+  avatar: Avatar
+  drivingLicenseNumber: String
+  email: String
+  firstName: String
+  id: Int
+  lastName: String
+  middleName: String
+  phone: String
+}
+
+type DriverStoptime {
+  arrivalTimestamp: Timestamp!
+  coords: [Float!]!
+  departureTimestamp: Timestamp!
+  isTraveled: Boolean!
+
+  """Do you need it?"""
+  radius: Float!
+  stopId: Int!
+  stopName: String!
+
+  """amount in seconds"""
+  waitingTime: Int!
+}
+
+type DriverTrip {
+  endTimestamp: Timestamp
+  firsStopName: String
+  id: Int!
+  lastStopName: String
+  lastTraveledStopId: Int
+  normalizedShapeDist: Float
+  route: DriverRoute!
+
+  """[[lon1, lat1!], [lon2, lat2!], ...!]"""
+  shape: [[Float!]!]!
+  shapeDist: Float
+  startTimestamp: Timestamp
+  stoptimes: [DriverStoptime!]!
+  waitingTime: Int
+}
+
+type Fare {
+  rows: [FareRow!]
+  stops: [Stop!]
+}
+
+type FareColumn {
+  price: Float
+  stop: Stop
+  toStopId: Int
+}
+
+type FareRow {
+  columns: [FareColumn!]
+  fromStopId: Int
+  stop: Stop
+}
+
+type Instruction {
+  id: UUID
+  instruction: InstructionBody
+  tripExecutionId: Int
+}
+
+type InstructionBody {
+  offRoute: OffRouteInstruction
+  setVehicle: SetVehicleInstruction
+  switchRoute: SwitchRouteInstruction
+  type: InstructionType
+}
+
+input InstructionInput {
+  offRoute: OffRouteInstructionInput
+  setVehicle: SetVehicleInstructionInput
+  switchRoute: SwitchRouteInstructionInput
+  type: InstructionType!
+}
+
+type InstructionOrder {
+  endTime: Int
+  id: Int
+  startTime: Int
+  title: String
+}
+
+type InstructionRoute {
+  id: Int
+  name: String
+  shortName: String
+}
+
+type InstructionTrip {
+  endTime: Int
+  id: Int
+  startTime: Int
+  title: String
+}
+
+enum InstructionType {
+  OFF_ROUTE
+  SET_VEHICLE
+  SWITCH_ROUTE
+}
+
+"""JSON scalar"""
+scalar JSON
+
+enum LocationType {
+  BOARDING_AREA
+  ENTRANCE
+  NODE
+  RAILWAY_STATION
+  STATION
+  STOP
+}
+
+type Message {
+  """Might be text or base64 wav audio, based on content_type"""
+  content: String
+  contentType: MessageContentType
+  id: Int
+  timestamp: Timestamp
+}
+
+enum MessageContentType {
+  AUDIO
+  TEXT
+}
+
+type MessagesAudio {
+  content: String
+  description: String
+  id: Int
+}
+
+type MessagesGroup {
+  drivers: [Driver!]
+  id: Int
+  name: String
+}
+
+type MessagesRoute {
+  id: Int
+  name: String
+  shortName: String
+}
+
+enum MessageType {
+  GROUP
+  PERSONAL
+}
+
+enum NetworkRouteChangeType {
+  ROUTE_CREATE
+  ROUTE_DELETE
+  ROUTE_UPDATE_LONG_NAME
+  ROUTE_UPDATE_SHORT_NAME
+  ROUTE_UPDATE_TYPE
+  ROUTE_VERSION_DELETE
+  TRIP_DELETE
+}
+
+enum NetworkRouteVersionChangeType {
+  ROUTE_VERSION_CREATE
+  ROUTE_VERSION_SELECT
+  ROUTE_VERSION_UPDATE_DAYS
+  ROUTE_VERSION_UPDATE_END_DATE
+  ROUTE_VERSION_UPDATE_END_TIME
+  ROUTE_VERSION_UPDATE_HAS_FREQUENCIES
+  ROUTE_VERSION_UPDATE_HEADWAY_SECS
+  ROUTE_VERSION_UPDATE_NAME
+  ROUTE_VERSION_UPDATE_PRIORITY
+  ROUTE_VERSION_UPDATE_START_DATE
+  ROUTE_VERSION_UPDATE_START_TIME
+}
+
+enum NetworkStopChangeType {
+  STOP_CREATE
+  STOP_DELETE
+  STOP_UPDATE_COORDS
+  STOP_UPDATE_IS_SERVICE
+  STOP_UPDATE_LOCATION_TYPE
+  STOP_UPDATE_NAME
+  STOP_UPDATE_RADIUS
+}
+
+enum NetworkTripChangeType {
+  TRIP_CLONE
+  TRIP_CREATE
+  TRIP_CREATE_STOPTIME
+  TRIP_DELETE_STOPTIME
+  TRIP_UPDATE_IS_PIVOT
+  TRIP_UPDATE_STOPTIME_ARRIVAL_TIME
+  TRIP_UPDATE_STOPTIME_DEPARTURE_TIME
+  TRIP_UPDATE_STOPTIME_SHAPE_ID
+  TRIP_UPDATE_STOPTIME_STOP_ID
+}
+
+type NetworkVersion {
+  id: Int
+  insertedAt: Timestamp
+  isActive: Boolean
+  name: String
+}
+
+enum OffRouteAction {
+  GOTO_AGENCY
+  WAIT
+}
+
+type OffRouteInstruction {
+  action: OffRouteAction
+  reason: OffRouteReason
+}
+
+input OffRouteInstructionInput {
+  action: OffRouteAction
+  reason: OffRouteReason
+}
+
+enum OffRouteReason {
+  ACCIDENT
+  DRIVER_TROUBLE
+  EMERGENCY
+  MALFUNCTION
+}
+
+type Order {
+  date: Date
+  driver: Driver
+  endTime: Int
+  id: Int
+  startTime: Int
+  title: String
+  tripExecutions: [TripExecution!]
+  vehicle: Vehicle
+}
+
+enum OrderDirection {
+  ASC
+  ASC_NULLS_FIRST
+  ASC_NULLS_LAST
+  DESC
+  DESC_NULLS_FIRST
+  DESC_NULLS_LAST
+}
+
+type PublicDirection {
+  shape: [[Float!]!]
+  stops: [PublicStop!]
+}
+
+type PublicRoute {
+  """only for publicRouteDetailsGet"""
+  back: PublicDirection
+
+  """only for publicRouteDetailsGet"""
+  forward: PublicDirection
+  id: Int
+  name: String
+
+  """depr"""
+  shape: [[Float!]!]
+  shortName: String
+
+  """depr"""
+  stops: [PublicStop!]
+}
+
+type PublicScheduleRoute {
+  arrivalTime: Int
+  id: Int
+  name: String
+  shortName: String
+}
+
+type PublicShape {
+  executionsIds: [Int!]
+  path: [[Float!]!]!
+  routeShortName: String
+  stops: [PublicStop!]
+}
+
+type PublicStop {
+  """only for publicTrip"""
+  arrivalTime: Int
+  coords: [Float!]
+  id: Int
+
+  """only for publicTrip"""
+  isTraveled: Boolean
+  name: String
+
+  """only for publicTrip"""
+  normalizedShapeDist: Float
+
+  """only for publicTrip"""
+  shapeDist: Float
+}
+
+type PublicTrip {
+  id: Int
+  shape: [[Float!]!]
+  stops: [PublicStop!]
+}
+
+type PublicVehicle {
+  bearing: Float
+  boardNumber: String
+  coords: [Float!]
+  distanceToLine: Float
+  id: Int
+  normalizedShapeDist: Float
+  registrationNumber: String
+  routeId: Int
+  shapeDist: Float
+  timestamp: Timestamp
+  tripDirection: TripDirection
+  tripId: Int
+  type: VehicleType
+  wheelchairBoarding: WheelchairBoarding
+}
+
+type RealtimeOrder {
+  acceptedTripsCount: Int
+  currentTripNum: Int
+  driver: Driver
+  endTime: Int
+  id: Int
+  instructions: [Instruction!]
+  lastStopDeviation: Int
+  nextStopDeviation: Int
+  routeId: Int
+  startTime: Int
+  title: String
+  tripsCount: Int
+  vehicleId: Int
+}
+
+type RealtimeRoute {
+  orders: [RealtimeOrder!]
+  stops: [RealtimeStop!]
+  vehicles: [RealtimeVehicle!]
+}
+
+type RealtimeRouteRow {
+  activeOrdersCount: Int
+  agency: Agency
+  hasFrequencies: Boolean
+  id: Int
+  intervalSeconds: Int
+  isInterval: Boolean
+  lastStopDeviationCount: Int
+  lastStopDeviationMax: Int
+  name: String
+  nextStopDeviationCount: Int
+  ordersCount: Int
+  shortName: String
+  tripExecutionsFactCount: Int
+  tripExecutionsPlanCount: Int
+  vehiclesCount: Int
+}
+
+type RealtimeShape {
+  executionsIds: [Int!]
+  path: [[Float!]!]!
+  routeShortName: String
+  stops: [RealtimeStop!]
+}
+
+type RealtimeStop {
+  coords: [Float!]
+  dir: TripDirection
+  id: Int
+  isService: Boolean
+  locationType: LocationType
+  name: String
+  normDist: Float
+}
+
+type RealtimeTripExecution {
+  acceptScore: Float
+  dir: TripDirection
+  id: Int
+  isActive: Boolean
+  orderId: Int
+  routeId: Int
+  stops: [TripExecutionStop!]
+}
+
+type RealtimeVehicle {
+  bearing: Float
+  boardNumber: String
+  distanceToLine: Float
+  id: Int
+  imei: String
+  normalizedShapeDist: Float
+  oid: String
+  originLl: [Float!]
+  registrationNumber: String
+  routeId: Int
+  shapeDist: Float
+  shapeLl: [Float!]
+  size: VehicleSize
+  speed: Float
+  status: RealtimeVehicleStatus
+  timestamp: Timestamp
+  tripDirection: TripDirection
+  tripExecutionId: Int
+  type: VehicleType
+  wheelchairBoarding: WheelchairBoarding
+}
+
+type RealtimeVehicleMeta {
+  agency: Agency
+  driver: Driver
+  tripExecutionId: Int
+  vehicle: Vehicle
+  vehicleId: Int
+}
+
+enum RealtimeVehicleStatus {
+  ACTIVE
+  NO_CONNECTION
+  STAYING
+}
+
+type Report {
+  content: String
+  name: String
+  reportType: AvaliableReports
+}
+
+enum ReportParams {
+  AGENCY_ID
+  DATE
+  DISPATCHERS_IDS
+  DRIVER_ID
+  FROM_DATE
+  FROM_TIMESTAMP
+  MIN_VELOCITY
+  ROUTES_IDS
+  TO_DATE
+  TO_TIMESTAMP
+}
+
+type ReportProperties {
+  avaliableParams: [ReportParams!]
+  name: String
+  type: AvaliableReports
+}
+
+type ReportRoute {
+  id: Int
+  name: String
+  shortName: String
+}
+
+enum Role {
+  AGENCY_ADMIN
+  DISPATCHER
+  SUPERADMIN
+}
+
+type RootMutationType {
+  agencyCreate(address: String, city: String, email: String, expireDate: Date, name: String, phone: Int): Agency
+  agencyDelete(id: UUID!): Agency
+  agencyUpdate(address: String, city: String, email: String, expireDate: Date, id: UUID!, name: String, phone: Int): Agency
+
+  """Create attachment"""
+  attachmentCreate(file: Upload!): Attachment
+
+  """Delete attachment"""
+  attachmentDelete(id: UUID!): String
+
+  """Create avatar"""
+  avatarCreate(file: Upload!): Avatar
+
+  """Delete avatar"""
+  avatarDelete(id: UUID!): String
+  brandCreate(name: String!): VehicleBrand
+  brandDelete(id: Int!): VehicleBrand
+  brandUpdate(id: Int!, name: String): VehicleBrand
+  cityCreate(name: String!): City
+  cityDelete(cityId: Int!): City
+  createRouteChange(changeType: NetworkRouteChangeType!, id: Int, name: String, selectedVersionId: Int, shortName: String, type: RouteType): Route
+  createRouteVersionChange(changeType: NetworkRouteVersionChangeType!, days: [Day!], endDate: Date, endTime: Int, hasFrequencies: Boolean, headwaySecs: Int, id: Int, name: String, priority: Int, routeId: Int, selectedVersionId: Int, startDate: Date, startTime: Int): RouteVersion
+  createStopChange(changeType: NetworkStopChangeType!, coords: [Float!], id: Int, isService: Boolean, locationType: LocationType, name: String, radius: Float): Stop
+  createTripChange(
+    arrivalTime: Int
+    changeType: NetworkTripChangeType!
+    departureTime: Int
+    dir: TripDirection
+    id: Int
+    index: Int
+    isPivot: Boolean
+    routeId: Int
+    shapeId: Int
+
+    """shift seconds for TRIP_CLONE"""
+    shift: Int
+    stopId: Int
+  ): Trip
+  driverAuthCodeReset(driverId: Int!): String
+  driverCreate(agencyId: UUID, allowedVehiclesTypes: [RouteType!], avatarId: UUID, drivingLicenseNumber: String, email: String, firstName: String, lastName: String, middleName: String, phone: String): Driver
+  driverDelete(id: Int!): Driver
+  driverSendSensorsData(coords: [Float!]!, speed: Float!, timestamp: Timestamp!): String
+  driverSessionCreate(authCode: String!): DriverSession
+  driverSessionDelete: String
+  driverSessionRefresh(refreshToken: String!): DriverSession
+  driverUpdate(agencyId: UUID, allowedVehiclesTypes: [RouteType!], avatarId: UUID, drivingLicenseNumber: String, email: String, firstName: String, id: Int!, lastName: String, middleName: String, phone: String): Driver
+  fareCreate(fromStopId: Int!, price: Float!, toStopId: Int!, tripId: Int!): Fare
+  importAgenciesFromFile(file: Upload): [Agency!]
+  importDriversFromFile(agencyId: UUID!, file: Upload): [Driver!]
+  importVehiclesFromFile(agencyId: UUID!, file: Upload): [Vehicle!]
+  messageCreate(audioId: Int, content: String, contentType: MessageContentType!, driverId: Int, groupId: Int, type: MessageType!): Message
+  messagesGroupCreate(driversIds: [Int!]!, name: String!): MessagesGroup
+  modelCreate(brandId: Int!, name: String!): VehicleModel
+  modelDelete(id: Int): VehicleModel
+  modelUpdate(brandId: Int, id: Int!, name: String): VehicleModel
+  networkVersionCreate(name: String!): NetworkVersion
+  networkVersionImportGtfs: NetworkVersion
+  networkVersionSwitch(versionId: Int): NetworkVersion
+  orderCreate(date: Date!, routeId: Int!, title: String!): Order!
+  orderDelete(id: Int!): String
+  orderUpdate(driverId: Int, id: Int!, title: String, vehicleId: Int): Order!
+  realtimeOrderApplyCorrection(correction: Int!, stopIndex: Int!, tripExecutionId: Int!): String
+  realtimeSetRouteInterval(intervalSeconds: Int, isInterval: Boolean!, routeId: Int!): String
+  routeDeleteAgency(routeId: Int!): String
+  routeSetAgency(agencyId: UUID!, routeId: Int!): String
+  routeVersionDelete(id: Int!): RouteVersion
+  scheduleAskImport: String
+  scheduleImportNetwork: String
+  scheduleXlsUpload(xls: Upload!): String
+  sendInstruction(instruction: InstructionInput!, orderId: Int!): Instruction
+  sessionCreate(email: String!, password: String!): UserSession
+  sessionDelete: String
+  sessionRefresh(refreshToken: String!): UserSession
+  shapeCreate(path: [[Float!]!]!, pivotPoints: [[Float!]!], routeVersionId: Int!, tripId: Int!): Shape
+  shapeDelete(id: Int!): Shape
+  shapeUpdate(id: Int!, path: [[Float!]!]!, pivotPoints: [[Float!]!]): Shape
+  tripDelete(id: Int!): Trip
+  tripExecutionApplyCorrection(correction: Int!, id: Int!, stopIndex: Int!): RealtimeTripExecution
+  tripExecutionSetOrder(id: Int!, orderId: Int): TripExecution!
+  undoChange: UndoChangeResult
+  undoRouteChange(id: Int!): Route
+  undoStopChange(id: Int!): Stop
+  undoTripChange(id: Int!): Trip
+  updateTripExecution(acceptScore: Float!, id: Int!): RealtimeTripExecution
+  updateTripExecutionStop(accepted: Boolean, comment: TripExecutionStopCommentInp, correction: Int, stopIndex: Int!, tripExecutionId: Int!): RealtimeTripExecution
+  userCreate(user: UserInput!): User
+
+  """DEV"""
+  userDelete(userId: UUID!): User
+  userSelfUpdate(user: UserSelfUpdateInput!): User
+  userUpdate(user: UserUpdateInput!): User
+  vehicleCreate(agencyId: UUID, boardNumber: String, hasInfoPanel: Boolean, hasSpeakers: Boolean, imei: String, oid: String, registrationNumber: String, size: VehicleSize, type: VehicleType, wheelchairBoarding: WheelchairBoarding): Vehicle
+  vehicleDelete(id: Int!): Vehicle
+  vehicleUpdate(agencyId: UUID, boardNumber: String, hasInfoPanel: Boolean, hasSpeakers: Boolean, id: Int!, imei: String, oid: String, registrationNumber: String, size: VehicleSize, type: VehicleType, wheelchairBoarding: WheelchairBoarding): Vehicle
+  vehiclesXlsOidUpdate(xls: Upload!): String
 }
 
 type RootQueryType {
-  getSeed: String
+  actionsLogsGet(fromTimestamp: Timestamp!, toTimestamp: Timestamp!, types: [ActionType!]): [ActionLog!]
+  agenciesDict: DictFile
+  agenciesGet(ids: [UUID!], limit: Int, offset: Int, orderBy: String, orderDirection: OrderDirection, search: String, withStats: Boolean! = false): [Agency!]
+  askApiVehiclesGet(id: String): [AskApiVehicle!]
+  brandsGet(ids: [Int!]): [VehicleBrand!]
+  citiesGet(ids: [Int!], limit: Int, offset: Int, search: String): [City!]
+  dispatchersDict: DictFile
+
+  """Get profile"""
+  driverGetActiveTrip: DriverTrip
+  driverGetByAuthCode(authCode: String!): Driver
+  driverGetTrips(ids: [Int!]): [DriverTrip!]!
+  driverMessagesGet(limit: Int = 10, offset: Int = 0): [Message!]
+  driversDict: DictFile
+  driversGet(agenciesIds: [UUID!], ids: [Int!], limit: Int, offset: Int, orderBy: String, orderDirection: OrderDirection, search: String): [Driver!]
+  instructionRoutesGet: [InstructionRoute!]
+  instructionsOrdersGet(routeId: Int!): [InstructionOrder!]
+  instructionsTripsGet(orderId: Int!): [InstructionTrip!]
+  messagesAudioGet: [MessagesAudio!]
+  messagesChatsGet(type: MessageType!): [Chat!]
+  messagesDriversGet(agenciesIds: [UUID!], routesIds: [Int!]): [Driver!]
+  messagesGet(driverId: Int, groupId: Int, limit: Int = 10, offset: Int = 0, type: MessageType!): [Message!]
+  messagesRoutesGet(agenciesIds: [UUID!]): [MessagesRoute!]
+  modelsGet(ids: [Int!]): [VehicleModel!]
+  networkVersionsGet(ids: [Int!], isActive: Boolean, search: String): [NetworkVersion!]
+  ordersGet(date: Date!, ids: [Int!], routeId: Int!): [Order!]
+  publicRouteDetailsGet(routeId: Int!): PublicRoute
+  publicRoutesGet(search: String): [PublicRoute!]
+  publicShapesGet(
+    routesIds: [Int!]
+
+    """i.e. tripId"""
+    tripsExecutionsIds: [Int!]
+  ): [PublicShape!]
+  publicStopScheduleGet(stopId: Int!): [PublicScheduleRoute!]
+  publicStopsGet(bbox: [[Float!]!], ids: [Int!], limit: Int, offset: Int, search: String): [PublicStop!]
+  publicTripGet(tripId: Int!): PublicTrip
+  publicVehiclesGet: [PublicVehicle!]
+  realtimeOrderTripExecutionsGet(orderId: Int!): [RealtimeTripExecution!]
+  realtimeRouteGet(id: Int!): RealtimeRoute
+  realtimeRouteRowsGet(search: String): [RealtimeRouteRow!]
+  realtimeVehiclePathGet(tripExecutionId: Int, vehicleId: Int): [[Float!]!]
+  realtimeVehiclesGet(vehiclesIds: [Int!]): [RealtimeVehicle!]
+  realtimeVehiclesMetaGet(executionsIds: [Int!], vehiclesIds: [Int!]): [RealtimeVehicleMeta!]
+  realtimeVehiclesShapesGet(routesIds: [Int!], tripsExecutionsIds: [Int!]): [RealtimeShape!]
+
+  """Get report"""
+  reportGet(agencyId: UUID, date: Date, dispatchersIds: [String!], driverId: Int, fromDate: Date, fromTimestamp: Timestamp, minVelocity: Float, routesIds: [Int!], toDate: Date, toTimestamp: Timestamp, type: AvaliableReports!): Report
+
+  """returns list of reports"""
+  reportsList: [ReportProperties!]
+  reportsRoutesGet(date: Date!, search: String): [ReportRoute!]
+  routeTripExecutionsGet(date: Date!, routeId: Int!): [TripExecution!]
+  routesDict: DictFile
+  routesGet(agenciesIds: [UUID!], ids: [Int!], limit: Int = 100, offset: Int = 0, search: String, types: [RouteType!]): [Route!]
+  routesVersionsGet(ids: [Int!], limit: Int, name: String, offset: Int, orderBy: String, orderDirection: OrderDirection, routeIds: [Int!]): [RouteVersion!]
+  scheduleCalendarDatesGet(fromDate: Date, toDate: Date): [ScheduleCalendarDate!]
+  scheduleDriversWorkloadGet(date: Date!, search: String): [Driver!]
+  scheduleRoutesGet(date: Date!, limit: Int = 20, offset: Int = 0, search: String): [ScheduleRoute!]
+  scheduleVehiclesWorkloadGet(date: Date!, search: String): [Vehicle!]
+  schedulerTripsGet: JSON
+  shapesGet(ids: [Int!], limit: Int = 1000, offset: Int = 0, routeId: Int): [Shape!]
+  shapesGetCompact: JSON
+  stopsGet(bbox: [[Float!]!], ids: [Int!], isService: Boolean, limit: Int, locationTypes: [LocationType!], offset: Int = 0, orderBy: String, orderDirection: OrderDirection, search: String): [Stop!]
+  tripFareGet(tripId: Int!): Fare
+  tripsGet(directions: [TripDirection!], fromTime: Int, hasFrequencies: Boolean, ids: [Int!], isActive: Boolean, limit: Int = 10, offset: Int = 0, routeIds: [Int!], toTime: Int, versionIds: [Int!]): [Trip!]
+  usersGet(agenciesIds: [UUID!], emails: [String!], ids: [UUID!], limit: Int, offset: Int, orderBy: String, orderDirection: OrderDirection, phones: [Int!], roles: [Role!], search: String): [User!]
+  vehiclesDict: DictFile
+  vehiclesGet(agenciesIds: [UUID!], ids: [Int!], limit: Int, offset: Int, orderBy: String, orderDirection: OrderDirection, search: String): [Vehicle!]
+  vehiclesGetCompact: String
+  vehiclesLogRoutesGet(search: String, timeEnd: Timestamp!, timeStart: Timestamp!): [Route!]
+  vehiclesLogVehiclesGet(routeIds: [Int!], search: String, timeEnd: Timestamp!, timeStart: Timestamp!): [Vehicle!]
+  vehiclesLogsGet(routeIds: [Int!], timeEnd: Timestamp!, timeStart: Timestamp!, vehicleIds: [Int!]): [VehicleLogGroup!]
+}
+
+type Route {
+  id: Int
+  name: String
+  originRouteId: String
+  selectedVersion: RouteVersion
+  selectedVersionId: Int
+  shortName: String
+  type: RouteType
+  versions: [RouteVersion!]
+}
+
+enum RouteType {
+  BUS
+  CABLE_CAR
+  FERRY
+  FUNICULAR
+  GONDOLA
+  METRO
+  RAIL
+  TRAM
+  TROLLEY
+}
+
+type RouteVersion {
+  backTrips: [Trip!]
+  days: [Day!]
+  endDate: Date
+  endTime: Int
+  forwardTrips: [Trip!]
+  hasFrequencies: Boolean
+  headwaySecs: Int
+  id: Int
+  name: String
+  priority: Int
+  route: Route
+  routeId: Int
+  shapes: [Shape!]
+  startDate: Date
+  startTime: Int
+}
+
+type ScheduleCalendarDate {
+  date: Date
+  unresolvedTripsCount: Int
+}
+
+type ScheduleRoute {
+  dispatcher: User
+  id: Int
+  name: String
+  resolvedTripsCount: Int
+  shortName: String
+  type: RouteType
+  unresolvedTripsCount: Int
+}
+
+type SetVehicleInstruction {
+  targetOrderId: Int
+  targetTripExecutionId: Int
+  vehicleId: Int
+}
+
+input SetVehicleInstructionInput {
+  targetTripExecutionId: Int!
+  vehicleId: Int!
+}
+
+type Shape {
+  id: Int
+  path: [[Float!]!]
+  pivotPoints: [[Float!]!]
+}
+
+type Stop {
+  coords: [Float!]
+  id: Int
+  isService: Boolean
+  locationType: LocationType
+  name: String
+  radius: Float
+}
+
+type StopTime {
+  arrivalTime: Int
+  departureTime: Int
+  distTraveled: Float
+  index: Int
+  normalizedDist: Float
+  shapeId: Int
+  stop: Stop
+  stopId: Int
+}
+
+type SwitchRouteInstruction {
+  targetOrderId: Int
+  targetTripExecutionId: Int
+}
+
+input SwitchRouteInstructionInput {
+  targetTripExecutionId: Int!
+}
+
+"""Unix timestamp"""
+scalar Timestamp
+
+type Trip {
+  direction: TripDirection
+  endTime: Int
+  id: Int
+  isPivot: Boolean
+  parentTripId: Int
+  routeVersion: RouteVersion
+  routeVersionId: Int
+  shapes: [Shape!]
+  startTime: Int
+  stoptimes: [StopTime!]
+  stoptimesCompact: [[Int!]!]
+  tripDistance: Float
+}
+
+enum TripDirection {
+  BACK
+  FORWARD
+}
+
+type TripExecution {
+  dir: TripDirection
+  endTime: Int
+  id: Int
+  orderId: Int
+  startTime: Int
+}
+
+type TripExecutionStop {
+  accepted: Boolean
+  comment: TripExecutionStopComment
+  coords: [Float!]
+  correction: Int
+  dist: Float
+  factArrival: Int
+  factDeparture: Int
+  id: String
+  isService: Boolean
+  locationType: LocationType
+  name: String
+  normDist: Float
+  planArrival: Int
+  planDeparture: Int
+}
+
+type TripExecutionStopComment {
+  action: TripExecutionStopCommentAction
+  reason: TripExecutionStopCommentReason
+  status: TripExecutionStopCommentStatus
+}
+
+enum TripExecutionStopCommentAction {
+  COME_OFF
+  LATE
+  PARK_RETURN
+  SWITCH
+  UNDERPRODUCTION
+}
+
+input TripExecutionStopCommentInp {
+  action: TripExecutionStopCommentAction
+  reason: TripExecutionStopCommentReason
+  status: TripExecutionStopCommentStatus
+}
+
+enum TripExecutionStopCommentReason {
+  AGENCY_FAULT
+  BO_DEFECT
+  DRIVER_FAULT
+  NO_AGENCY_FAOULT
+  OTHER
+  PS_DAMAGE
+  REFUEL
+  ROAD_FACTOR
+  TECH_DEFECT
+  TECH_OPERATION
+}
+
+enum TripExecutionStopCommentStatus {
+  DONE_WITH_VIOLATIONS
+  NOT_DONE
+}
+
+type UndoChangeResult {
+  route: Route
+  stop: Stop
+  type: UndoChangeResultType
+}
+
+enum UndoChangeResultType {
+  ROUTE
+  STOP
+}
+
+"""Represents an uploaded file."""
+scalar Upload
+
+type User {
+  abilities: [UserAbility!]
+  agency: Agency
+  agencyId: UUID
+  city: City
+  desktopSettings: JSON
+  desktopWallpaper: Attachment
+  email: String
+  firstName: String
+  id: UUID
+  lastName: String
+  middleName: String
+  phone: Int
+  position: String
+  role: Role
+}
+
+enum UserAbility {
+  AGENCIES
+  CONTROL_CENTER
+  REALTIME_MAP
+  REPORTS
+  SCHEDULE
+  TRACKING
+  TRANSPORT_NETWORK
+  USERS
+}
+
+input UserInput {
+  abilities: [UserAbility!]
+  agencyId: UUID
+  cityId: Int
+  desktopSettings: JSON
+  desktopWallpaperId: UUID
+  email: String
+  firstName: String
+  lastName: String
+  middleName: String
+  password: String
+  phone: Int
+  position: String
+  role: Role
+}
+
+input UserSelfUpdateInput {
+  desktopSettings: JSON
+  desktopWallpaperId: UUID
+}
+
+type UserSession {
+  expireAt: Timestamp
+  refreshToken: String
+  token: String
+  user: User
+}
+
+input UserUpdateInput {
+  abilities: [UserAbility!]
+  agencyId: UUID
+  cityId: Int
+  desktopSettings: JSON
+  desktopWallpaperId: UUID
+  email: String
+  firstName: String
+  id: UUID!
+  lastName: String
+  middleName: String
+  password: String
+  phone: Int
+  position: String
+  role: Role
+}
+
+"""UUID scalar"""
+scalar UUID
+
+type Vehicle {
+  agency: Agency
+  boardNumber: String
+  hasInfoPanel: Boolean
+  hasSpeakers: Boolean
+  id: Int
+  imei: String
+  oid: String
+  registrationNumber: String
+  size: VehicleSize
+  type: VehicleType
+  wheelchairBoarding: WheelchairBoarding
+  workload: [[Int!]!]
+}
+
+type VehicleBrand {
+  id: Int
+  models: [VehicleModel!]
+  name: String
+  vehicles: [Vehicle!]
+}
+
+type VehicleLog {
+  normalizedShapeDist: Float
+  originLl: [Float!]
+  shapeDist: Float
+  shapeLl: [Float!]
+  speed: Float
+  timestamp: Timestamp
+}
+
+type VehicleLogGroup {
+  agencyId: String
+  agencyName: String
+  driverFio: String
+  driverId: Int
+  executionId: Int
+  logs: [VehicleLog!]
+  routeId: Int
+  routeName: String
+  routeShortName: String
+  shape: [[Float!]!]
+  stops: [TripExecutionStop!]
+  vehicleId: Int
+  vehicleRegistrationNumber: String
+  vehicleType: VehicleType
+}
+
+type VehicleModel {
+  brand: VehicleBrand
+  id: Int
+  name: String
+}
+
+enum VehicleSize {
+  BIG
+  MEDIUM
+  SMALL
+}
+
+enum VehicleType {
+  BUS
+  CABLE_CAR
+  FERRY
+  FUNICULAR
+  GONDOLA
+  METRO
+  RAIL
+  TRAM
+  TROLLEY
+}
+
+enum WheelchairBoarding {
+  AVAILABLE
+  UNAVAILABLE
+  UNDEFINED
 }

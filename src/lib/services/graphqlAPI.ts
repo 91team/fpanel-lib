@@ -6,12 +6,16 @@ import { CancellablePromise } from 'mobx/lib/api/flow'
 import { STATE } from 'src/lib/constants/api'
 import { mutations, queries } from 'src/lib/gql/generated/graphqlConfigs'
 import { TMutations, TQueries } from 'src/lib/gql/generated/graphqlTypes'
-import { StoreName } from 'src/lib/store/constants'
-import { TNotification } from 'src/lib/store/notifications'
-import { getService, getStore } from 'src/lib/utils/global'
 
+import { ApolloService, ServicesManager } from '.'
 import { IApollo } from './apollo'
 import { ServiceName } from './types/constants'
+
+export type TNotification = {
+  id: string
+  type: 'ERROR' | 'SUCCESS'
+  message?: string
+}
 
 type TGraphqlActionType = 'query' | 'mutation'
 type TSetState = (state: STATE) => void
@@ -20,9 +24,6 @@ type TCallGraphqlActionParams<TData, TParams extends {}> = {
   onSuccess?: (data: TData) => void
   onError?: (erorr: any) => void
   setState?: TSetState
-  notifications?: {
-    [key in TNotification['type']]?: Omit<TNotification, 'id' | 'type'>
-  }
 }
 
 type Required2<NullableT, T = NonNullable<NullableT>> = {
@@ -49,16 +50,18 @@ type TGraphqlRequests = {
   [key in ['queries', 'mutations'][number]]: TGraphqlConfigs
 }
 
-export class GraphqlAPIService {
+export class GraphqlAPIService extends ServicesManager {
   public mutations!: TMutations
   public queries!: TQueries
 
   constructor() {
+    super()
+
     this.addConfigs({ mutations, queries })
   }
 
   private get apolloClient() {
-    const apollo = getService(ServiceName.APOLLO)
+    const apollo = this.getService<ApolloService>(ServiceName.APOLLO)
 
     return apollo.getClient()
   }
@@ -69,10 +72,8 @@ export class GraphqlAPIService {
   >({
     GQLDocument,
     type,
-    notifications = {},
   }: TCreateGraphqlActionParams): TGraphqlAction<any, any> => {
     const self = this
-    const notificationsStore = getStore(StoreName.NOTIFICATIONS)
 
     // @ts-expect-error
     return flow(function* ({
@@ -80,7 +81,6 @@ export class GraphqlAPIService {
       onSuccess,
       onError,
       setState,
-      notifications: { ERROR, SUCCESS } = notifications,
     }: TCallGraphqlActionParams<TGraphqlResult['data'], TParams>) {
       if (setState) {
         setState(STATE.LOADING)
@@ -104,13 +104,6 @@ export class GraphqlAPIService {
         const { data } = result
 
         if (data) {
-          if (SUCCESS) {
-            notificationsStore.pushNotification({
-              type: 'SUCCESS',
-              ...SUCCESS,
-            })
-          }
-
           if (setState) {
             setState(STATE.SUCCESS)
           }
@@ -124,13 +117,6 @@ export class GraphqlAPIService {
           throw new Error('Graphql answer doesn`t contents data')
         }
       } catch (error) {
-        if (ERROR) {
-          notificationsStore.pushNotification({
-            type: 'ERROR',
-            ...ERROR,
-          })
-        }
-
         if (setState) {
           setState(STATE.FAILED)
         }

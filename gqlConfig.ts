@@ -8,6 +8,12 @@ export const config: TConfig = {
   fragments: {},
   mutations: {},
   queries: {
-    getSeed: null,
+    publicRouteDetailsGet: 'Не удалось получить информацию о маршруте',
+    publicRoutesGet: 'Не удалось получить список маршрутов',
+    publicStopScheduleGet: 'Не удалось получить график маршрута',
+    publicStopsGet: 'Не удалось получить список остановок',
+    publicTripGet: '',
+    publicShapesGet: 'Не удалось получить траектории маршрутов',
+    publicVehiclesGet: 'Не удалось получить информацию о транспорте',
   },
 }

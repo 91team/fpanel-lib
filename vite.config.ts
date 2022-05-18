@@ -16,7 +16,6 @@ export default defineConfig(({ mode }) => {
       assetsDir: '',
       sourcemap: true,
       lib: {
-        "files": ["dist"],
         entry: path.resolve(__dirname, 'src/index.ts'),
         name: 'FPanelPublicApi',
         fileName: 'fpanel-public-api'

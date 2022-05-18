@@ -1,8 +1,7 @@
 {
   "name": "fpanel-public-api",
   "version": "1.0.0",
-  "license": "Private",
-  "types": "./dist/types/index.d.ts",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "yarn vite",

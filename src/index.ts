@@ -1,8 +1,7 @@
-import { TMutations, TQueries } from 'src/lib/gql/generated/graphqlTypes'
-import { ServiceName } from 'src/lib/services/types/constants'
-
+import { TMutations, TQueries } from './lib/gql/generated/graphqlTypes'
 import { ServicesManager } from './lib/services'
 import { TStorage, TStorageKeys } from './lib/services/types'
+import { ServiceName } from './lib/services/types/constants'
 
 export type TFPanelQueries = TQueries
 export type TFPanelMutations = TMutations

@@ -1,4 +1,4 @@
-# FPapenl public api
+# FPanel public api
 
 ## Старт
 

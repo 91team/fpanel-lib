@@ -9,8 +9,8 @@ export type TFPanelMutations = TMutations
 class FPanelClient {
   private services: ServicesManager
 
-  constructor() {
-    this.services = new ServicesManager()
+  constructor({ isDev = false, hostname }: { isDev?: boolean; hostname: string }) {
+    this.services = new ServicesManager({ isDev, hostname })
 
     this.services.initialize()
   }

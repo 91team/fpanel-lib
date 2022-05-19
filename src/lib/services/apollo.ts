@@ -8,32 +8,28 @@ import { setContext } from 'apollo-link-context'
 import loggerLink from 'apollo-link-logger'
 import universalFetch from 'isomorphic-unfetch'
 
-import { GRAPHQL_API_URL } from 'src/lib/constants/api'
-
-import { ServicesManager } from './manager'
-
 export type IApollo = ApolloClient<NormalizedCacheObject>
 export type TInitialState = NormalizedCacheObject
 export type TOptions = {
   cacheState?: TInitialState
+  isDev: boolean
+  hostname: string
 }
 
-export class ApolloService extends ServicesManager {
+export class ApolloService {
   private client: IApollo
 
-  constructor({ cacheState: initialApolloState = {} }: TOptions) {
-    super()
-
+  constructor({ cacheState: initialApolloState = {}, isDev, hostname }: TOptions) {
     this.client = new ApolloClient<NormalizedCacheObject>({
       connectToDevTools: true,
       ssrMode: false,
-      link: this.getClientLink(),
+      link: this.getClientLink(hostname, isDev),
       cache: this.getClientCache(initialApolloState),
     })
   }
 
-  private getClientLink = () => {
-    const linkOptions = { uri: GRAPHQL_API_URL, credentials: 'same-origin' }
+  private getClientLink = (hostname: string, isDev: boolean) => {
+    const linkOptions = { uri: hostname, credentials: 'same-origin' }
     // HTTP-link is a part of upload link
     const uploadLink = createUploadLink({
       ...linkOptions,
@@ -51,7 +47,7 @@ export class ApolloService extends ServicesManager {
       })
     )
 
-    return ApolloLink.from([authLink, uploadLink].filter(Boolean))
+    return ApolloLink.from([isDev && loggerLink, authLink, uploadLink].filter(Boolean))
   }
 
   private getClientCache = (initialState: TInitialState) =>

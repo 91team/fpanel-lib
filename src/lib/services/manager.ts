@@ -7,12 +7,27 @@ export class ServicesManager {
   // @ts-expect-error
   public services: TStorage = {}
 
+  public isDev: boolean = false
+  public hostname: string = ''
+
+  constructor({ isDev, hostname }: { isDev: boolean; hostname: string }) {
+    this.isDev = isDev
+    this.hostname = hostname
+  }
+
   public initialize({
     initialApolloState,
   }: {
     initialApolloState?: TApolloInitialState
   } = {}) {
-    this.addService(ServiceName.APOLLO, new ApolloService({ cacheState: initialApolloState }))
+    this.addService(
+      ServiceName.APOLLO,
+      new ApolloService({
+        cacheState: initialApolloState,
+        isDev: this.isDev,
+        hostname: this.hostname,
+      })
+    )
     this.addService(ServiceName.GRAPHQL_API, new GraphqlAPIService(this.services))
   }
 

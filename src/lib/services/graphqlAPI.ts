@@ -7,10 +7,7 @@ import { STATE } from 'src/lib/constants/api'
 import { mutations, queries } from 'src/lib/gql/generated/graphqlConfigs'
 import { TMutations, TQueries } from 'src/lib/gql/generated/graphqlTypes'
 
-import { ApolloService, ServicesManager } from '.'
-import { IApollo } from './apollo'
 import { TStorage } from './types'
-import { ServiceName } from './types/constants'
 
 export type TNotification = {
   id: string

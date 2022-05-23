@@ -29,7 +29,7 @@ export class ApolloService {
   }
 
   private getClientLink = (hostname: string, isDev: boolean) => {
-    const linkOptions = { uri: hostname, credentials: 'same-origin' }
+    const linkOptions = { uri: `${hostname}/api/graphql`, credentials: 'same-origin' }
     // HTTP-link is a part of upload link
     const uploadLink = createUploadLink({
       ...linkOptions,

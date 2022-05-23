@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "dev": "yarn vite",
-    "build": "yarn vite build && yarn tsc --emitDeclarationOnly && mv dist/src dist/types",
+    "build": "yarn vite build && yarn tsc --emitDeclarationOnly && cp -R dist/src dist/types && rm -R dist/src",
     "serve": "yarn vite preview",
     "gql:clean": "yarn rimraf src/lib/gql/generated",
     "gql:generate-configs": "yarn ts-node --project ./scripts/tsconfig.json ./scripts/generateGQLConfigs && yarn eslint src/lib/gql/documents/* --fix",

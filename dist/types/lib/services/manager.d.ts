@@ -2,6 +2,12 @@ import { TInitialState as TApolloInitialState } from './apollo';
 import { TServices, TStorage } from './types';
 export declare class ServicesManager {
     services: TStorage;
+    isDev: boolean;
+    hostname: string;
+    constructor({ isDev, hostname }: {
+        isDev: boolean;
+        hostname: string;
+    });
     initialize({ initialApolloState, }?: {
         initialApolloState?: TApolloInitialState;
     }): void;

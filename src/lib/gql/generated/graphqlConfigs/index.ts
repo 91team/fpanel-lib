@@ -1,4 +1,6 @@
 import {
+  CameraByIdDocument,
+  CamerasGetDocument,
   PublicRouteDetailsGetDocument,
   PublicRoutesGetDocument,
   PublicShapesGetDocument,
@@ -20,6 +22,22 @@ const mutations: {
 const queries: {
   [key in keyof TQueries]: TGraphqlConfig
 } = {
+  cameraById: {
+    GQLDocument: CameraByIdDocument,
+    notifications: {
+      ERROR: {
+        message: 'Не удалось получить информацию о камере'
+      }
+    }
+  },
+  camerasGet: {
+    GQLDocument: CamerasGetDocument,
+    notifications: {
+      ERROR: {
+        message: 'Не удалось получить список камер'
+      }
+    }
+  },
   publicRouteDetailsGet: {
     GQLDocument: PublicRouteDetailsGetDocument,
     notifications: {

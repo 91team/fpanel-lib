@@ -1,6 +1,10 @@
 import { TGraphqlAction } from 'src/lib/services/graphqlAPI'
 
 import {
+  CameraByIdQuery,
+  CameraByIdQueryVariables,
+  CamerasGetQuery,
+  CamerasGetQueryVariables,
   PublicRouteDetailsGetQuery,
   PublicRouteDetailsGetQueryVariables,
   PublicRoutesGetQuery,
@@ -23,6 +27,8 @@ import {
 export type TMutations = {}
 
 export type TQueries = {
+  cameraById: TGraphqlAction<CameraByIdQuery, CameraByIdQueryVariables>
+  camerasGet: TGraphqlAction<CamerasGetQuery, CamerasGetQueryVariables>
   publicRouteDetailsGet: TGraphqlAction<PublicRouteDetailsGetQuery, PublicRouteDetailsGetQueryVariables>
   publicRoutesGet: TGraphqlAction<PublicRoutesGetQuery, PublicRoutesGetQueryVariables>
   publicShapesGet: TGraphqlAction<PublicShapesGetQuery, PublicShapesGetQueryVariables>

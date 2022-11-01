@@ -1,5 +1,16 @@
 import gql from 'graphql-tag'
 
+export const CameraFragment = gql`
+  fragment Camera on Camera {
+    address
+    coords
+    expire
+    id
+    name
+    url
+  }
+`
+
 export const PublicDirectionFragment = gql`
   fragment PublicDirection on PublicDirection {
     shape
@@ -54,6 +65,7 @@ export const PublicStopFragment = gql`
     id
     isTraveled
     name
+    nameEn
     normalizedShapeDist
     shapeDist
   }

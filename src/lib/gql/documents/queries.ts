@@ -1,5 +1,21 @@
 import gql from 'graphql-tag'
 
+export const cameraByIdQuery = gql`
+  query cameraById($id: UUID!) {
+    cameraById(id: $id) {
+      ...Camera
+    }
+  }
+`
+
+export const camerasGetQuery = gql`
+  query camerasGet {
+    camerasGet {
+      ...Camera
+    }
+  }
+`
+
 export const publicRouteDetailsGetQuery = gql`
   query publicRouteDetailsGet($routeId: Int!) {
     publicRouteDetailsGet(routeId: $routeId) {

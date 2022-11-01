@@ -1,3 +1,5 @@
+export declare const cameraByIdQuery: any;
+export declare const camerasGetQuery: any;
 export declare const publicRouteDetailsGetQuery: any;
 export declare const publicRoutesGetQuery: any;
 export declare const publicShapesGetQuery: any;

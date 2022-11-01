@@ -21,16 +21,42 @@ export interface ActionLog {
     user?: Maybe<User>;
 }
 export declare const enum ActionType {
+    AgencyCreate = "AGENCY_CREATE",
+    AgencyDelete = "AGENCY_DELETE",
+    AgencyUpdate = "AGENCY_UPDATE",
+    DirectionCreate = "DIRECTION_CREATE",
+    DirectionDelete = "DIRECTION_DELETE",
+    DirectionUpdate = "DIRECTION_UPDATE",
+    DriverCreate = "DRIVER_CREATE",
+    DriverDelete = "DRIVER_DELETE",
+    DriverUpdate = "DRIVER_UPDATE",
+    GroupChatCreate = "GROUP_CHAT_CREATE",
     InstructionOffRoute = "INSTRUCTION_OFF_ROUTE",
     InstructionSwitchRoute = "INSTRUCTION_SWITCH_ROUTE",
     OrderChange = "ORDER_CHANGE",
-    RouteInterval = "ROUTE_INTERVAL"
+    ReportCreate = "REPORT_CREATE",
+    RouteCreate = "ROUTE_CREATE",
+    RouteDelete = "ROUTE_DELETE",
+    RouteInterval = "ROUTE_INTERVAL",
+    RouteUpdate = "ROUTE_UPDATE",
+    ScheduleCreate = "SCHEDULE_CREATE",
+    ScheduleDelete = "SCHEDULE_DELETE",
+    ScheduleUpdate = "SCHEDULE_UPDATE",
+    StopCreate = "STOP_CREATE",
+    StopDelete = "STOP_DELETE",
+    StopUpdate = "STOP_UPDATE",
+    UserCreate = "USER_CREATE",
+    UserDelete = "USER_DELETE",
+    UserUpdate = "USER_UPDATE",
+    VehicleCreate = "VEHICLE_CREATE",
+    VehicleDelete = "VEHICLE_DELETE",
+    VehicleUpdate = "VEHICLE_UPDATE"
 }
 export interface Agency {
     __typename?: 'Agency';
     address?: Maybe<Scalars['String']>;
     adminsCount?: Maybe<Scalars['Int']>;
-    city?: Maybe<Scalars['String']>;
+    city?: Maybe<City>;
     dispatchersCount?: Maybe<Scalars['Int']>;
     driversCount?: Maybe<Scalars['Int']>;
     email?: Maybe<Scalars['String']>;
@@ -40,6 +66,25 @@ export interface Agency {
     phone?: Maybe<Scalars['Int']>;
     routesCount?: Maybe<Scalars['Int']>;
     vehiclesCount?: Maybe<Scalars['Int']>;
+}
+export declare const enum ArchiveObjectType {
+    Agency = "AGENCY",
+    Driver = "DRIVER",
+    Route = "ROUTE",
+    RouteDirection = "ROUTE_DIRECTION",
+    Schedule = "SCHEDULE",
+    Stop = "STOP",
+    User = "USER",
+    Vehicle = "VEHICLE"
+}
+export interface ArchiveRecord {
+    __typename?: 'ArchiveRecord';
+    id?: Maybe<Scalars['String']>;
+    insertedAt?: Maybe<Scalars['Timestamp']>;
+    linkedObjectName?: Maybe<Scalars['String']>;
+    name?: Maybe<Scalars['String']>;
+    objectType?: Maybe<ArchiveObjectType>;
+    userLogin?: Maybe<Scalars['String']>;
 }
 export interface AskApiVehicle {
     __typename?: 'AskApiVehicle';
@@ -60,18 +105,23 @@ export interface Attachment {
     url?: Maybe<Scalars['String']>;
 }
 export declare const enum AvaliableReports {
-    DailyTrips = "DAILY_TRIPS",
-    Dispatcher = "DISPATCHER",
-    DrivingQuality = "DRIVING_QUALITY",
-    Malfunctions = "MALFUNCTIONS",
-    OrderDistTimes = "ORDER_DIST_TIMES",
-    RouteWorkload = "ROUTE_WORKLOAD",
-    VehiclesMileage = "VEHICLES_MILEAGE"
+    Dispatching = "DISPATCHING",
+    RoudtripsWorkload = "ROUDTRIPS_WORKLOAD",
+    TripsByDateWorkload = "TRIPS_BY_DATE_WORKLOAD"
 }
 export interface Avatar {
     __typename?: 'Avatar';
     aspectRatio?: Maybe<Scalars['Float']>;
     contentType?: Maybe<Scalars['String']>;
+    id?: Maybe<Scalars['UUID']>;
+    name?: Maybe<Scalars['String']>;
+    url?: Maybe<Scalars['String']>;
+}
+export interface Camera {
+    __typename?: 'Camera';
+    address?: Maybe<Scalars['String']>;
+    coords?: Maybe<Array<Scalars['Float']>>;
+    expire?: Maybe<Scalars['Timestamp']>;
     id?: Maybe<Scalars['UUID']>;
     name?: Maybe<Scalars['String']>;
     url?: Maybe<Scalars['String']>;
@@ -88,14 +138,30 @@ export interface City {
     id?: Maybe<Scalars['Int']>;
     name?: Maybe<Scalars['String']>;
 }
-export declare const enum Day {
-    Fr = "FR",
-    Mo = "MO",
-    Sa = "SA",
-    Su = "SU",
-    Th = "TH",
-    Tu = "TU",
-    We = "WE"
+export interface Contract {
+    __typename?: 'Contract';
+    agency?: Maybe<Agency>;
+    city?: Maybe<City>;
+    endDate?: Maybe<Scalars['Date']>;
+    id?: Maybe<Scalars['Int']>;
+    name?: Maybe<Scalars['String']>;
+    routes?: Maybe<Array<Route>>;
+    routesCount?: Maybe<Scalars['Int']>;
+    startDate?: Maybe<Scalars['Date']>;
+}
+export declare const enum CorrectionType {
+    Order = "ORDER",
+    Stop = "STOP",
+    Trip = "TRIP"
+}
+export declare const enum DayOfWeek {
+    Friday = "FRIDAY",
+    Monday = "MONDAY",
+    Saturday = "SATURDAY",
+    Sunday = "SUNDAY",
+    Thursday = "THURSDAY",
+    Tuesday = "TUESDAY",
+    Wednesday = "WEDNESDAY"
 }
 export interface DictFile {
     __typename?: 'DictFile';
@@ -106,7 +172,7 @@ export interface Driver {
     __typename?: 'Driver';
     agency?: Maybe<Agency>;
     agencyId?: Maybe<Scalars['UUID']>;
-    allowedVehiclesTypes?: Maybe<Array<RouteType>>;
+    allowedVehiclesTypes?: Maybe<Array<VehicleType>>;
     authCode?: Maybe<Scalars['String']>;
     avatar?: Maybe<Avatar>;
     avatarId?: Maybe<Scalars['UUID']>;
@@ -135,7 +201,7 @@ export interface DriverSession {
 export interface DriverSimplified {
     __typename?: 'DriverSimplified';
     agency?: Maybe<Agency>;
-    allowedVehiclesTypes?: Maybe<Array<RouteType>>;
+    allowedVehiclesTypes?: Maybe<Array<VehicleType>>;
     avatar?: Maybe<Avatar>;
     drivingLicenseNumber?: Maybe<Scalars['String']>;
     email?: Maybe<Scalars['String']>;
@@ -170,23 +236,6 @@ export interface DriverTrip {
     startTimestamp?: Maybe<Scalars['Timestamp']>;
     stoptimes: Array<DriverStoptime>;
     waitingTime?: Maybe<Scalars['Int']>;
-}
-export interface Fare {
-    __typename?: 'Fare';
-    rows?: Maybe<Array<FareRow>>;
-    stops?: Maybe<Array<Stop>>;
-}
-export interface FareColumn {
-    __typename?: 'FareColumn';
-    price?: Maybe<Scalars['Float']>;
-    stop?: Maybe<Stop>;
-    toStopId?: Maybe<Scalars['Int']>;
-}
-export interface FareRow {
-    __typename?: 'FareRow';
-    columns?: Maybe<Array<FareColumn>>;
-    fromStopId?: Maybe<Scalars['Int']>;
-    stop?: Maybe<Stop>;
 }
 export interface Instruction {
     __typename?: 'Instruction';
@@ -273,47 +322,78 @@ export declare const enum MessageType {
     Group = "GROUP",
     Personal = "PERSONAL"
 }
+export declare const enum NetworkOrderChangeType {
+    OrderCreate = "ORDER_CREATE",
+    TripCreate = "TRIP_CREATE",
+    TripDelete = "TRIP_DELETE",
+    TripUpdateStoptimes = "TRIP_UPDATE_STOPTIMES",
+    TripUpdateWaitingType = "TRIP_UPDATE_WAITING_TYPE"
+}
 export declare const enum NetworkRouteChangeType {
     RouteCreate = "ROUTE_CREATE",
     RouteDelete = "ROUTE_DELETE",
+    RouteDirectionDelete = "ROUTE_DIRECTION_DELETE",
+    RouteScheduleDelete = "ROUTE_SCHEDULE_DELETE",
+    RouteScheduleSetIsActive = "ROUTE_SCHEDULE_SET_IS_ACTIVE",
+    RouteUpdateAgency = "ROUTE_UPDATE_AGENCY",
+    RouteUpdateAllowedDeviation = "ROUTE_UPDATE_ALLOWED_DEVIATION",
+    RouteUpdateCity = "ROUTE_UPDATE_CITY",
     RouteUpdateLongName = "ROUTE_UPDATE_LONG_NAME",
+    RouteUpdateParkingTime = "ROUTE_UPDATE_PARKING_TIME",
     RouteUpdateShortName = "ROUTE_UPDATE_SHORT_NAME",
-    RouteUpdateType = "ROUTE_UPDATE_TYPE",
-    RouteVersionDelete = "ROUTE_VERSION_DELETE",
-    TripDelete = "TRIP_DELETE"
+    RouteUpdateTransportClass = "ROUTE_UPDATE_TRANSPORT_CLASS",
+    RouteUpdateTransportType = "ROUTE_UPDATE_TRANSPORT_TYPE"
 }
-export declare const enum NetworkRouteVersionChangeType {
-    RouteVersionCreate = "ROUTE_VERSION_CREATE",
-    RouteVersionSelect = "ROUTE_VERSION_SELECT",
-    RouteVersionUpdateDays = "ROUTE_VERSION_UPDATE_DAYS",
-    RouteVersionUpdateEndDate = "ROUTE_VERSION_UPDATE_END_DATE",
-    RouteVersionUpdateEndTime = "ROUTE_VERSION_UPDATE_END_TIME",
-    RouteVersionUpdateHasFrequencies = "ROUTE_VERSION_UPDATE_HAS_FREQUENCIES",
-    RouteVersionUpdateHeadwaySecs = "ROUTE_VERSION_UPDATE_HEADWAY_SECS",
-    RouteVersionUpdateName = "ROUTE_VERSION_UPDATE_NAME",
-    RouteVersionUpdatePriority = "ROUTE_VERSION_UPDATE_PRIORITY",
-    RouteVersionUpdateStartDate = "ROUTE_VERSION_UPDATE_START_DATE",
-    RouteVersionUpdateStartTime = "ROUTE_VERSION_UPDATE_START_TIME"
+export declare const enum NetworkRouteDirectionChangeType {
+    RouteDirectionCreate = "ROUTE_DIRECTION_CREATE",
+    RouteDirectionCreateStoptime = "ROUTE_DIRECTION_CREATE_STOPTIME",
+    RouteDirectionDeleteStoptime = "ROUTE_DIRECTION_DELETE_STOPTIME",
+    RouteDirectionUpdateEndDate = "ROUTE_DIRECTION_UPDATE_END_DATE",
+    RouteDirectionUpdateIsLocked = "ROUTE_DIRECTION_UPDATE_IS_LOCKED",
+    RouteDirectionUpdateName = "ROUTE_DIRECTION_UPDATE_NAME",
+    RouteDirectionUpdatePlanTime = "ROUTE_DIRECTION_UPDATE_PLAN_TIME",
+    RouteDirectionUpdateStartDate = "ROUTE_DIRECTION_UPDATE_START_DATE",
+    RouteDirectionUpdateStoptimeShapeId = "ROUTE_DIRECTION_UPDATE_STOPTIME_SHAPE_ID",
+    RouteDirectionUpdateStoptimeShapePath = "ROUTE_DIRECTION_UPDATE_STOPTIME_SHAPE_PATH",
+    RouteDirectionUpdateStoptimeShapePivotAndPath = "ROUTE_DIRECTION_UPDATE_STOPTIME_SHAPE_PIVOT_AND_PATH",
+    RouteDirectionUpdateStoptimeShapePivotPoints = "ROUTE_DIRECTION_UPDATE_STOPTIME_SHAPE_PIVOT_POINTS",
+    RouteDirectionUpdateStoptimeStopId = "ROUTE_DIRECTION_UPDATE_STOPTIME_STOP_ID",
+    RouteDirectionUpdateStoptimeTravelTime = "ROUTE_DIRECTION_UPDATE_STOPTIME_TRAVEL_TIME"
+}
+export declare const enum NetworkScheduleChangeType {
+    OrderDelete = "ORDER_DELETE",
+    ScheduleCreate = "SCHEDULE_CREATE",
+    ScheduleGenerateTrips = "SCHEDULE_GENERATE_TRIPS",
+    ScheduleUpdateActivityDays = "SCHEDULE_UPDATE_ACTIVITY_DAYS",
+    ScheduleUpdateBackDirection = "SCHEDULE_UPDATE_BACK_DIRECTION",
+    ScheduleUpdateBackParkingTime = "SCHEDULE_UPDATE_BACK_PARKING_TIME",
+    ScheduleUpdateEndDate = "SCHEDULE_UPDATE_END_DATE",
+    ScheduleUpdateEndTime = "SCHEDULE_UPDATE_END_TIME",
+    ScheduleUpdateExceptionDates = "SCHEDULE_UPDATE_EXCEPTION_DATES",
+    ScheduleUpdateForwardDirection = "SCHEDULE_UPDATE_FORWARD_DIRECTION",
+    ScheduleUpdateInterval = "SCHEDULE_UPDATE_INTERVAL",
+    ScheduleUpdateIntervalType = "SCHEDULE_UPDATE_INTERVAL_TYPE",
+    ScheduleUpdateName = "SCHEDULE_UPDATE_NAME",
+    ScheduleUpdateOrdersAmount = "SCHEDULE_UPDATE_ORDERS_AMOUNT",
+    ScheduleUpdateParkingTime = "SCHEDULE_UPDATE_PARKING_TIME",
+    ScheduleUpdateRoundTripsPerOrderAmount = "SCHEDULE_UPDATE_ROUND_TRIPS_PER_ORDER_AMOUNT",
+    ScheduleUpdateStartDate = "SCHEDULE_UPDATE_START_DATE",
+    ScheduleUpdateStartTime = "SCHEDULE_UPDATE_START_TIME",
+    ScheduleUpdateType = "SCHEDULE_UPDATE_TYPE"
 }
 export declare const enum NetworkStopChangeType {
+    StopCopy = "STOP_COPY",
     StopCreate = "STOP_CREATE",
     StopDelete = "STOP_DELETE",
+    StopDeleteMultiple = "STOP_DELETE_MULTIPLE",
+    StopUpdateCity = "STOP_UPDATE_CITY",
     StopUpdateCoords = "STOP_UPDATE_COORDS",
+    StopUpdateDate = "STOP_UPDATE_DATE",
     StopUpdateIsService = "STOP_UPDATE_IS_SERVICE",
     StopUpdateLocationType = "STOP_UPDATE_LOCATION_TYPE",
     StopUpdateName = "STOP_UPDATE_NAME",
-    StopUpdateRadius = "STOP_UPDATE_RADIUS"
-}
-export declare const enum NetworkTripChangeType {
-    TripClone = "TRIP_CLONE",
-    TripCreate = "TRIP_CREATE",
-    TripCreateStoptime = "TRIP_CREATE_STOPTIME",
-    TripDeleteStoptime = "TRIP_DELETE_STOPTIME",
-    TripUpdateIsPivot = "TRIP_UPDATE_IS_PIVOT",
-    TripUpdateStoptimeArrivalTime = "TRIP_UPDATE_STOPTIME_ARRIVAL_TIME",
-    TripUpdateStoptimeDepartureTime = "TRIP_UPDATE_STOPTIME_DEPARTURE_TIME",
-    TripUpdateStoptimeShapeId = "TRIP_UPDATE_STOPTIME_SHAPE_ID",
-    TripUpdateStoptimeStopId = "TRIP_UPDATE_STOPTIME_STOP_ID"
+    StopUpdateReverseDirectionStop = "STOP_UPDATE_REVERSE_DIRECTION_STOP",
+    StopUpdateZone = "STOP_UPDATE_ZONE"
 }
 export interface NetworkVersion {
     __typename?: 'NetworkVersion';
@@ -343,14 +423,11 @@ export declare const enum OffRouteReason {
 }
 export interface Order {
     __typename?: 'Order';
-    date?: Maybe<Scalars['Date']>;
-    driver?: Maybe<Driver>;
-    endTime?: Maybe<Scalars['Int']>;
     id?: Maybe<Scalars['Int']>;
-    startTime?: Maybe<Scalars['Int']>;
-    title?: Maybe<Scalars['String']>;
-    tripExecutions?: Maybe<Array<TripExecution>>;
-    vehicle?: Maybe<Vehicle>;
+    name?: Maybe<Scalars['String']>;
+    schedule?: Maybe<Schedule>;
+    scheduleId?: Maybe<Scalars['Int']>;
+    trips?: Maybe<Array<Trip>>;
 }
 export declare const enum OrderDirection {
     Asc = "ASC",
@@ -375,6 +452,13 @@ export interface PublicRoute {
     shortName?: Maybe<Scalars['String']>;
     stops?: Maybe<Array<PublicStop>>;
 }
+export interface PublicRouteStopArrivals {
+    __typename?: 'PublicRouteStopArrivals';
+    expectedArrival?: Maybe<Scalars['Timestamp']>;
+    planArrival?: Maybe<Scalars['Timestamp']>;
+    vehicleId?: Maybe<Scalars['Int']>;
+    vehicleRegistrationNumber?: Maybe<Scalars['String']>;
+}
 export interface PublicScheduleRoute {
     __typename?: 'PublicScheduleRoute';
     arrivalTime?: Maybe<Scalars['Int']>;
@@ -396,8 +480,15 @@ export interface PublicStop {
     id?: Maybe<Scalars['Int']>;
     isTraveled?: Maybe<Scalars['Boolean']>;
     name?: Maybe<Scalars['String']>;
+    nameEn?: Maybe<Scalars['String']>;
     normalizedShapeDist?: Maybe<Scalars['Float']>;
     shapeDist?: Maybe<Scalars['Float']>;
+}
+export interface PublicStopArrivalForecast {
+    __typename?: 'PublicStopArrivalForecast';
+    arrivals?: Maybe<Array<PublicRouteStopArrivals>>;
+    routeId?: Maybe<Scalars['Int']>;
+    routeShortName?: Maybe<Scalars['String']>;
 }
 export interface PublicTrip {
     __typename?: 'PublicTrip';
@@ -424,70 +515,107 @@ export interface PublicVehicle {
 }
 export interface RealtimeOrder {
     __typename?: 'RealtimeOrder';
-    acceptedTripsCount?: Maybe<Scalars['Int']>;
-    currentTripNum?: Maybe<Scalars['Int']>;
+    acceptedTripsAmount?: Maybe<Scalars['Int']>;
+    currentTripNumber?: Maybe<Scalars['Int']>;
     driver?: Maybe<Driver>;
     endTime?: Maybe<Scalars['Int']>;
     id?: Maybe<Scalars['Int']>;
     instructions?: Maybe<Array<Instruction>>;
     lastStopDeviation?: Maybe<Scalars['Int']>;
+    name?: Maybe<Scalars['String']>;
     nextStopDeviation?: Maybe<Scalars['Int']>;
-    routeId?: Maybe<Scalars['Int']>;
     startTime?: Maybe<Scalars['Int']>;
-    title?: Maybe<Scalars['String']>;
-    tripsCount?: Maybe<Scalars['Int']>;
-    vehicleId?: Maybe<Scalars['Int']>;
+    trips?: Maybe<Array<RealtimeTrip>>;
+    tripsAmount?: Maybe<Scalars['Int']>;
+    vehicle?: Maybe<Vehicle>;
 }
 export interface RealtimeRoute {
     __typename?: 'RealtimeRoute';
-    orders?: Maybe<Array<RealtimeOrder>>;
-    stops?: Maybe<Array<RealtimeStop>>;
-    vehicles?: Maybe<Array<RealtimeVehicle>>;
-}
-export interface RealtimeRouteRow {
-    __typename?: 'RealtimeRouteRow';
-    activeOrdersCount?: Maybe<Scalars['Int']>;
     agency?: Maybe<Agency>;
-    hasFrequencies?: Maybe<Scalars['Boolean']>;
+    completedTripsAmount?: Maybe<Scalars['Int']>;
     id?: Maybe<Scalars['Int']>;
     intervalSeconds?: Maybe<Scalars['Int']>;
     isInterval?: Maybe<Scalars['Boolean']>;
-    lastStopDeviationCount?: Maybe<Scalars['Int']>;
-    lastStopDeviationMax?: Maybe<Scalars['Int']>;
+    maxDeviation?: Maybe<Scalars['Int']>;
+    missedLastStopAmount?: Maybe<Scalars['Int']>;
+    missedNextStopAmount?: Maybe<Scalars['Int']>;
     name?: Maybe<Scalars['String']>;
-    nextStopDeviationCount?: Maybe<Scalars['Int']>;
-    ordersCount?: Maybe<Scalars['Int']>;
+    orders?: Maybe<Array<RealtimeOrder>>;
+    ordersAmount?: Maybe<Scalars['Int']>;
     shortName?: Maybe<Scalars['String']>;
-    tripExecutionsFactCount?: Maybe<Scalars['Int']>;
-    tripExecutionsPlanCount?: Maybe<Scalars['Int']>;
-    vehiclesCount?: Maybe<Scalars['Int']>;
+    totalTripsAmount?: Maybe<Scalars['Int']>;
+    vehiclesAmount?: Maybe<Scalars['Int']>;
 }
 export interface RealtimeShape {
     __typename?: 'RealtimeShape';
     executionsIds?: Maybe<Array<Scalars['Int']>>;
     path: Array<Array<Scalars['Float']>>;
     routeShortName?: Maybe<Scalars['String']>;
-    stops?: Maybe<Array<RealtimeStop>>;
+    stops?: Maybe<Array<RealtimeTripStop>>;
 }
-export interface RealtimeStop {
-    __typename?: 'RealtimeStop';
-    coords?: Maybe<Array<Scalars['Float']>>;
-    dir?: Maybe<TripDirection>;
+export interface RealtimeTrip {
+    __typename?: 'RealtimeTrip';
+    acceptScore?: Maybe<Scalars['Float']>;
+    directionType?: Maybe<TripDirection>;
     id?: Maybe<Scalars['Int']>;
-    isService?: Maybe<Scalars['Boolean']>;
-    locationType?: Maybe<LocationType>;
+    stops?: Maybe<Array<RealtimeTripStop>>;
+}
+export interface RealtimeTripComment {
+    __typename?: 'RealtimeTripComment';
+    action?: Maybe<RealtimeTripCommentAction>;
+    reason?: Maybe<RealtimeTripCommentReason>;
+    status?: Maybe<RealtimeTripCommentStatus>;
+}
+export declare const enum RealtimeTripCommentAction {
+    ComeOff = "COME_OFF",
+    Late = "LATE",
+    ParkReturn = "PARK_RETURN",
+    Switch = "SWITCH",
+    Underproduction = "UNDERPRODUCTION",
+    Wait = "WAIT"
+}
+export interface RealtimeTripCommentInput {
+    action?: Maybe<RealtimeTripCommentAction>;
+    reason?: Maybe<RealtimeTripCommentReason>;
+    status?: Maybe<RealtimeTripCommentStatus>;
+}
+export declare const enum RealtimeTripCommentReason {
+    AgencyFault = "AGENCY_FAULT",
+    BoDefect = "BO_DEFECT",
+    DriverFault = "DRIVER_FAULT",
+    Expluatation = "EXPLUATATION",
+    MissSchedule = "MISS_SCHEDULE",
+    MissShape = "MISS_SHAPE",
+    NoAgencyFaoult = "NO_AGENCY_FAOULT",
+    Other = "OTHER",
+    PsDamage = "PS_DAMAGE",
+    Refuel = "REFUEL",
+    RoadFactor = "ROAD_FACTOR",
+    TechDefect = "TECH_DEFECT",
+    TechOperation = "TECH_OPERATION"
+}
+export declare const enum RealtimeTripCommentStatus {
+    DoneWithViolations = "DONE_WITH_VIOLATIONS",
+    NotDone = "NOT_DONE"
+}
+export interface RealtimeTripStop {
+    __typename?: 'RealtimeTripStop';
+    accepted?: Maybe<Scalars['Boolean']>;
+    arrivalDeviation?: Maybe<Scalars['Int']>;
+    comment?: Maybe<RealtimeTripComment>;
+    coords?: Maybe<Array<Scalars['Float']>>;
+    correction?: Maybe<Scalars['Int']>;
+    departureDeviation?: Maybe<Scalars['Int']>;
+    directionType?: Maybe<TripDirection>;
+    dist?: Maybe<Scalars['Float']>;
+    factArrival?: Maybe<Scalars['Int']>;
+    factDeparture?: Maybe<Scalars['Int']>;
+    id?: Maybe<Scalars['Int']>;
     name?: Maybe<Scalars['String']>;
     normDist?: Maybe<Scalars['Float']>;
-}
-export interface RealtimeTripExecution {
-    __typename?: 'RealtimeTripExecution';
-    acceptScore?: Maybe<Scalars['Float']>;
-    dir?: Maybe<TripDirection>;
-    id?: Maybe<Scalars['Int']>;
-    isActive?: Maybe<Scalars['Boolean']>;
-    orderId?: Maybe<Scalars['Int']>;
-    routeId?: Maybe<Scalars['Int']>;
-    stops?: Maybe<Array<TripExecutionStop>>;
+    parkingTime?: Maybe<Scalars['Int']>;
+    planArrival?: Maybe<Scalars['Int']>;
+    planDeparture?: Maybe<Scalars['Int']>;
 }
 export interface RealtimeVehicle {
     __typename?: 'RealtimeVehicle';
@@ -532,16 +660,11 @@ export interface Report {
     reportType?: Maybe<AvaliableReports>;
 }
 export declare const enum ReportParams {
-    AgencyId = "AGENCY_ID",
+    AgenciesIds = "AGENCIES_IDS",
     Date = "DATE",
-    DispatchersIds = "DISPATCHERS_IDS",
-    DriverId = "DRIVER_ID",
     FromDate = "FROM_DATE",
-    FromTimestamp = "FROM_TIMESTAMP",
-    MinVelocity = "MIN_VELOCITY",
     RoutesIds = "ROUTES_IDS",
-    ToDate = "TO_DATE",
-    ToTimestamp = "TO_TIMESTAMP"
+    ToDate = "TO_DATE"
 }
 export interface ReportProperties {
     __typename?: 'ReportProperties';
@@ -565,6 +688,8 @@ export interface RootMutationType {
     agencyCreate?: Maybe<Agency>;
     agencyDelete?: Maybe<Agency>;
     agencyUpdate?: Maybe<Agency>;
+    archiveRecordDelete?: Maybe<Scalars['String']>;
+    archiveRecordRestore?: Maybe<Scalars['String']>;
     attachmentCreate?: Maybe<Attachment>;
     attachmentDelete?: Maybe<Scalars['String']>;
     avatarCreate?: Maybe<Avatar>;
@@ -574,10 +699,16 @@ export interface RootMutationType {
     brandUpdate?: Maybe<VehicleBrand>;
     cityCreate?: Maybe<City>;
     cityDelete?: Maybe<City>;
+    contractAddRoute?: Maybe<Contract>;
+    contractCreate?: Maybe<Contract>;
+    contractDelete?: Maybe<Contract>;
+    contractDeleteRoute?: Maybe<Contract>;
+    contractUpdate?: Maybe<Contract>;
+    createOrderChange?: Maybe<Order>;
     createRouteChange?: Maybe<Route>;
-    createRouteVersionChange?: Maybe<RouteVersion>;
+    createRouteDirectionChange?: Maybe<RouteDirection>;
+    createScheduleChange?: Maybe<Schedule>;
     createStopChange?: Maybe<Stop>;
-    createTripChange?: Maybe<Trip>;
     driverAuthCodeReset?: Maybe<Scalars['String']>;
     driverCreate?: Maybe<Driver>;
     driverDelete?: Maybe<Driver>;
@@ -586,7 +717,6 @@ export interface RootMutationType {
     driverSessionDelete?: Maybe<Scalars['String']>;
     driverSessionRefresh?: Maybe<DriverSession>;
     driverUpdate?: Maybe<Driver>;
-    fareCreate?: Maybe<Fare>;
     importAgenciesFromFile?: Maybe<Array<Agency>>;
     importDriversFromFile?: Maybe<Array<Driver>>;
     importVehiclesFromFile?: Maybe<Array<Vehicle>>;
@@ -598,17 +728,11 @@ export interface RootMutationType {
     networkVersionCreate?: Maybe<NetworkVersion>;
     networkVersionImportGtfs?: Maybe<NetworkVersion>;
     networkVersionSwitch?: Maybe<NetworkVersion>;
-    orderCreate: Order;
-    orderDelete?: Maybe<Scalars['String']>;
-    orderUpdate: Order;
-    realtimeOrderApplyCorrection?: Maybe<Scalars['String']>;
-    realtimeSetRouteInterval?: Maybe<Scalars['String']>;
+    realtimeSetCorrection?: Maybe<RealtimeOrder>;
     routeDeleteAgency?: Maybe<Scalars['String']>;
     routeSetAgency?: Maybe<Scalars['String']>;
-    routeVersionDelete?: Maybe<RouteVersion>;
-    scheduleAskImport?: Maybe<Scalars['String']>;
-    scheduleImportNetwork?: Maybe<Scalars['String']>;
-    scheduleXlsUpload?: Maybe<Scalars['String']>;
+    schedulerSetDriver?: Maybe<Scalars['String']>;
+    schedulerSetVehicle?: Maybe<Scalars['String']>;
     sendInstruction?: Maybe<Instruction>;
     sessionCreate?: Maybe<UserSession>;
     sessionDelete?: Maybe<Scalars['String']>;
@@ -616,17 +740,23 @@ export interface RootMutationType {
     shapeCreate?: Maybe<Shape>;
     shapeDelete?: Maybe<Shape>;
     shapeUpdate?: Maybe<Shape>;
-    tripDelete?: Maybe<Trip>;
-    tripExecutionApplyCorrection?: Maybe<RealtimeTripExecution>;
-    tripExecutionSetOrder: TripExecution;
+    syncSchedules?: Maybe<Scalars['String']>;
     undoChange?: Maybe<UndoChangeResult>;
+    undoOrderChange?: Maybe<Order>;
     undoRouteChange?: Maybe<Route>;
+    undoRouteDirectionChange?: Maybe<RouteDirection>;
+    undoScheduleChange?: Maybe<Schedule>;
     undoStopChange?: Maybe<Stop>;
-    undoTripChange?: Maybe<Trip>;
-    updateTripExecution?: Maybe<RealtimeTripExecution>;
-    updateTripExecutionStop?: Maybe<RealtimeTripExecution>;
+    updateRealtimeTrip?: Maybe<RealtimeTrip>;
+    updateRealtimeTripStop?: Maybe<RealtimeTrip>;
+    userAddAgency?: Maybe<User>;
+    userAddCity?: Maybe<User>;
+    userAddRoute?: Maybe<User>;
     userCreate?: Maybe<User>;
     userDelete?: Maybe<User>;
+    userRemoveAgency?: Maybe<User>;
+    userRemoveCity?: Maybe<User>;
+    userRemoveRoute?: Maybe<User>;
     userSelfUpdate?: Maybe<User>;
     userUpdate?: Maybe<User>;
     vehicleCreate?: Maybe<Vehicle>;
@@ -636,7 +766,7 @@ export interface RootMutationType {
 }
 export interface RootMutationTypeAgencyCreateArgs {
     address?: Maybe<Scalars['String']>;
-    city?: Maybe<Scalars['String']>;
+    cityId?: Maybe<Scalars['Int']>;
     email?: Maybe<Scalars['String']>;
     expireDate?: Maybe<Scalars['Date']>;
     name?: Maybe<Scalars['String']>;
@@ -647,12 +777,19 @@ export interface RootMutationTypeAgencyDeleteArgs {
 }
 export interface RootMutationTypeAgencyUpdateArgs {
     address?: Maybe<Scalars['String']>;
-    city?: Maybe<Scalars['String']>;
+    cityId?: Maybe<Scalars['Int']>;
     email?: Maybe<Scalars['String']>;
     expireDate?: Maybe<Scalars['Date']>;
     id: Scalars['UUID'];
     name?: Maybe<Scalars['String']>;
     phone?: Maybe<Scalars['Int']>;
+}
+export interface RootMutationTypeArchiveRecordDeleteArgs {
+    id: Scalars['String'];
+}
+export interface RootMutationTypeArchiveRecordRestoreArgs {
+    force?: Maybe<Scalars['Boolean']>;
+    id: Scalars['String'];
 }
 export interface RootMutationTypeAttachmentCreateArgs {
     file: Scalars['Upload'];
@@ -682,57 +819,111 @@ export interface RootMutationTypeCityCreateArgs {
 export interface RootMutationTypeCityDeleteArgs {
     cityId: Scalars['Int'];
 }
+export interface RootMutationTypeContractAddRouteArgs {
+    contractId: Scalars['Int'];
+    routeId: Scalars['Int'];
+}
+export interface RootMutationTypeContractCreateArgs {
+    agencyId?: Maybe<Scalars['Int']>;
+    cityId?: Maybe<Scalars['Int']>;
+    endDate?: Maybe<Scalars['Date']>;
+    name?: Maybe<Scalars['String']>;
+    startDate?: Maybe<Scalars['Date']>;
+}
+export interface RootMutationTypeContractDeleteArgs {
+    id: Scalars['Int'];
+}
+export interface RootMutationTypeContractDeleteRouteArgs {
+    contractId: Scalars['Int'];
+    routeId: Scalars['Int'];
+}
+export interface RootMutationTypeContractUpdateArgs {
+    agencyId?: Maybe<Scalars['Int']>;
+    cityId?: Maybe<Scalars['Int']>;
+    endDate?: Maybe<Scalars['Date']>;
+    id: Scalars['Int'];
+    name?: Maybe<Scalars['String']>;
+    startDate?: Maybe<Scalars['Date']>;
+}
+export interface RootMutationTypeCreateOrderChangeArgs {
+    changeType: NetworkOrderChangeType;
+    directionId?: Maybe<Scalars['Int']>;
+    id?: Maybe<Scalars['Int']>;
+    index?: Maybe<Scalars['Int']>;
+    scheduleId?: Maybe<Scalars['Int']>;
+    time?: Maybe<Scalars['Int']>;
+    type?: Maybe<TripWaitingType>;
+}
 export interface RootMutationTypeCreateRouteChangeArgs {
+    agencyId?: Maybe<Scalars['UUID']>;
+    allowedDeviation?: Maybe<Scalars['Int']>;
     changeType: NetworkRouteChangeType;
+    cityId?: Maybe<Scalars['Int']>;
     id?: Maybe<Scalars['Int']>;
     name?: Maybe<Scalars['String']>;
-    selectedVersionId?: Maybe<Scalars['Int']>;
+    parkingTime?: Maybe<Scalars['Int']>;
+    scheduleIsActive?: Maybe<Scalars['Boolean']>;
     shortName?: Maybe<Scalars['String']>;
-    type?: Maybe<RouteType>;
+    transportClass?: Maybe<VehicleSize>;
+    transportType?: Maybe<VehicleType>;
 }
-export interface RootMutationTypeCreateRouteVersionChangeArgs {
-    changeType: NetworkRouteVersionChangeType;
-    days?: Maybe<Array<Day>>;
+export interface RootMutationTypeCreateRouteDirectionChangeArgs {
+    changeType: NetworkRouteDirectionChangeType;
+    endDate?: Maybe<Scalars['Date']>;
+    id?: Maybe<Scalars['Int']>;
+    index?: Maybe<Scalars['Int']>;
+    isLocked?: Maybe<Scalars['Boolean']>;
+    name?: Maybe<Scalars['String']>;
+    path?: Maybe<Array<Array<Scalars['Float']>>>;
+    pivotPoints?: Maybe<Array<Array<Scalars['Float']>>>;
+    planTime?: Maybe<Scalars['Int']>;
+    routeId?: Maybe<Scalars['Int']>;
+    shapeId?: Maybe<Scalars['Int']>;
+    startDate?: Maybe<Scalars['Date']>;
+    stopId?: Maybe<Scalars['Int']>;
+    travelTime?: Maybe<Scalars['Int']>;
+}
+export interface RootMutationTypeCreateScheduleChangeArgs {
+    activityDays?: Maybe<Array<DayOfWeek>>;
+    changeType: NetworkScheduleChangeType;
+    directionId?: Maybe<Scalars['Int']>;
     endDate?: Maybe<Scalars['Date']>;
     endTime?: Maybe<Scalars['Int']>;
-    hasFrequencies?: Maybe<Scalars['Boolean']>;
-    headwaySecs?: Maybe<Scalars['Int']>;
+    exceptionDates?: Maybe<Array<Scalars['Date']>>;
     id?: Maybe<Scalars['Int']>;
+    interval?: Maybe<Scalars['Int']>;
+    intervalType?: Maybe<ScheduleIntervalType>;
     name?: Maybe<Scalars['String']>;
-    priority?: Maybe<Scalars['Int']>;
+    ordersAmount?: Maybe<Scalars['Int']>;
+    parkingTime?: Maybe<Scalars['Int']>;
+    roundTripsPerOrderAmount?: Maybe<Scalars['Int']>;
     routeId?: Maybe<Scalars['Int']>;
-    selectedVersionId?: Maybe<Scalars['Int']>;
     startDate?: Maybe<Scalars['Date']>;
     startTime?: Maybe<Scalars['Int']>;
+    totalRoundTripsAmount?: Maybe<Scalars['Int']>;
+    type?: Maybe<ScheduleType>;
 }
 export interface RootMutationTypeCreateStopChangeArgs {
     changeType: NetworkStopChangeType;
+    cityId?: Maybe<Scalars['Int']>;
     coords?: Maybe<Array<Scalars['Float']>>;
+    date?: Maybe<Scalars['Date']>;
     id?: Maybe<Scalars['Int']>;
+    ids?: Maybe<Array<Scalars['Int']>>;
     isService?: Maybe<Scalars['Boolean']>;
     locationType?: Maybe<LocationType>;
     name?: Maybe<Scalars['String']>;
+    polygon?: Maybe<Array<Array<Scalars['Float']>>>;
     radius?: Maybe<Scalars['Float']>;
-}
-export interface RootMutationTypeCreateTripChangeArgs {
-    arrivalTime?: Maybe<Scalars['Int']>;
-    changeType: NetworkTripChangeType;
-    departureTime?: Maybe<Scalars['Int']>;
-    dir?: Maybe<TripDirection>;
-    id?: Maybe<Scalars['Int']>;
-    index?: Maybe<Scalars['Int']>;
-    isPivot?: Maybe<Scalars['Boolean']>;
-    routeId?: Maybe<Scalars['Int']>;
-    shapeId?: Maybe<Scalars['Int']>;
-    shift?: Maybe<Scalars['Int']>;
-    stopId?: Maybe<Scalars['Int']>;
+    reverseDirectionStopId?: Maybe<Scalars['Int']>;
+    zoneType?: Maybe<StopZoneType>;
 }
 export interface RootMutationTypeDriverAuthCodeResetArgs {
     driverId: Scalars['Int'];
 }
 export interface RootMutationTypeDriverCreateArgs {
     agencyId?: Maybe<Scalars['UUID']>;
-    allowedVehiclesTypes?: Maybe<Array<RouteType>>;
+    allowedVehiclesTypes?: Maybe<Array<VehicleType>>;
     avatarId?: Maybe<Scalars['UUID']>;
     drivingLicenseNumber?: Maybe<Scalars['String']>;
     email?: Maybe<Scalars['String']>;
@@ -757,7 +948,7 @@ export interface RootMutationTypeDriverSessionRefreshArgs {
 }
 export interface RootMutationTypeDriverUpdateArgs {
     agencyId?: Maybe<Scalars['UUID']>;
-    allowedVehiclesTypes?: Maybe<Array<RouteType>>;
+    allowedVehiclesTypes?: Maybe<Array<VehicleType>>;
     avatarId?: Maybe<Scalars['UUID']>;
     drivingLicenseNumber?: Maybe<Scalars['String']>;
     email?: Maybe<Scalars['String']>;
@@ -766,12 +957,6 @@ export interface RootMutationTypeDriverUpdateArgs {
     lastName?: Maybe<Scalars['String']>;
     middleName?: Maybe<Scalars['String']>;
     phone?: Maybe<Scalars['String']>;
-}
-export interface RootMutationTypeFareCreateArgs {
-    fromStopId: Scalars['Int'];
-    price: Scalars['Float'];
-    toStopId: Scalars['Int'];
-    tripId: Scalars['Int'];
 }
 export interface RootMutationTypeImportAgenciesFromFileArgs {
     file?: Maybe<Scalars['Upload']>;
@@ -814,29 +999,11 @@ export interface RootMutationTypeNetworkVersionCreateArgs {
 export interface RootMutationTypeNetworkVersionSwitchArgs {
     versionId?: Maybe<Scalars['Int']>;
 }
-export interface RootMutationTypeOrderCreateArgs {
-    date: Scalars['Date'];
-    routeId: Scalars['Int'];
-    title: Scalars['String'];
-}
-export interface RootMutationTypeOrderDeleteArgs {
-    id: Scalars['Int'];
-}
-export interface RootMutationTypeOrderUpdateArgs {
-    driverId?: Maybe<Scalars['Int']>;
-    id: Scalars['Int'];
-    title?: Maybe<Scalars['String']>;
-    vehicleId?: Maybe<Scalars['Int']>;
-}
-export interface RootMutationTypeRealtimeOrderApplyCorrectionArgs {
+export interface RootMutationTypeRealtimeSetCorrectionArgs {
     correction: Scalars['Int'];
     stopIndex: Scalars['Int'];
     tripExecutionId: Scalars['Int'];
-}
-export interface RootMutationTypeRealtimeSetRouteIntervalArgs {
-    intervalSeconds?: Maybe<Scalars['Int']>;
-    isInterval: Scalars['Boolean'];
-    routeId: Scalars['Int'];
+    type: CorrectionType;
 }
 export interface RootMutationTypeRouteDeleteAgencyArgs {
     routeId: Scalars['Int'];
@@ -845,18 +1012,22 @@ export interface RootMutationTypeRouteSetAgencyArgs {
     agencyId: Scalars['UUID'];
     routeId: Scalars['Int'];
 }
-export interface RootMutationTypeRouteVersionDeleteArgs {
-    id: Scalars['Int'];
+export interface RootMutationTypeSchedulerSetDriverArgs {
+    date: Scalars['Date'];
+    driverId?: Maybe<Scalars['Int']>;
+    orderId: Scalars['Int'];
 }
-export interface RootMutationTypeScheduleXlsUploadArgs {
-    xls: Scalars['Upload'];
+export interface RootMutationTypeSchedulerSetVehicleArgs {
+    date: Scalars['Date'];
+    orderId: Scalars['Int'];
+    vehicleId?: Maybe<Scalars['Int']>;
 }
 export interface RootMutationTypeSendInstructionArgs {
     instruction: InstructionInput;
     orderId: Scalars['Int'];
 }
 export interface RootMutationTypeSessionCreateArgs {
-    email: Scalars['String'];
+    login: Scalars['String'];
     password: Scalars['String'];
 }
 export interface RootMutationTypeSessionRefreshArgs {
@@ -865,8 +1036,6 @@ export interface RootMutationTypeSessionRefreshArgs {
 export interface RootMutationTypeShapeCreateArgs {
     path: Array<Array<Scalars['Float']>>;
     pivotPoints?: Maybe<Array<Array<Scalars['Float']>>>;
-    routeVersionId: Scalars['Int'];
-    tripId: Scalars['Int'];
 }
 export interface RootMutationTypeShapeDeleteArgs {
     id: Scalars['Int'];
@@ -876,42 +1045,63 @@ export interface RootMutationTypeShapeUpdateArgs {
     path: Array<Array<Scalars['Float']>>;
     pivotPoints?: Maybe<Array<Array<Scalars['Float']>>>;
 }
-export interface RootMutationTypeTripDeleteArgs {
-    id: Scalars['Int'];
+export interface RootMutationTypeSyncSchedulesArgs {
+    fromDate: Scalars['Date'];
 }
-export interface RootMutationTypeTripExecutionApplyCorrectionArgs {
-    correction: Scalars['Int'];
+export interface RootMutationTypeUndoOrderChangeArgs {
     id: Scalars['Int'];
-    stopIndex: Scalars['Int'];
-}
-export interface RootMutationTypeTripExecutionSetOrderArgs {
-    id: Scalars['Int'];
-    orderId?: Maybe<Scalars['Int']>;
 }
 export interface RootMutationTypeUndoRouteChangeArgs {
+    id: Scalars['Int'];
+}
+export interface RootMutationTypeUndoRouteDirectionChangeArgs {
+    id: Scalars['Int'];
+}
+export interface RootMutationTypeUndoScheduleChangeArgs {
     id: Scalars['Int'];
 }
 export interface RootMutationTypeUndoStopChangeArgs {
     id: Scalars['Int'];
 }
-export interface RootMutationTypeUndoTripChangeArgs {
-    id: Scalars['Int'];
-}
-export interface RootMutationTypeUpdateTripExecutionArgs {
+export interface RootMutationTypeUpdateRealtimeTripArgs {
     acceptScore: Scalars['Float'];
     id: Scalars['Int'];
 }
-export interface RootMutationTypeUpdateTripExecutionStopArgs {
+export interface RootMutationTypeUpdateRealtimeTripStopArgs {
     accepted?: Maybe<Scalars['Boolean']>;
-    comment?: Maybe<TripExecutionStopCommentInp>;
+    comment?: Maybe<RealtimeTripCommentInput>;
     correction?: Maybe<Scalars['Int']>;
-    stopIndex: Scalars['Int'];
-    tripExecutionId: Scalars['Int'];
+    id: Scalars['Int'];
+    index: Scalars['Int'];
+}
+export interface RootMutationTypeUserAddAgencyArgs {
+    agencyId: Scalars['UUID'];
+    userId: Scalars['UUID'];
+}
+export interface RootMutationTypeUserAddCityArgs {
+    cityId: Scalars['Int'];
+    userId: Scalars['UUID'];
+}
+export interface RootMutationTypeUserAddRouteArgs {
+    routeId: Scalars['Int'];
+    userId: Scalars['UUID'];
 }
 export interface RootMutationTypeUserCreateArgs {
     user: UserInput;
 }
 export interface RootMutationTypeUserDeleteArgs {
+    userId: Scalars['UUID'];
+}
+export interface RootMutationTypeUserRemoveAgencyArgs {
+    agencyId: Scalars['UUID'];
+    userId: Scalars['UUID'];
+}
+export interface RootMutationTypeUserRemoveCityArgs {
+    cityId: Scalars['Int'];
+    userId: Scalars['UUID'];
+}
+export interface RootMutationTypeUserRemoveRouteArgs {
+    routeId: Scalars['Int'];
     userId: Scalars['UUID'];
 }
 export interface RootMutationTypeUserSelfUpdateArgs {
@@ -956,9 +1146,13 @@ export interface RootQueryType {
     actionsLogsGet?: Maybe<Array<ActionLog>>;
     agenciesDict?: Maybe<DictFile>;
     agenciesGet?: Maybe<Array<Agency>>;
+    archiveRecordsGet?: Maybe<Array<ArchiveRecord>>;
     askApiVehiclesGet?: Maybe<Array<AskApiVehicle>>;
     brandsGet?: Maybe<Array<VehicleBrand>>;
+    cameraById?: Maybe<Camera>;
+    camerasGet?: Maybe<Array<Camera>>;
     citiesGet?: Maybe<Array<City>>;
+    contractsGet?: Maybe<Array<Contract>>;
     dispatchersDict?: Maybe<DictFile>;
     driverGetActiveTrip?: Maybe<DriverTrip>;
     driverGetByAuthCode?: Maybe<Driver>;
@@ -980,13 +1174,15 @@ export interface RootQueryType {
     publicRouteDetailsGet?: Maybe<PublicRoute>;
     publicRoutesGet?: Maybe<Array<PublicRoute>>;
     publicShapesGet?: Maybe<Array<PublicShape>>;
+    publicStopArrivalsForecastGet?: Maybe<Array<PublicStopArrivalForecast>>;
     publicStopScheduleGet?: Maybe<Array<PublicScheduleRoute>>;
     publicStopsGet?: Maybe<Array<PublicStop>>;
     publicTripGet?: Maybe<PublicTrip>;
     publicVehiclesGet?: Maybe<Array<PublicVehicle>>;
-    realtimeOrderTripExecutionsGet?: Maybe<Array<RealtimeTripExecution>>;
-    realtimeRouteGet?: Maybe<RealtimeRoute>;
-    realtimeRouteRowsGet?: Maybe<Array<RealtimeRouteRow>>;
+    realtimeRouteGetStops?: Maybe<Array<RealtimeTripStop>>;
+    realtimeRoutesGet?: Maybe<Array<RealtimeRoute>>;
+    realtimeUnknownVehiclesGet?: Maybe<Array<RealtimeVehicle>>;
+    realtimeUnknownVehiclesMetaGet?: Maybe<Array<RealtimeVehicleMeta>>;
     realtimeVehiclePathGet?: Maybe<Array<Array<Scalars['Float']>>>;
     realtimeVehiclesGet?: Maybe<Array<RealtimeVehicle>>;
     realtimeVehiclesMetaGet?: Maybe<Array<RealtimeVehicleMeta>>;
@@ -994,19 +1190,16 @@ export interface RootQueryType {
     reportGet?: Maybe<Report>;
     reportsList?: Maybe<Array<ReportProperties>>;
     reportsRoutesGet?: Maybe<Array<ReportRoute>>;
-    routeTripExecutionsGet?: Maybe<Array<TripExecution>>;
+    roadGet?: Maybe<Array<Array<Array<Scalars['Float']>>>>;
     routesDict?: Maybe<DictFile>;
     routesGet?: Maybe<Array<Route>>;
-    routesVersionsGet?: Maybe<Array<RouteVersion>>;
-    scheduleCalendarDatesGet?: Maybe<Array<ScheduleCalendarDate>>;
-    scheduleDriversWorkloadGet?: Maybe<Array<Driver>>;
-    scheduleRoutesGet?: Maybe<Array<ScheduleRoute>>;
-    scheduleVehiclesWorkloadGet?: Maybe<Array<Vehicle>>;
-    schedulerTripsGet?: Maybe<Scalars['JSON']>;
+    schedulerDriversWorkloadsGet?: Maybe<Array<Workload>>;
+    schedulerRoutesGet?: Maybe<Array<SchedulerRoute>>;
+    schedulerVehiclesWorkloadsGet?: Maybe<Array<Workload>>;
+    schedulesGet?: Maybe<Array<Schedule>>;
     shapesGet?: Maybe<Array<Shape>>;
     shapesGetCompact?: Maybe<Scalars['JSON']>;
     stopsGet?: Maybe<Array<Stop>>;
-    tripFareGet?: Maybe<Fare>;
     tripsGet?: Maybe<Array<Trip>>;
     usersGet?: Maybe<Array<User>>;
     vehiclesDict?: Maybe<DictFile>;
@@ -1017,9 +1210,13 @@ export interface RootQueryType {
     vehiclesLogsGet?: Maybe<Array<VehicleLogGroup>>;
 }
 export interface RootQueryTypeActionsLogsGetArgs {
-    fromTimestamp: Scalars['Timestamp'];
-    toTimestamp: Scalars['Timestamp'];
+    fromTimestamp?: Maybe<Scalars['Timestamp']>;
+    limit?: Maybe<Scalars['Int']>;
+    offset?: Maybe<Scalars['Int']>;
+    search?: Maybe<Scalars['String']>;
+    toTimestamp?: Maybe<Scalars['Timestamp']>;
     types?: Maybe<Array<ActionType>>;
+    usersIds?: Maybe<Array<Scalars['String']>>;
 }
 export interface RootQueryTypeAgenciesGetArgs {
     ids?: Maybe<Array<Scalars['UUID']>>;
@@ -1030,16 +1227,36 @@ export interface RootQueryTypeAgenciesGetArgs {
     search?: Maybe<Scalars['String']>;
     withStats?: Scalars['Boolean'];
 }
+export interface RootQueryTypeArchiveRecordsGetArgs {
+    dates?: Maybe<Array<Scalars['Date']>>;
+    limit?: Maybe<Scalars['Int']>;
+    objectTypes?: Maybe<Array<ArchiveObjectType>>;
+    offset?: Maybe<Scalars['Int']>;
+    search?: Maybe<Scalars['String']>;
+    usersIds?: Maybe<Array<Scalars['String']>>;
+}
 export interface RootQueryTypeAskApiVehiclesGetArgs {
     id?: Maybe<Scalars['String']>;
 }
 export interface RootQueryTypeBrandsGetArgs {
     ids?: Maybe<Array<Scalars['Int']>>;
 }
+export interface RootQueryTypeCameraByIdArgs {
+    id: Scalars['UUID'];
+}
 export interface RootQueryTypeCitiesGetArgs {
     ids?: Maybe<Array<Scalars['Int']>>;
     limit?: Maybe<Scalars['Int']>;
     offset?: Maybe<Scalars['Int']>;
+    search?: Maybe<Scalars['String']>;
+}
+export interface RootQueryTypeContractsGetArgs {
+    agenciesIds?: Maybe<Array<Scalars['UUID']>>;
+    ids?: Maybe<Array<Scalars['Int']>>;
+    limit?: Maybe<Scalars['Int']>;
+    offset?: Maybe<Scalars['Int']>;
+    orderBy?: Maybe<Scalars['String']>;
+    orderDirection?: Maybe<OrderDirection>;
     search?: Maybe<Scalars['String']>;
 }
 export interface RootQueryTypeDriverGetByAuthCodeArgs {
@@ -1093,9 +1310,7 @@ export interface RootQueryTypeNetworkVersionsGetArgs {
     search?: Maybe<Scalars['String']>;
 }
 export interface RootQueryTypeOrdersGetArgs {
-    date: Scalars['Date'];
-    ids?: Maybe<Array<Scalars['Int']>>;
-    routeId: Scalars['Int'];
+    scheduleId: Scalars['Int'];
 }
 export interface RootQueryTypePublicRouteDetailsGetArgs {
     routeId: Scalars['Int'];
@@ -1106,6 +1321,9 @@ export interface RootQueryTypePublicRoutesGetArgs {
 export interface RootQueryTypePublicShapesGetArgs {
     routesIds?: Maybe<Array<Scalars['Int']>>;
     tripsExecutionsIds?: Maybe<Array<Scalars['Int']>>;
+}
+export interface RootQueryTypePublicStopArrivalsForecastGetArgs {
+    stopId: Scalars['Int'];
 }
 export interface RootQueryTypePublicStopScheduleGetArgs {
     stopId: Scalars['Int'];
@@ -1120,20 +1338,25 @@ export interface RootQueryTypePublicStopsGetArgs {
 export interface RootQueryTypePublicTripGetArgs {
     tripId: Scalars['Int'];
 }
-export interface RootQueryTypeRealtimeOrderTripExecutionsGetArgs {
-    orderId: Scalars['Int'];
+export interface RootQueryTypeRealtimeRouteGetStopsArgs {
+    routeId: Scalars['Int'];
 }
-export interface RootQueryTypeRealtimeRouteGetArgs {
-    id: Scalars['Int'];
+export interface RootQueryTypeRealtimeRoutesGetArgs {
+    ids?: Maybe<Array<Scalars['Int']>>;
 }
-export interface RootQueryTypeRealtimeRouteRowsGetArgs {
+export interface RootQueryTypeRealtimeUnknownVehiclesGetArgs {
     search?: Maybe<Scalars['String']>;
+}
+export interface RootQueryTypeRealtimeUnknownVehiclesMetaGetArgs {
+    vehiclesIds?: Maybe<Array<Scalars['Int']>>;
 }
 export interface RootQueryTypeRealtimeVehiclePathGetArgs {
     tripExecutionId?: Maybe<Scalars['Int']>;
     vehicleId?: Maybe<Scalars['Int']>;
 }
 export interface RootQueryTypeRealtimeVehiclesGetArgs {
+    routesIds?: Maybe<Array<Scalars['Int']>>;
+    search?: Maybe<Scalars['String']>;
     vehiclesIds?: Maybe<Array<Scalars['Int']>>;
 }
 export interface RootQueryTypeRealtimeVehiclesMetaGetArgs {
@@ -1145,25 +1368,19 @@ export interface RootQueryTypeRealtimeVehiclesShapesGetArgs {
     tripsExecutionsIds?: Maybe<Array<Scalars['Int']>>;
 }
 export interface RootQueryTypeReportGetArgs {
-    agencyId?: Maybe<Scalars['UUID']>;
+    agenciesIds?: Maybe<Array<Scalars['UUID']>>;
     date?: Maybe<Scalars['Date']>;
-    dispatchersIds?: Maybe<Array<Scalars['String']>>;
-    driverId?: Maybe<Scalars['Int']>;
     fromDate?: Maybe<Scalars['Date']>;
-    fromTimestamp?: Maybe<Scalars['Timestamp']>;
-    minVelocity?: Maybe<Scalars['Float']>;
     routesIds?: Maybe<Array<Scalars['Int']>>;
     toDate?: Maybe<Scalars['Date']>;
-    toTimestamp?: Maybe<Scalars['Timestamp']>;
     type: AvaliableReports;
 }
 export interface RootQueryTypeReportsRoutesGetArgs {
     date: Scalars['Date'];
     search?: Maybe<Scalars['String']>;
 }
-export interface RootQueryTypeRouteTripExecutionsGetArgs {
-    date: Scalars['Date'];
-    routeId: Scalars['Int'];
+export interface RootQueryTypeRoadGetArgs {
+    points?: Maybe<Array<Array<Scalars['Float']>>>;
 }
 export interface RootQueryTypeRoutesGetArgs {
     agenciesIds?: Maybe<Array<Scalars['UUID']>>;
@@ -1171,34 +1388,24 @@ export interface RootQueryTypeRoutesGetArgs {
     limit?: Maybe<Scalars['Int']>;
     offset?: Maybe<Scalars['Int']>;
     search?: Maybe<Scalars['String']>;
-    types?: Maybe<Array<RouteType>>;
+    types?: Maybe<Array<VehicleType>>;
 }
-export interface RootQueryTypeRoutesVersionsGetArgs {
+export interface RootQueryTypeSchedulerDriversWorkloadsGetArgs {
+    date: Scalars['Date'];
+    search?: Maybe<Scalars['String']>;
+}
+export interface RootQueryTypeSchedulerRoutesGetArgs {
+    date: Scalars['Date'];
+    ids?: Maybe<Array<Scalars['Int']>>;
+}
+export interface RootQueryTypeSchedulerVehiclesWorkloadsGetArgs {
+    date: Scalars['Date'];
+    search?: Maybe<Scalars['String']>;
+}
+export interface RootQueryTypeSchedulesGetArgs {
     ids?: Maybe<Array<Scalars['Int']>>;
     limit?: Maybe<Scalars['Int']>;
-    name?: Maybe<Scalars['String']>;
     offset?: Maybe<Scalars['Int']>;
-    orderBy?: Maybe<Scalars['String']>;
-    orderDirection?: Maybe<OrderDirection>;
-    routeIds?: Maybe<Array<Scalars['Int']>>;
-}
-export interface RootQueryTypeScheduleCalendarDatesGetArgs {
-    fromDate?: Maybe<Scalars['Date']>;
-    toDate?: Maybe<Scalars['Date']>;
-}
-export interface RootQueryTypeScheduleDriversWorkloadGetArgs {
-    date: Scalars['Date'];
-    search?: Maybe<Scalars['String']>;
-}
-export interface RootQueryTypeScheduleRoutesGetArgs {
-    date: Scalars['Date'];
-    limit?: Maybe<Scalars['Int']>;
-    offset?: Maybe<Scalars['Int']>;
-    search?: Maybe<Scalars['String']>;
-}
-export interface RootQueryTypeScheduleVehiclesWorkloadGetArgs {
-    date: Scalars['Date'];
-    search?: Maybe<Scalars['String']>;
 }
 export interface RootQueryTypeShapesGetArgs {
     ids?: Maybe<Array<Scalars['Int']>>;
@@ -1217,23 +1424,13 @@ export interface RootQueryTypeStopsGetArgs {
     orderDirection?: Maybe<OrderDirection>;
     search?: Maybe<Scalars['String']>;
 }
-export interface RootQueryTypeTripFareGetArgs {
-    tripId: Scalars['Int'];
-}
 export interface RootQueryTypeTripsGetArgs {
-    directions?: Maybe<Array<TripDirection>>;
-    fromTime?: Maybe<Scalars['Int']>;
-    hasFrequencies?: Maybe<Scalars['Boolean']>;
     ids?: Maybe<Array<Scalars['Int']>>;
-    isActive?: Maybe<Scalars['Boolean']>;
-    limit?: Maybe<Scalars['Int']>;
-    offset?: Maybe<Scalars['Int']>;
-    routeIds?: Maybe<Array<Scalars['Int']>>;
-    toTime?: Maybe<Scalars['Int']>;
-    versionIds?: Maybe<Array<Scalars['Int']>>;
+    ordersIds?: Maybe<Array<Scalars['Int']>>;
 }
 export interface RootQueryTypeUsersGetArgs {
     agenciesIds?: Maybe<Array<Scalars['UUID']>>;
+    citiesIds?: Maybe<Array<Scalars['Int']>>;
     emails?: Maybe<Array<Scalars['String']>>;
     ids?: Maybe<Array<Scalars['UUID']>>;
     limit?: Maybe<Scalars['Int']>;
@@ -1254,11 +1451,15 @@ export interface RootQueryTypeVehiclesGetArgs {
     search?: Maybe<Scalars['String']>;
 }
 export interface RootQueryTypeVehiclesLogRoutesGetArgs {
+    limit?: Maybe<Scalars['Int']>;
+    offset?: Maybe<Scalars['Int']>;
     search?: Maybe<Scalars['String']>;
     timeEnd: Scalars['Timestamp'];
     timeStart: Scalars['Timestamp'];
 }
 export interface RootQueryTypeVehiclesLogVehiclesGetArgs {
+    limit?: Maybe<Scalars['Int']>;
+    offset?: Maybe<Scalars['Int']>;
     routeIds?: Maybe<Array<Scalars['Int']>>;
     search?: Maybe<Scalars['String']>;
     timeEnd: Scalars['Timestamp'];
@@ -1272,58 +1473,92 @@ export interface RootQueryTypeVehiclesLogsGetArgs {
 }
 export interface Route {
     __typename?: 'Route';
+    agency?: Maybe<Agency>;
+    allowedDeviation?: Maybe<Scalars['Int']>;
+    city?: Maybe<City>;
+    directions?: Maybe<Array<RouteDirection>>;
     id?: Maybe<Scalars['Int']>;
     name?: Maybe<Scalars['String']>;
-    originRouteId?: Maybe<Scalars['String']>;
-    selectedVersion?: Maybe<RouteVersion>;
-    selectedVersionId?: Maybe<Scalars['Int']>;
+    nameEn?: Maybe<Scalars['String']>;
+    parkingTime?: Maybe<Scalars['Int']>;
+    schedules?: Maybe<Array<Schedule>>;
     shortName?: Maybe<Scalars['String']>;
-    type?: Maybe<RouteType>;
-    versions?: Maybe<Array<RouteVersion>>;
+    transportClass?: Maybe<VehicleSize>;
+    transportType?: Maybe<VehicleType>;
 }
-export declare const enum RouteType {
-    Bus = "BUS",
-    CableCar = "CABLE_CAR",
-    Ferry = "FERRY",
-    Funicular = "FUNICULAR",
-    Gondola = "GONDOLA",
-    Metro = "METRO",
-    Rail = "RAIL",
-    Tram = "TRAM",
-    Trolley = "TROLLEY"
-}
-export interface RouteVersion {
-    __typename?: 'RouteVersion';
-    backTrips?: Maybe<Array<Trip>>;
-    days?: Maybe<Array<Day>>;
+export interface RouteDirection {
+    __typename?: 'RouteDirection';
     endDate?: Maybe<Scalars['Date']>;
-    endTime?: Maybe<Scalars['Int']>;
-    forwardTrips?: Maybe<Array<Trip>>;
-    hasFrequencies?: Maybe<Scalars['Boolean']>;
-    headwaySecs?: Maybe<Scalars['Int']>;
     id?: Maybe<Scalars['Int']>;
+    isLocked?: Maybe<Scalars['Boolean']>;
     name?: Maybe<Scalars['String']>;
-    priority?: Maybe<Scalars['Int']>;
+    planTime?: Maybe<Scalars['Int']>;
     route?: Maybe<Route>;
-    routeId?: Maybe<Scalars['Int']>;
     shapes?: Maybe<Array<Shape>>;
     startDate?: Maybe<Scalars['Date']>;
+    stoptimes?: Maybe<Array<StopTime>>;
+}
+export interface Schedule {
+    __typename?: 'Schedule';
+    activityDays?: Maybe<Array<DayOfWeek>>;
+    backDirection?: Maybe<RouteDirection>;
+    backParkingTime?: Maybe<Scalars['Int']>;
+    endDate?: Maybe<Scalars['Date']>;
+    endTime?: Maybe<Scalars['Int']>;
+    exceptionDates?: Maybe<Array<Scalars['Date']>>;
+    forwardDirection?: Maybe<RouteDirection>;
+    id?: Maybe<Scalars['Int']>;
+    interval?: Maybe<Scalars['Int']>;
+    intervalType?: Maybe<ScheduleIntervalType>;
+    isActive?: Maybe<Scalars['Boolean']>;
+    name?: Maybe<Scalars['String']>;
+    orders?: Maybe<Array<Order>>;
+    ordersAmount?: Maybe<Scalars['Int']>;
+    parkingTime?: Maybe<Scalars['Int']>;
+    roundTripsPerOrderAmount?: Maybe<Scalars['Int']>;
+    route?: Maybe<Route>;
+    routeId?: Maybe<Scalars['Int']>;
+    startDate?: Maybe<Scalars['Date']>;
     startTime?: Maybe<Scalars['Int']>;
+    totalRoundTripsAmount?: Maybe<Scalars['Int']>;
+    type?: Maybe<ScheduleType>;
 }
-export interface ScheduleCalendarDate {
-    __typename?: 'ScheduleCalendarDate';
-    date?: Maybe<Scalars['Date']>;
-    unresolvedTripsCount?: Maybe<Scalars['Int']>;
+export declare const enum ScheduleIntervalType {
+    Fixed = "FIXED",
+    Fuzzy = "FUZZY",
+    Interval = "INTERVAL"
 }
-export interface ScheduleRoute {
-    __typename?: 'ScheduleRoute';
-    dispatcher?: Maybe<User>;
+export interface SchedulerOrder {
+    __typename?: 'SchedulerOrder';
+    driver?: Maybe<Driver>;
     id?: Maybe<Scalars['Int']>;
     name?: Maybe<Scalars['String']>;
-    resolvedTripsCount?: Maybe<Scalars['Int']>;
+    trips?: Maybe<Array<SchedulerTrip>>;
+    vehicle?: Maybe<Vehicle>;
+}
+export interface SchedulerRoute {
+    __typename?: 'SchedulerRoute';
+    city?: Maybe<City>;
+    date?: Maybe<Scalars['Date']>;
+    id?: Maybe<Scalars['Int']>;
+    name?: Maybe<Scalars['String']>;
+    orders?: Maybe<Array<SchedulerOrder>>;
+    ordersAmount?: Maybe<Scalars['Int']>;
     shortName?: Maybe<Scalars['String']>;
-    type?: Maybe<RouteType>;
-    unresolvedTripsCount?: Maybe<Scalars['Int']>;
+    vehicleType?: Maybe<VehicleType>;
+}
+export interface SchedulerTrip {
+    __typename?: 'SchedulerTrip';
+    directionType?: Maybe<TripDirection>;
+    endTime?: Maybe<Scalars['Int']>;
+    seqNum?: Maybe<Scalars['Int']>;
+    startTime?: Maybe<Scalars['Int']>;
+    waitingTime?: Maybe<Scalars['Int']>;
+}
+export declare const enum ScheduleType {
+    Circular = "CIRCULAR",
+    CompletePendulum = "COMPLETE_PENDULUM",
+    IncompletePendulum = "INCOMPLETE_PENDULUM"
 }
 export interface SetVehicleInstruction {
     __typename?: 'SetVehicleInstruction';
@@ -1343,12 +1578,19 @@ export interface Shape {
 }
 export interface Stop {
     __typename?: 'Stop';
+    city?: Maybe<City>;
     coords?: Maybe<Array<Scalars['Float']>>;
+    date?: Maybe<Scalars['Date']>;
     id?: Maybe<Scalars['Int']>;
     isService?: Maybe<Scalars['Boolean']>;
     locationType?: Maybe<LocationType>;
     name?: Maybe<Scalars['String']>;
+    nameEn?: Maybe<Scalars['String']>;
+    polygon?: Maybe<Array<Array<Scalars['Float']>>>;
     radius?: Maybe<Scalars['Float']>;
+    reverseDirectionStop?: Maybe<Stop>;
+    stopRoutes?: Maybe<Array<Route>>;
+    zoneType?: Maybe<StopZoneType>;
 }
 export interface StopTime {
     __typename?: 'StopTime';
@@ -1360,6 +1602,11 @@ export interface StopTime {
     shapeId?: Maybe<Scalars['Int']>;
     stop?: Maybe<Stop>;
     stopId?: Maybe<Scalars['Int']>;
+    travelToNext?: Maybe<Scalars['Int']>;
+}
+export declare const enum StopZoneType {
+    Polygon = "POLYGON",
+    Radius = "RADIUS"
 }
 export interface SwitchRouteInstruction {
     __typename?: 'SwitchRouteInstruction';
@@ -1371,81 +1618,27 @@ export interface SwitchRouteInstructionInput {
 }
 export interface Trip {
     __typename?: 'Trip';
-    direction?: Maybe<TripDirection>;
+    direction?: Maybe<RouteDirection>;
+    directionId?: Maybe<Scalars['Int']>;
+    directionType?: Maybe<TripDirection>;
     endTime?: Maybe<Scalars['Int']>;
     id?: Maybe<Scalars['Int']>;
-    isPivot?: Maybe<Scalars['Boolean']>;
-    parentTripId?: Maybe<Scalars['Int']>;
-    routeVersion?: Maybe<RouteVersion>;
-    routeVersionId?: Maybe<Scalars['Int']>;
+    order?: Maybe<Order>;
+    orderId?: Maybe<Scalars['Int']>;
     shapes?: Maybe<Array<Shape>>;
     startTime?: Maybe<Scalars['Int']>;
     stoptimes?: Maybe<Array<StopTime>>;
-    stoptimesCompact?: Maybe<Array<Array<Scalars['Int']>>>;
-    tripDistance?: Maybe<Scalars['Float']>;
+    waitingType?: Maybe<TripWaitingType>;
 }
 export declare const enum TripDirection {
     Back = "BACK",
     Forward = "FORWARD"
 }
-export interface TripExecution {
-    __typename?: 'TripExecution';
-    dir?: Maybe<TripDirection>;
-    endTime?: Maybe<Scalars['Int']>;
-    id?: Maybe<Scalars['Int']>;
-    orderId?: Maybe<Scalars['Int']>;
-    startTime?: Maybe<Scalars['Int']>;
-}
-export interface TripExecutionStop {
-    __typename?: 'TripExecutionStop';
-    accepted?: Maybe<Scalars['Boolean']>;
-    comment?: Maybe<TripExecutionStopComment>;
-    coords?: Maybe<Array<Scalars['Float']>>;
-    correction?: Maybe<Scalars['Int']>;
-    dist?: Maybe<Scalars['Float']>;
-    factArrival?: Maybe<Scalars['Int']>;
-    factDeparture?: Maybe<Scalars['Int']>;
-    id?: Maybe<Scalars['String']>;
-    isService?: Maybe<Scalars['Boolean']>;
-    locationType?: Maybe<LocationType>;
-    name?: Maybe<Scalars['String']>;
-    normDist?: Maybe<Scalars['Float']>;
-    planArrival?: Maybe<Scalars['Int']>;
-    planDeparture?: Maybe<Scalars['Int']>;
-}
-export interface TripExecutionStopComment {
-    __typename?: 'TripExecutionStopComment';
-    action?: Maybe<TripExecutionStopCommentAction>;
-    reason?: Maybe<TripExecutionStopCommentReason>;
-    status?: Maybe<TripExecutionStopCommentStatus>;
-}
-export declare const enum TripExecutionStopCommentAction {
-    ComeOff = "COME_OFF",
-    Late = "LATE",
-    ParkReturn = "PARK_RETURN",
-    Switch = "SWITCH",
-    Underproduction = "UNDERPRODUCTION"
-}
-export interface TripExecutionStopCommentInp {
-    action?: Maybe<TripExecutionStopCommentAction>;
-    reason?: Maybe<TripExecutionStopCommentReason>;
-    status?: Maybe<TripExecutionStopCommentStatus>;
-}
-export declare const enum TripExecutionStopCommentReason {
-    AgencyFault = "AGENCY_FAULT",
-    BoDefect = "BO_DEFECT",
-    DriverFault = "DRIVER_FAULT",
-    NoAgencyFaoult = "NO_AGENCY_FAOULT",
-    Other = "OTHER",
-    PsDamage = "PS_DAMAGE",
+export declare const enum TripWaitingType {
+    Departure = "DEPARTURE",
+    Lunch = "LUNCH",
     Refuel = "REFUEL",
-    RoadFactor = "ROAD_FACTOR",
-    TechDefect = "TECH_DEFECT",
-    TechOperation = "TECH_OPERATION"
-}
-export declare const enum TripExecutionStopCommentStatus {
-    DoneWithViolations = "DONE_WITH_VIOLATIONS",
-    NotDone = "NOT_DONE"
+    Waiting = "WAITING"
 }
 export interface UndoChangeResult {
     __typename?: 'UndoChangeResult';
@@ -1460,19 +1653,21 @@ export declare const enum UndoChangeResultType {
 export interface User {
     __typename?: 'User';
     abilities?: Maybe<Array<UserAbility>>;
-    agency?: Maybe<Agency>;
-    agencyId?: Maybe<Scalars['UUID']>;
-    city?: Maybe<City>;
+    agencies?: Maybe<Array<Agency>>;
+    cities?: Maybe<Array<City>>;
     desktopSettings?: Maybe<Scalars['JSON']>;
     desktopWallpaper?: Maybe<Attachment>;
     email?: Maybe<Scalars['String']>;
     firstName?: Maybe<Scalars['String']>;
+    hasAllCities?: Maybe<Scalars['Boolean']>;
     id?: Maybe<Scalars['UUID']>;
     lastName?: Maybe<Scalars['String']>;
+    login?: Maybe<Scalars['String']>;
     middleName?: Maybe<Scalars['String']>;
     phone?: Maybe<Scalars['Int']>;
     position?: Maybe<Scalars['String']>;
     role?: Maybe<Role>;
+    routes?: Maybe<Array<Route>>;
 }
 export declare const enum UserAbility {
     Agencies = "AGENCIES",
@@ -1492,7 +1687,9 @@ export interface UserInput {
     desktopWallpaperId?: Maybe<Scalars['UUID']>;
     email?: Maybe<Scalars['String']>;
     firstName?: Maybe<Scalars['String']>;
+    hasAllCities?: Maybe<Scalars['Boolean']>;
     lastName?: Maybe<Scalars['String']>;
+    login?: Maybe<Scalars['String']>;
     middleName?: Maybe<Scalars['String']>;
     password?: Maybe<Scalars['String']>;
     phone?: Maybe<Scalars['Int']>;
@@ -1512,14 +1709,15 @@ export interface UserSession {
 }
 export interface UserUpdateInput {
     abilities?: Maybe<Array<UserAbility>>;
-    agencyId?: Maybe<Scalars['UUID']>;
     cityId?: Maybe<Scalars['Int']>;
     desktopSettings?: Maybe<Scalars['JSON']>;
     desktopWallpaperId?: Maybe<Scalars['UUID']>;
     email?: Maybe<Scalars['String']>;
     firstName?: Maybe<Scalars['String']>;
+    hasAllCities?: Maybe<Scalars['Boolean']>;
     id: Scalars['UUID'];
     lastName?: Maybe<Scalars['String']>;
+    login?: Maybe<Scalars['String']>;
     middleName?: Maybe<Scalars['String']>;
     password?: Maybe<Scalars['String']>;
     phone?: Maybe<Scalars['Int']>;
@@ -1569,7 +1767,7 @@ export interface VehicleLogGroup {
     routeName?: Maybe<Scalars['String']>;
     routeShortName?: Maybe<Scalars['String']>;
     shape?: Maybe<Array<Array<Scalars['Float']>>>;
-    stops?: Maybe<Array<TripExecutionStop>>;
+    stops?: Maybe<Array<RealtimeTripStop>>;
     vehicleId?: Maybe<Scalars['Int']>;
     vehicleRegistrationNumber?: Maybe<Scalars['String']>;
     vehicleType?: Maybe<VehicleType>;
@@ -1601,6 +1799,15 @@ export declare const enum WheelchairBoarding {
     Unavailable = "UNAVAILABLE",
     Undefined = "UNDEFINED"
 }
+export interface Workload {
+    __typename?: 'Workload';
+    entityId?: Maybe<Scalars['Int']>;
+    entityName?: Maybe<Scalars['String']>;
+    workload?: Maybe<Array<Array<Scalars['Float']>>>;
+}
+export declare type CameraFragment = ({
+    __typename?: 'Camera';
+} & Pick<Camera, 'address' | 'coords' | 'expire' | 'id' | 'name' | 'url'>);
 export declare type PublicDirectionFragment = ({
     __typename?: 'PublicDirection';
 } & Pick<PublicDirection, 'shape'> & {
@@ -1633,7 +1840,7 @@ export declare type PublicShapeFragment = ({
 });
 export declare type PublicStopFragment = ({
     __typename?: 'PublicStop';
-} & Pick<PublicStop, 'arrivalTime' | 'coords' | 'id' | 'isTraveled' | 'name' | 'normalizedShapeDist' | 'shapeDist'>);
+} & Pick<PublicStop, 'arrivalTime' | 'coords' | 'id' | 'isTraveled' | 'name' | 'nameEn' | 'normalizedShapeDist' | 'shapeDist'>);
 export declare type PublicTripFragment = ({
     __typename?: 'PublicTrip';
 } & Pick<PublicTrip, 'id' | 'shape'> & {
@@ -1644,6 +1851,24 @@ export declare type PublicTripFragment = ({
 export declare type PublicVehicleFragment = ({
     __typename?: 'PublicVehicle';
 } & Pick<PublicVehicle, 'bearing' | 'boardNumber' | 'coords' | 'distanceToLine' | 'id' | 'normalizedShapeDist' | 'registrationNumber' | 'routeId' | 'shapeDist' | 'timestamp' | 'tripDirection' | 'tripId' | 'type' | 'wheelchairBoarding'>);
+export declare type CameraByIdQueryVariables = {
+    id: Scalars['UUID'];
+};
+export declare type CameraByIdQuery = ({
+    __typename?: 'RootQueryType';
+} & {
+    cameraById: Maybe<({
+        __typename?: 'Camera';
+    } & CameraFragment)>;
+});
+export declare type CamerasGetQueryVariables = {};
+export declare type CamerasGetQuery = ({
+    __typename?: 'RootQueryType';
+} & {
+    camerasGet: Maybe<Array<({
+        __typename?: 'Camera';
+    } & CameraFragment)>>;
+});
 export declare type PublicRouteDetailsGetQueryVariables = {
     routeId: Scalars['Int'];
 };
@@ -1717,6 +1942,7 @@ export declare type PublicVehiclesGetQuery = ({
         __typename?: 'PublicVehicle';
     } & PublicVehicleFragment)>>;
 });
+export declare const CameraFragmentDoc: any;
 export declare const PublicStopFragmentDoc: any;
 export declare const PublicDirectionFragmentDoc: any;
 export declare const PublicRouteFragmentDoc: any;
@@ -1724,6 +1950,10 @@ export declare const PublicScheduleRouteFragmentDoc: any;
 export declare const PublicShapeFragmentDoc: any;
 export declare const PublicTripFragmentDoc: any;
 export declare const PublicVehicleFragmentDoc: any;
+export declare const CameraByIdDocument: any;
+export declare type CameraByIdQueryResult = ApolloReactCommon.QueryResult<CameraByIdQuery, CameraByIdQueryVariables>;
+export declare const CamerasGetDocument: any;
+export declare type CamerasGetQueryResult = ApolloReactCommon.QueryResult<CamerasGetQuery, CamerasGetQueryVariables>;
 export declare const PublicRouteDetailsGetDocument: any;
 export declare type PublicRouteDetailsGetQueryResult = ApolloReactCommon.QueryResult<PublicRouteDetailsGetQuery, PublicRouteDetailsGetQueryVariables>;
 export declare const PublicRoutesGetDocument: any;

@@ -1,3 +1,4 @@
+export declare const CameraFragment: any;
 export declare const PublicDirectionFragment: any;
 export declare const PublicRouteFragment: any;
 export declare const PublicScheduleRouteFragment: any;

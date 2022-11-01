@@ -1,7 +1,9 @@
 import { TGraphqlAction } from 'src/lib/services/graphqlAPI';
-import { PublicRouteDetailsGetQuery, PublicRouteDetailsGetQueryVariables, PublicRoutesGetQuery, PublicRoutesGetQueryVariables, PublicShapesGetQuery, PublicShapesGetQueryVariables, PublicStopScheduleGetQuery, PublicStopScheduleGetQueryVariables, PublicStopsGetQuery, PublicStopsGetQueryVariables, PublicTripGetQuery, PublicTripGetQueryVariables, PublicVehiclesGetQuery, PublicVehiclesGetQueryVariables } from '../original/types';
+import { CameraByIdQuery, CameraByIdQueryVariables, CamerasGetQuery, CamerasGetQueryVariables, PublicRouteDetailsGetQuery, PublicRouteDetailsGetQueryVariables, PublicRoutesGetQuery, PublicRoutesGetQueryVariables, PublicShapesGetQuery, PublicShapesGetQueryVariables, PublicStopScheduleGetQuery, PublicStopScheduleGetQueryVariables, PublicStopsGetQuery, PublicStopsGetQueryVariables, PublicTripGetQuery, PublicTripGetQueryVariables, PublicVehiclesGetQuery, PublicVehiclesGetQueryVariables } from '../original/types';
 export declare type TMutations = {};
 export declare type TQueries = {
+    cameraById: TGraphqlAction<CameraByIdQuery, CameraByIdQueryVariables>;
+    camerasGet: TGraphqlAction<CamerasGetQuery, CamerasGetQueryVariables>;
     publicRouteDetailsGet: TGraphqlAction<PublicRouteDetailsGetQuery, PublicRouteDetailsGetQueryVariables>;
     publicRoutesGet: TGraphqlAction<PublicRoutesGetQuery, PublicRoutesGetQueryVariables>;
     publicShapesGet: TGraphqlAction<PublicShapesGetQuery, PublicShapesGetQueryVariables>;

@@ -51,7 +51,18 @@ export class ApolloService {
   }
 
   private getClientCache = (initialState: TInitialState) =>
-    new InMemoryCache().restore(initialState)
+    new InMemoryCache({
+      dataIdFromObject: (object) => {
+        switch (object.__typename) {
+          case 'PublicScheduleRoute':
+            // @ts-ignore
+            return object.arrivalTime
+          default:
+            // @ts-ignore
+            return object.id || object._id
+        }
+      },
+    }).restore(initialState)
 
   public getClient(): IApollo {
     if (!this.client) {

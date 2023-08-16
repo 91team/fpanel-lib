@@ -1,6 +1,6 @@
 overwrite: true
 schema:
-  - 'http://fpanel.91.vpn/api/graphql' #-boilerplate-
+  - 'https://dispatcher.primorsky-portal.ru/api/graphql' #-boilerplate-
 generates:
   schema.graphql:
     plugins:

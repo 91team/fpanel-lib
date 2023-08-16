@@ -22,6 +22,8 @@ export const PublicDirectionFragment = gql`
 
 export const PublicRouteFragment = gql`
   fragment PublicRoute on PublicRoute {
+    agencyId
+    agencyName
     back {
       ...PublicDirection
     }
@@ -68,6 +70,7 @@ export const PublicStopFragment = gql`
     nameEn
     normalizedShapeDist
     shapeDist
+    wheelchairBoarding
   }
 `
 
@@ -83,6 +86,8 @@ export const PublicTripFragment = gql`
 
 export const PublicVehicleFragment = gql`
   fragment PublicVehicle on PublicVehicle {
+    agencyId
+    agencyName
     bearing
     boardNumber
     coords

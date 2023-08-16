@@ -71,8 +71,8 @@ export const publicTripGetQuery = gql`
 `
 
 export const publicVehiclesGetQuery = gql`
-  query publicVehiclesGet {
-    publicVehiclesGet {
+  query publicVehiclesGet($onRoute: Boolean) {
+    publicVehiclesGet(onRoute: $onRoute) {
       ...PublicVehicle
     }
   }
